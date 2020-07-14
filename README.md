@@ -1,4 +1,8 @@
 # decompile_tool反编译工具类
-* 集成Jadx、apktool、apksigner等工具，快捷完成反编译一系列操作
-* 界面用java的swing库，调用系统cmd命令，需保证自带java环境变量
-* 先写windows版、后续出mac版
+* 集成Jadx快速查看apk包体内容
+* 集成apktool、可快速实现包体的反编译与汇编
+* 集成jar2dex、dex2jar，实现文件格式类型的转换
+* 集成apksigner、zipalign快速实现对包体的签名与对齐
+
+# 使用说明
+下载对应版本的zip包，解压后，打开执行文件即可
