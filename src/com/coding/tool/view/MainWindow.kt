@@ -5,8 +5,7 @@ import com.coding.tool.util.ToolUtil
 import com.coding.tool.view.dialog.*
 import java.awt.Dimension
 import java.awt.GridLayout
-import javax.swing.JButton
-import javax.swing.JFrame
+import javax.swing.*
 
 
 /**
@@ -49,10 +48,12 @@ class MainWindow : JFrame() {
         alignBtn.addActionListener {
             AlignDialog.showDialog()
         }
+
         defaultCloseOperation = EXIT_ON_CLOSE
-        layout = GridLayout(0,2)
+        layout = GridLayout(0, 2)
         size = Dimension(250, 250)
         setLocationRelativeTo(null)
+        jMenuBar = createMenuBar()
         add(jadxBtn)
         add(decompileBtn)
         add(dex2jarBtn)
@@ -62,5 +63,15 @@ class MainWindow : JFrame() {
         add(alignBtn)
         isVisible = true
         isResizable = false
+    }
+
+    private fun createMenuBar(): JMenuBar {
+        val menuBar = JMenuBar()
+        val authorItem = JMenuItem("关于")
+        authorItem.addActionListener {
+            CMD.CMD("explorer https://github.com/stray-coding/decompile_tool")
+        }
+        menuBar.add(authorItem)
+        return menuBar
     }
 }
