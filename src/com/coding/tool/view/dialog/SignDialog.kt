@@ -1,8 +1,9 @@
-package view.dialog
+package com.coding.tool.view.dialog
 
-import util.CMD
-import util.ToolUtil
-import view.FileJfc
+import com.coding.tool.util.CMD
+import com.coding.tool.util.Suffix
+import com.coding.tool.util.ToolUtil
+import com.coding.tool.view.FileJfc
 import javax.swing.*
 
 
@@ -11,14 +12,14 @@ import javax.swing.*
  *  author hdl
  *  Description:签名界面
  */
-class SignDialog : JDialog() {
+object SignDialog : JDialog() {
     init {
         val pane = JPanel()
 
         val srcPathTv = JTextField(45)
         val srcPathBtn = JButton("apk path")
         srcPathBtn.addActionListener {
-            FileJfc.newInstance(JFileChooser.FILES_ONLY, "选择apk", object : FileJfc.OnSelectListener {
+            FileJfc.newInstance(JFileChooser.FILES_ONLY, "选择apk", Suffix.APK, object : FileJfc.OnSelectListener {
                 override fun onSelected(path: String) {
                     srcPathTv.text = path
                 }
@@ -38,42 +39,47 @@ class SignDialog : JDialog() {
         val storeFileTv = JTextField(45)
         val storeFileBtn = JButton("store file")
         storeFileBtn.addActionListener {
-            FileJfc.newInstance(JFileChooser.FILES_ONLY, "选择签名文件", object : FileJfc.OnSelectListener {
+            FileJfc.newInstance(JFileChooser.FILES_ONLY, "选择签名文件", Suffix.SIGN, object : FileJfc.OnSelectListener {
                 override fun onSelected(path: String) {
                     storeFileTv.text = path
                 }
             })
         }
 
-        val storePasswordLabel = JLabel("storePassword: ",SwingConstants.LEFT)
+        val storePasswordLabel = JLabel("storePassword: ", SwingConstants.LEFT)
         val storePasswordTv = JTextField(45)
 
         val keyAliasLabel = JLabel("keyAlias: ")
         val keyAliasTv = JTextField(45)
 
-        val keyPasswordLabel = JLabel("keyPassword: ",SwingConstants.LEFT)
+        val keyPasswordLabel = JLabel("keyPassword: ", SwingConstants.LEFT)
         val keyPasswordTv = JTextField(45)
 
-        val signBtn = JButton("签名")
+        val submitBtn = JButton("签名")
         val logTA = JTextArea("日志")
         logTA.rows = 14
         logTA.columns = 55
         val scrollPane = JScrollPane(logTA)
         logTA.lineWrap = true
-        signBtn.addActionListener {
+        submitBtn.addActionListener {
             logTA.text = ""
-
-            val cmd = "java -jar ${ToolUtil.getApkSigner()} sign " +
-                    "--ks ${storeFileTv.text} " +
-                    "--ks-key-alias ${keyAliasTv.text} " +
-                    "--ks-pass pass:${storePasswordTv.text} " +
-                    "--key-pass pass:${keyPasswordTv.text} " +
-                    //"--out ${outPathTv.text}  " +
-                    " ${srcPathTv.text}"
-            logTA.text = logTA.text + cmd + "\n"
-            CMD.CMD(cmd) { msg ->
-                print("onContinueResult:$msg")
-                logTA.text = logTA.text + msg
+            val srcPath = srcPathTv.text
+            if (srcPath.isEmpty()) {
+                logTA.text = "源文件路径不能为空"
+                return@addActionListener
+            } else {
+                logTA.text = ""
+                val finalApkName = srcPath.substring(0, srcPath.length - 4) + "_sign.apk"
+                val cmd = "java -jar ${ToolUtil.getApkSigner()} sign " +
+                        "--ks ${storeFileTv.text} " +
+                        "--ks-key-alias ${keyAliasTv.text} " +
+                        "--ks-pass pass:${storePasswordTv.text} " +
+                        "--key-pass pass:${keyPasswordTv.text} " +
+                        "-v --out $finalApkName $srcPath"
+                logTA.text = logTA.text + cmd + "\n"
+                CMD.CMD(cmd) { msg ->
+                    logTA.text = logTA.text + msg
+                }
             }
         }
 
@@ -95,13 +101,17 @@ class SignDialog : JDialog() {
         pane.add(keyPasswordLabel)
         pane.add(keyPasswordTv)
 
-        pane.add(signBtn)
+        pane.add(submitBtn)
         pane.add(scrollPane)
         add(pane)
         setSize(640, 480)
         setLocationRelativeTo(null)
-        title = "签名"
+        title = "apk签名"
         isVisible = true
+        isResizable = false
+    }
 
+    fun showDialog() {
+        isVisible = true
     }
 }
