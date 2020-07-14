@@ -4,5 +4,4 @@
 * 集成jar2dex、dex2jar，实现文件格式类型的转换
 * 集成apksigner、zipalign快速实现对包体的签名与对齐
 
-# 使用说明
-下载对应版本的zip包，解压后，打开执行文件即可
+# 欢迎提Issues
