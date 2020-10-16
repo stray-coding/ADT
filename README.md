@@ -3,5 +3,4 @@
 * 集成apktool、可快速实现包体的反编译与汇编
 * 集成jar2dex、dex2jar，实现文件格式类型的转换
 * 集成apksigner、zipalign快速实现对包体的签名与对齐
-
-# 欢迎提Issues
+* 通过新旧dex，生成补丁patch
