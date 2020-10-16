@@ -19,44 +19,34 @@ object SignDialog : JDialog() {
         val srcPathTv = JTextField(45)
         val srcPathBtn = JButton("apk path")
         srcPathBtn.addActionListener {
-            FileJfc.newInstance(JFileChooser.FILES_ONLY, "选择apk", Suffix.APK, object : FileJfc.OnSelectListener {
+            FileJfc.newInstance(JFileChooser.FILES_ONLY, "choose apk", Suffix.APK, object : FileJfc.OnSelectListener {
                 override fun onSelected(path: String) {
                     srcPathTv.text = path
                 }
             })
         }
 
-        val outPathTv = JTextField(45)
-        val outPathBtn = JButton("out path")
-        outPathBtn.addActionListener {
-            FileJfc.newInstance(JFileChooser.DIRECTORIES_ONLY, "签名后的保存目录", object : FileJfc.OnSelectListener {
-                override fun onSelected(path: String) {
-                    outPathTv.text = path
-                }
-            })
-        }
-
         val storeFileTv = JTextField(45)
-        val storeFileBtn = JButton("store file")
+        val storeFileBtn = JButton("jks file")
         storeFileBtn.addActionListener {
-            FileJfc.newInstance(JFileChooser.FILES_ONLY, "选择签名文件", Suffix.SIGN, object : FileJfc.OnSelectListener {
+            FileJfc.newInstance(JFileChooser.FILES_ONLY, "choose sign", Suffix.SIGN, object : FileJfc.OnSelectListener {
                 override fun onSelected(path: String) {
                     storeFileTv.text = path
                 }
             })
         }
 
-        val storePasswordLabel = JLabel("storePassword: ", SwingConstants.LEFT)
+        val storePasswordLabel = JLabel("jks password: ", SwingConstants.LEFT)
         val storePasswordTv = JTextField(45)
 
         val keyAliasLabel = JLabel("keyAlias: ")
         val keyAliasTv = JTextField(45)
 
-        val keyPasswordLabel = JLabel("keyPassword: ", SwingConstants.LEFT)
+        val keyPasswordLabel = JLabel("key password: ", SwingConstants.LEFT)
         val keyPasswordTv = JTextField(45)
 
-        val submitBtn = JButton("签名")
-        val logTA = JTextArea("日志")
+        val submitBtn = JButton("sign")
+        val logTA = JTextArea("log")
         logTA.rows = 14
         logTA.columns = 55
         val scrollPane = JScrollPane(logTA)
@@ -65,7 +55,7 @@ object SignDialog : JDialog() {
             logTA.text = ""
             val srcPath = srcPathTv.text
             if (srcPath.isEmpty()) {
-                logTA.text = "源文件路径不能为空"
+                logTA.text = "src path cannot be empty"
                 return@addActionListener
             } else {
                 logTA.text = ""
@@ -86,9 +76,6 @@ object SignDialog : JDialog() {
         pane.add(srcPathBtn)
         pane.add(srcPathTv)
 
-/*        pane.add(outPathBtn)
-        pane.add(outPathTv)*/
-
         pane.add(storeFileBtn)
         pane.add(storeFileTv)
 
@@ -106,7 +93,7 @@ object SignDialog : JDialog() {
         add(pane)
         setSize(640, 480)
         setLocationRelativeTo(null)
-        title = "apk签名"
+        title = "sign"
         isVisible = true
         isResizable = false
     }

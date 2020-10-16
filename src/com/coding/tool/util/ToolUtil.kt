@@ -9,7 +9,7 @@ import java.io.File
  * @des:
  */
 object ToolUtil {
-    private const val BASE_PATH = "tools/win/"
+    private const val BASE_PATH = "tools/"
     fun getApkSigner(): String {
         val file = File("${BASE_PATH}apksigner.jar")
         println("exist:${file.exists()}")

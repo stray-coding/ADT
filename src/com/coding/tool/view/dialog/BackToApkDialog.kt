@@ -30,19 +30,9 @@ object BackToApkDialog : JDialog() {
         val srcPathTv = JTextField(45)
         val srcPathBtn = JButton("src dir")
         srcPathBtn.addActionListener {
-            FileJfc.newInstance(JFileChooser.DIRECTORIES_ONLY, "选择资源目录", object : FileJfc.OnSelectListener {
+            FileJfc.newInstance(JFileChooser.DIRECTORIES_ONLY, "src path", object : FileJfc.OnSelectListener {
                 override fun onSelected(path: String) {
                     srcPathTv.text = path
-                }
-            })
-        }
-
-        val outPathTv = JTextField(45)
-        val outPathBtn = JButton("out path")
-        outPathBtn.addActionListener {
-            FileJfc.newInstance(JFileChooser.DIRECTORIES_ONLY, "选择apk输出输出目录", object : FileJfc.OnSelectListener {
-                override fun onSelected(path: String) {
-                    outPathTv.text = path
                 }
             })
         }
@@ -50,8 +40,8 @@ object BackToApkDialog : JDialog() {
         val copyOriginalCb = Checkbox("copy original")
         val forceCoverCb = Checkbox("force cover", true)
 
-        val submitBtn = JButton("回编译")
-        val logTA = JTextArea("日志")
+        val submitBtn = JButton("back to compile")
+        val logTA = JTextArea("log")
         logTA.rows = 20
         logTA.columns = 50
         val scrollPane = JScrollPane(logTA)
@@ -64,10 +54,7 @@ object BackToApkDialog : JDialog() {
             if (srcPath == "") {
                 return@addActionListener
             }
-            val outPath = if (outPathTv.text.isEmpty()) {
-                "$srcPath.apk"
-            } else
-                " ${outPathTv.text}"
+            val outPath = "$srcPath.apk"
             val cmd = "java -jar ${ToolUtil.getApkTool()} b $srcPath $origin $forceCover -o $outPath"
             logTA.text = logTA.text + cmd + "\n"
             CMD.CMD(cmd) { msg ->
@@ -77,10 +64,7 @@ object BackToApkDialog : JDialog() {
 
         pane.add(srcPathBtn)
         pane.add(srcPathTv)
-/*        pane.add(outPathBtn)
-        pane.add(outPathTv)*/
 
-        //pane.add(ignoreDexCb)
         pane.add(copyOriginalCb)
         pane.add(forceCoverCb)
 
@@ -89,7 +73,7 @@ object BackToApkDialog : JDialog() {
         add(pane)
         setSize(640, 480)
         setLocationRelativeTo(null)
-        title = "apk回编译"
+        title = "back to compile"
         isVisible = true
         isResizable = false
     }

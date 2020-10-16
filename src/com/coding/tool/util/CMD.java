@@ -12,6 +12,22 @@ import java.io.InputStreamReader;
  */
 
 public class CMD {
+    public static Process CMDSync(String cmd, OnResultListener resultListener) {
+        Process p = null;
+        try {
+            cmd = "cmd.exe /c " + cmd;
+            System.out.println(cmd);
+            p = Runtime.getRuntime().exec(cmd);
+            dealResult(p.getInputStream(), resultListener);
+            dealResult(p.getErrorStream(), resultListener);
+            p.getOutputStream().close();
+        } catch (Exception e) {
+            System.out.println("命令行出错！");
+            e.printStackTrace();
+        }
+        return p;
+    }
+
 
     public static Process CMD(String cmd, OnResultListener resultListener) {
         Process p = null;
@@ -41,7 +57,7 @@ public class CMD {
     private static Process runCMD(String cmd) {
         Process p = null;
         try {
-            cmd = "cmd.exe /c start " + cmd;
+            cmd = "cmd.exe /k start " + cmd;
             System.out.println(cmd);
             p = Runtime.getRuntime().exec(cmd);
             new Thread(new cmdResult(p.getInputStream(), null)).start();
@@ -69,24 +85,28 @@ public class CMD {
 
         @Override
         public void run() {
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(ins));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (resultListener != null) {
-                        resultListener.onContinueResult(line + "\n");
-                    }
-                    System.out.println(line);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            dealResult(ins,resultListener);
         }
     }
 
     public interface OnResultListener {
         /*每一行返回一次*/
         void onContinueResult(String msg);
+    }
+
+    private static void dealResult(InputStream ins,OnResultListener resultListener){
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(ins));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (resultListener != null) {
+                    resultListener.onContinueResult(line + "\n");
+                }
+                System.out.println(line);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 

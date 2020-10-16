@@ -10,7 +10,7 @@ import javax.swing.*
  * @author: Coding.He
  * @date: 2020/7/14
  * @emil: 229101253@qq.com
- * @des:
+ * @des:apk 对齐
  */
 object AlignDialog : JDialog() {
     init {
@@ -19,25 +19,15 @@ object AlignDialog : JDialog() {
         val srcPathTv = JTextField(45)
         val srcPathBtn = JButton("apk path")
         srcPathBtn.addActionListener {
-            FileJfc.newInstance(JFileChooser.FILES_ONLY, "选择apk",Suffix.APK, object : FileJfc.OnSelectListener {
+            FileJfc.newInstance(JFileChooser.FILES_ONLY, "choose apk", Suffix.APK, object : FileJfc.OnSelectListener {
                 override fun onSelected(path: String) {
                     srcPathTv.text = path
                 }
             })
         }
 
-        val outPathTv = JTextField(45)
-        val outPathBtn = JButton("out path")
-        outPathBtn.addActionListener {
-            FileJfc.newInstance(JFileChooser.DIRECTORIES_ONLY, "对齐后的保存目录", object : FileJfc.OnSelectListener {
-                override fun onSelected(path: String) {
-                    outPathTv.text = path
-                }
-            })
-        }
-
-        val submitBtn = JButton("对齐")
-        val logTA = JTextArea("日志")
+        val submitBtn = JButton("align")
+        val logTA = JTextArea("log")
         logTA.rows = 23
         logTA.columns = 55
         val scrollPane = JScrollPane(logTA)
@@ -46,14 +36,10 @@ object AlignDialog : JDialog() {
             logTA.text = ""
             val srcPath = srcPathTv.text
             if (srcPath.isEmpty()) {
-                logTA.text = "源文件路径不能为空"
+                logTA.text = "src path cannot be empty"
                 return@addActionListener
             } else {
-                val outPath = if (outPathTv.text.isEmpty()) {
-                    val lastIndex = srcPath.lastIndexOf('.')
-                    srcPath.substring(0, lastIndex) + "_align.apk"
-                } else
-                    " ${outPathTv.text}"
+                val outPath = srcPath.substring(0, srcPath.lastIndexOf('.')) + "_align.apk"
                 val cmd = "${ToolUtil.getZipalign()} -f -v 4 $srcPath $outPath"
                 logTA.text = logTA.text + cmd + "\n"
                 CMD.CMD(cmd) { msg ->
@@ -65,15 +51,12 @@ object AlignDialog : JDialog() {
         pane.add(srcPathBtn)
         pane.add(srcPathTv)
 
-/*        pane.add(outPathBtn)
-        pane.add(outPathTv)*/
-
         pane.add(submitBtn)
         pane.add(scrollPane)
         add(pane)
         setSize(640, 480)
         setLocationRelativeTo(null)
-        title = "apk对齐"
+        title = "apk align"
         isVisible = true
         isResizable = false
     }

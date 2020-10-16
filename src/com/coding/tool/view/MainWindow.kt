@@ -48,6 +48,10 @@ class MainWindow : JFrame() {
         alignBtn.addActionListener {
             AlignDialog.showDialog()
         }
+        val generateBtn = JButton("补丁")
+        generateBtn.addActionListener {
+            PatchDialog.showDialog()
+        }
 
         defaultCloseOperation = EXIT_ON_CLOSE
         layout = GridLayout(0, 2)
@@ -61,6 +65,7 @@ class MainWindow : JFrame() {
         add(backToCompileBtn)
         add(signBtn)
         add(alignBtn)
+        add(generateBtn)
         isVisible = true
         isResizable = false
     }
