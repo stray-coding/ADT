@@ -49,7 +49,7 @@ object PatchDialog : JDialog() {
 
         val submitBtn = JButton("generate patch")
         val logTA = JTextArea("log")
-        logTA.rows = 18
+        logTA.rows = 19
         logTA.columns = 55
         val scrollPane = JScrollPane(logTA)
         logTA.lineWrap = true

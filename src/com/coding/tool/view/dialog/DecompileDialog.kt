@@ -32,8 +32,8 @@ object DecompileDialog : JDialog() {
 
         val submitBtn = JButton("decompile")
         val logTA = JTextArea("log")
-        logTA.rows = 20
-        logTA.columns = 50
+        logTA.rows = 23
+        logTA.columns = 55
         val scrollPane = JScrollPane(logTA)
         logTA.lineWrap = true
         submitBtn.addActionListener {

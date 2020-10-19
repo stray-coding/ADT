@@ -1,6 +1,7 @@
 package com.coding.tool.view
 
 import com.coding.tool.util.CMD
+import com.coding.tool.util.SignCfgUtil
 import com.coding.tool.util.ToolUtil
 import com.coding.tool.view.dialog.*
 import java.awt.Dimension
@@ -14,7 +15,16 @@ import javax.swing.*
  * @emil: 229101253@qq.com
  * @des:
  */
-class MainWindow : JFrame() {
+class MainWindow private constructor() : JFrame() {
+
+    companion object {
+        private val mainWindow = MainWindow()
+        fun getInstance(): MainWindow {
+            SignCfgUtil.initSignXml()
+            return mainWindow
+        }
+    }
+
     init {
         title = "反编译工具"
         val jadxBtn = JButton("jadx")
@@ -79,4 +89,5 @@ class MainWindow : JFrame() {
         menuBar.add(authorItem)
         return menuBar
     }
+
 }

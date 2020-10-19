@@ -41,7 +41,7 @@ object Dex2JarDialog : JDialog() {
                 logTA.text = "src path cannot be empty"
                 return@addActionListener
             } else {
-                val outPath = srcPath.substring(0, srcPath.lastIndexOf('.')) + ".jar"
+                val outPath = srcPath.substring(0, srcPath.lastIndexOf('.')) + "_dex2jar.jar"
                 val cmd = "${ToolUtil.getDex2jar()} $srcPath -f -o $outPath"
                 logTA.text = logTA.text + cmd + "\n"
                 CMD.CMD(cmd) { msg ->

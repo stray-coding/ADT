@@ -39,7 +39,7 @@ object AlignDialog : JDialog() {
                 logTA.text = "src path cannot be empty"
                 return@addActionListener
             } else {
-                val outPath = srcPath.substring(0, srcPath.lastIndexOf('.')) + "_align.apk"
+                val outPath = srcPath.substring(0, srcPath.lastIndexOf('.')) + "_aligned.apk"
                 val cmd = "${ToolUtil.getZipalign()} -f -v 4 $srcPath $outPath"
                 logTA.text = logTA.text + cmd + "\n"
                 CMD.CMD(cmd) { msg ->

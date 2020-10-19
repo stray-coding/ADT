@@ -42,8 +42,8 @@ object BackToApkDialog : JDialog() {
 
         val submitBtn = JButton("back to compile")
         val logTA = JTextArea("log")
-        logTA.rows = 20
-        logTA.columns = 50
+        logTA.rows = 23
+        logTA.columns = 55
         val scrollPane = JScrollPane(logTA)
         logTA.lineWrap = true
         submitBtn.addActionListener {
@@ -54,7 +54,7 @@ object BackToApkDialog : JDialog() {
             if (srcPath == "") {
                 return@addActionListener
             }
-            val outPath = "$srcPath.apk"
+            val outPath = "${srcPath}_back_to_compile.apk"
             val cmd = "java -jar ${ToolUtil.getApkTool()} b $srcPath $origin $forceCover -o $outPath"
             logTA.text = logTA.text + cmd + "\n"
             CMD.CMD(cmd) { msg ->

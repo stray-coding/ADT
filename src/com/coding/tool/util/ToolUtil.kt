@@ -51,4 +51,18 @@ object ToolUtil {
         println(file.absolutePath)
         return file.absolutePath
     }
+
+    fun getDefaultSignFile():String{
+        val file = File("${BASE_PATH}stray-coding.jks")
+        println("exist:${file.exists()}")
+        println(file.absolutePath)
+        return file.absolutePath
+    }
+
+    fun getSignConfigXml():String{
+        val file = File("${BASE_PATH}sign_config.xml")
+        println("exist:${file.exists()}")
+        println(file.absolutePath)
+        return file.absolutePath
+    }
 }

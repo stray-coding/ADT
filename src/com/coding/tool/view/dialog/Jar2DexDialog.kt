@@ -41,7 +41,7 @@ object Jar2DexDialog : JDialog() {
                 logTA.text = "src path cannot be empty"
                 return@addActionListener
             } else {
-                val outPath = srcPath.substring(0, srcPath.lastIndexOf('.')) + ".dex"
+                val outPath = srcPath.substring(0, srcPath.lastIndexOf('.')) + "_jar2dex.dex"
                 val cmd = "${ToolUtil.getJar2dex()} $srcPath -f -o $outPath"
                 logTA.text = logTA.text + cmd + "\n"
                 CMD.CMD(cmd) { msg ->
