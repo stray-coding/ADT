@@ -5,6 +5,7 @@ import com.coding.tool.util.SignCfgUtil
 import com.coding.tool.util.Suffix
 import com.coding.tool.util.ToolUtil
 import com.coding.tool.view.FileJfc
+import java.awt.Checkbox
 import javax.swing.*
 
 
@@ -29,12 +30,16 @@ object SignDialog : JDialog() {
             })
         }
 
+        val v1Cb = Checkbox("v1", true)
+        val v2Cb = Checkbox("v2", true)
+
         val nameList = DefaultComboBoxModel<String>()
         for (item in SignCfgUtil.getSignList()) {
             nameList.addElement(item.name)
         }
 
         signListJCb.model = nameList
+
 
         val deleteSignBtn = JButton("delete sign")
         deleteSignBtn.addActionListener {
@@ -67,6 +72,8 @@ object SignDialog : JDialog() {
                         "--ks-key-alias ${selectSign?.alias} " +
                         "--ks-pass pass:${selectSign?.pwd} " +
                         "--key-pass pass:${selectSign?.aliasPwd} " +
+                        "--v1-signing-enabled ${v1Cb.state} " +
+                        "--v2-signing-enabled ${v2Cb.state} " +
                         "-v --out $finalApkName $srcPath"
                 logTA.text = logTA.text + cmd + "\n"
                 CMD.CMD(cmd) { msg ->
@@ -75,12 +82,26 @@ object SignDialog : JDialog() {
             }
         }
 
+        val signCheckBtn = JButton("check sign")
+        signCheckBtn.addActionListener {
+            val cmd = "java -jar ${ToolUtil.getApkSigner()} verify -v ${srcPathTv.text}"
+            logTA.text = logTA.text + cmd + "\n"
+            CMD.CMD(cmd) { msg ->
+                logTA.text = logTA.text + msg
+            }
+        }
+
+
         pane.add(srcPathBtn)
         pane.add(srcPathTv)
         pane.add(signListJCb)
+        pane.add(v1Cb)
+        pane.add(v2Cb)
         pane.add(submitBtn)
         pane.add(deleteSignBtn)
+
         pane.add(addSignBtn)
+        pane.add(signCheckBtn)
         pane.add(scrollPane)
         add(pane)
         setSize(640, 480)
