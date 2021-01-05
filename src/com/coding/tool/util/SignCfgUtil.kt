@@ -12,7 +12,7 @@ import javax.xml.transform.stream.StreamResult
 /**
  * @author: Coding.He
  * @date: 2020/10/19
- * @emil: 229101253@qq.com
+ * @emil: stray-coding@foxmail.com
  * @des:
  */
 object SignCfgUtil {
@@ -26,8 +26,8 @@ object SignCfgUtil {
 
     fun initSignXml() {
         if (!FileUtils.isFileExists(SIGN_PATH)) {
-            FileUtils.copyFile(ToolUtil.getSignConfigXml(), SIGN_PATH)
-            addSign(SignConfig("DecompileSign", ToolUtil.getDefaultSignFile(), "aa887887", "stray-coding", "aa887887"))
+            FileUtils.copyFile(ToolFilePath.getSignConfigXml(), SIGN_PATH)
+            addSign(SignConfig("defaultSign", ToolFilePath.getDefaultSignFile(), "aa887887", "stray-coding", "aa887887"))
         }
     }
 
@@ -130,7 +130,7 @@ object SignCfgUtil {
                     signConfig.aliasPwd = element.getAttribute("key-pass")
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    println("签名配置文件有误")
+                    println("sign configuration error")
                 }
                 return signConfig
             }

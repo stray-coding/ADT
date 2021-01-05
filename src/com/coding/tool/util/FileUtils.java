@@ -426,12 +426,7 @@ public final class FileUtils {
     private static boolean copyOrMoveDir(final File srcDir,
                                          final File destDir,
                                          final boolean isMove) {
-        return copyOrMoveDir(srcDir, destDir, new OnReplaceListener() {
-            @Override
-            public boolean onReplace() {
-                return true;
-            }
-        }, isMove);
+        return copyOrMoveDir(srcDir, destDir, () -> true, isMove);
     }
 
     private static boolean copyOrMoveDir(final File srcDir,
@@ -469,12 +464,7 @@ public final class FileUtils {
     private static boolean copyOrMoveFile(final File srcFile,
                                           final File destFile,
                                           final boolean isMove) {
-        return copyOrMoveFile(srcFile, destFile, new OnReplaceListener() {
-            @Override
-            public boolean onReplace() {
-                return true;
-            }
-        }, isMove);
+        return copyOrMoveFile(srcFile, destFile, () -> true, isMove);
     }
 
     private static boolean copyOrMoveFile(final File srcFile,

@@ -1,19 +1,11 @@
-# decompile_tool反编译工具类
-* 集成Jadx快速查看apk包体内容
-* 集成apktool、可快速实现包体的反编译与汇编
-* 集成jar2dex、dex2jar，实现文件格式类型的转换
-* 集成apksigner、zipalign快速实现对包体的签名与对齐
-* 通过新旧dex，生成补丁patch
+# decompile_tool
+* Integrate jadx to quickly view the contents of the apk package
+* Integrated apktool can quickly realize the decompilation and assembly of the package body
+* Integrate jar2dex, dex2jar, realize file format type conversion
+* Integrate apksigner and zipalign to quickly realize the signature and alignment of the package body
+* Quickly generate incremental package patch.dex according to the new and old dex
 
-# 使用方法
-请确保你的PC至少含有java环境  
-下载release中的decompile_tool.zip，然后解压到本地目录  
-1.打开cmd,目录跳转至decompile_tool.jar所在目录
-```$xslt
-cd decompile_tool.jar所在目录
-```
-2.运行decompile_tool.jar文件
-```
-java -jar decompile_tool.jar
-```
+# Instructions
+Please make sure your PC contains java environment and environment variables have been configured
+Download release/decompile_tool.zip in the release, and unzip it to a local directory
 

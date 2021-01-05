@@ -3,7 +3,7 @@ package com.coding.tool.util
 /**
  * @author: Coding.He
  * @date: 2020/7/14
- * @emil: 229101253@qq.com
+ * @emil: stray-coding@foxmail.com
  * @des:
  */
 object Suffix {
