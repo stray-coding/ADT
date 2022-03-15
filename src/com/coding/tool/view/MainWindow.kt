@@ -1,10 +1,10 @@
 package com.coding.tool.view
 
 import com.coding.tool.Proxy
+import com.coding.tool.constants.Constants
 import com.coding.tool.util.SignCfgUtil
 import com.coding.tool.util.Suffix
 import com.coding.tool.util.Terminal
-import java.awt.Dimension
 import java.awt.GridLayout
 import javax.swing.*
 
@@ -82,7 +82,7 @@ class MainWindow private constructor() : JFrame() {
 
         defaultCloseOperation = EXIT_ON_CLOSE
         layout = GridLayout(0, 2)
-        size = Dimension(250, 250)
+        setSize(Constants.Windows_Width, Constants.Window_Height)
         setLocationRelativeTo(null)
         jMenuBar = createMenuBar()
         add(jadxBtn)
@@ -90,8 +90,8 @@ class MainWindow private constructor() : JFrame() {
         add(dex2jarBtn)
         add(jar2dexBtn)
         add(backToCompileBtn)
-        add(signBtn)
         add(alignBtn)
+        add(signBtn)
         add(generateBtn)
         isVisible = true
         isResizable = false

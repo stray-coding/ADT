@@ -1,5 +1,8 @@
 package com.coding.tool.view
 
+import com.coding.tool.constants.Constants
+import com.coding.tool.util.FileUtils
+import com.coding.tool.util.PathUtils
 import com.coding.tool.util.SignCfgUtil
 import com.coding.tool.util.Suffix
 import java.io.File
@@ -27,16 +30,19 @@ object AddSignDialog : JDialog() {
         val keyPwdLabel = JLabel("key password: ", SwingConstants.LEFT)
         val keyPwdTv = JTextField(columns)
 
-        val jksFileBtn = JButton("jks file path")
+        val jksFileBtn = JButton("sign file path")
         jksFileBtn.addActionListener {
             if (jksPwdTv.text.isEmpty() || keyAliasTv.text.isEmpty() || keyPwdTv.text.isEmpty()) {
                 Toast.showMsg(this, "please complete the signature configuration information")
                 return@addActionListener
             }
-            FileChooser.newInstance(this, JFileChooser.FILES_ONLY, "choose sign", Suffix.SIGN, object : FileChooser.OnSelectListener {
+            FileChooser.newInstance(this, JFileChooser.FILES_ONLY, "choose sign", arrayOf(Suffix.JKS, Suffix.KEY_STORE), object : FileChooser.OnSelectListener {
                 override fun onSelected(path: String) {
                     name = path.substring(path.lastIndexOf(File.separator) + 1, path.lastIndexOf('.'))
-                    val sign = SignCfgUtil.SignConfig(name, path, jksPwdTv.text, keyAliasTv.text, keyPwdTv.text)
+                    //保存签名文件的路径
+                    val savePath = PathUtils.getConfigDir() + File.separator + path.substring(path.lastIndexOf(File.separator) + 1)
+                    FileUtils.copyFile(path, savePath)
+                    val sign = SignCfgUtil.SignConfig(name, savePath, jksPwdTv.text, keyAliasTv.text, keyPwdTv.text)
                     SignCfgUtil.addSign(sign)
                     SignDialog.refreshSignList()
                     isVisible = false
@@ -56,7 +62,7 @@ object AddSignDialog : JDialog() {
         pane.add(jksFileBtn)
 
         add(pane)
-        setSize(250, 250)
+        setSize(Constants.Windows_Width, Constants.Window_Height)
 
         setLocationRelativeTo(null)
         title = "add sign"

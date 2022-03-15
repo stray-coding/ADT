@@ -12,61 +12,71 @@ import javax.swing.filechooser.FileSystemView
  * @emil: stray-coding@foxmail.com
  * @des::file chooser
  */
-class FileChooser private constructor(parent: Component, mode: Int, title: String, filterStr: String, onSelectListener: OnSelectListener) :
-    JFileChooser() {
+class FileChooser private constructor(parent: Component, mode: Int, title: String, filterArray: Array<String>, onSelectListener: OnSelectListener) :
+        JFileChooser() {
 
     companion object {
         fun newInstance(mode: Int, title: String, onSelectListener: OnSelectListener) {
-            FileChooser(MainWindow.getInstance(), mode, title, "", onSelectListener)
+            FileChooser(MainWindow.getInstance(), mode, title, arrayOf(""), onSelectListener)
         }
 
         fun newInstance(mode: Int, title: String, filterStr: String, onSelectListener: OnSelectListener) {
-            FileChooser(MainWindow.getInstance(), mode, title, filterStr, onSelectListener)
+            FileChooser(MainWindow.getInstance(), mode, title, arrayOf(filterStr), onSelectListener)
         }
 
         fun newInstance(parent: Component, mode: Int, title: String, onSelectListener: OnSelectListener) {
-            FileChooser(parent, mode, title, "", onSelectListener)
+            FileChooser(parent, mode, title, arrayOf(""), onSelectListener)
         }
 
         fun newInstance(parent: Component, mode: Int, title: String, filterStr: String, onSelectListener: OnSelectListener) {
-            FileChooser(parent, mode, title, filterStr, onSelectListener)
+            FileChooser(parent, mode, title, arrayOf(filterStr), onSelectListener)
+        }
+
+        fun newInstance(parent: Component, mode: Int, title: String, filterArray: Array<String>, onSelectListener: OnSelectListener) {
+            FileChooser(parent, mode, title, filterArray, onSelectListener)
         }
     }
 
     init {
         fileSelectionMode = mode
         currentDirectory = FileSystemView.getFileSystemView().homeDirectory
-        fileFilter = MyFileFilter(filterStr)
+        fileFilter = MyFileFilter(filterArray)
         showDialog(parent, title)
-        val file = selectedFile
-        val filePath = file.absolutePath
-        if (file.isDirectory) {
-            println("dir:$filePath")
-        } else if (file.isFile) {
-            println("file:$filePath")
+        selectedFile?.let {
+            if (it.isDirectory) {
+                println("dir:${it.absolutePath}")
+            } else if (it.isFile) {
+                println("file:${it.absolutePath}")
+            }
+            onSelectListener.onSelected(it.absolutePath)
         }
-        onSelectListener.onSelected(filePath)
     }
 
     interface OnSelectListener {
         fun onSelected(path: String)
     }
 
-    class MyFileFilter(str: String) : FileFilter() {
+    class MyFileFilter(array: Array<String>) : FileFilter() {
 
-        private var suffix: String = ""
+        private var suffixArray = arrayOf("")
 
         init {
-            suffix = str
+            suffixArray = array
         }
 
         override fun accept(f: File): Boolean {
-            if (suffix.isEmpty()) return true
-            return f.name.endsWith(suffix) || f.isDirectory
+            if (suffixArray.isEmpty()) return true
+            if (f.isDirectory) return true
+            for (item in suffixArray) {
+                if (f.name.endsWith(item)) {
+                    return true
+                }
+            }
+            return false
         }
 
         override fun getDescription(): String {
-            return if (suffix.isEmpty()) "all files or dir" else suffix
+            return if (suffixArray.isEmpty()) "all files or dir" else suffixArray.toString()
         }
     }
 

@@ -15,9 +15,9 @@ object Proxy {
      * */
     fun openJadx() {
         if (Terminal.isWindows()) {
-            Terminal.run(ToolFilePath.getJadx())
+            Terminal.run(PathUtils.getJadx())
         } else {
-            Terminal.run("open ${ToolFilePath.getJadx()}")
+            Terminal.run("open ${PathUtils.getJadx()}")
         }
     }
 
@@ -34,7 +34,7 @@ object Proxy {
         val dexStr = if (ignoreDex) "-s" else ""
         val srcStr = if (ignoreSrc) "-r" else ""
         val outPath = apkPath.substring(0, apkPath.length - 4)
-        val cmd = "java -jar ${ToolFilePath.getApkTool()} d $apkPath $dexStr $srcStr -f -o $outPath"
+        val cmd = "java -jar ${PathUtils.getApkTool()} d $apkPath $dexStr $srcStr -f -o $outPath"
         Terminal.run(cmd)
     }
 
@@ -45,9 +45,9 @@ object Proxy {
     fun dex2jar(dexPath: String) {
         if (dexPath.isEmpty()) return
         if (!dexPath.endsWith(Suffix.DEX)) return
-        if (!Terminal.isWindows()) Terminal.run("chmod u+x ${ToolFilePath.getDex2jar()}", null)
+        if (!Terminal.isWindows()) Terminal.run("chmod u+x ${PathUtils.getDex2jar()}", null)
         val outPath = dexPath.substring(0, dexPath.lastIndexOf('.')) + "_d2j.jar"
-        val cmd = "${ToolFilePath.getDex2jar()} $dexPath -f -o $outPath"
+        val cmd = "${PathUtils.getDex2jar()} $dexPath -f -o $outPath"
         Terminal.run(cmd, null)
         for (item in FileUtils.listFilesInDir("./")) {
             if (item.name.contains("-error.zip")) {
@@ -63,9 +63,9 @@ object Proxy {
     fun jar2dex(jarPath: String) {
         if (jarPath.isEmpty()) return
         if (!jarPath.endsWith(Suffix.JAR)) return
-        if (!Terminal.isWindows()) Terminal.run("chmod u+x ${ToolFilePath.getJar2dex()}", null)
+        if (!Terminal.isWindows()) Terminal.run("chmod u+x ${PathUtils.getJar2dex()}", null)
         val outPath = jarPath.substring(0, jarPath.lastIndexOf('.')) + "_j2d.dex"
-        val cmd = "${ToolFilePath.getJar2dex()} $jarPath -f -o $outPath"
+        val cmd = "${PathUtils.getJar2dex()} $jarPath -f -o $outPath"
         Terminal.run(cmd, null)
         for (item in FileUtils.listFilesInDir("./")) {
             if (item.name.contains("-error.zip")) {
@@ -81,7 +81,7 @@ object Proxy {
     fun backToApk(srcDir: String) {
         if (srcDir.isEmpty()) return
         val outPath = "${srcDir}_btc.apk"
-        val cmd = "java -jar ${ToolFilePath.getApkTool()} b $srcDir -f -o $outPath"
+        val cmd = "java -jar ${PathUtils.getApkTool()} b $srcDir -f -o $outPath"
         Terminal.run(cmd)
     }
 
@@ -98,7 +98,7 @@ object Proxy {
         if (apkPath.isEmpty()) return false
         if (!apkPath.endsWith(Suffix.APK)) return false
         val finalApkName = apkPath.substring(0, apkPath.length - 4) + "_signed.apk"
-        val cmd = "java -jar ${ToolFilePath.getApkSigner()} sign " +
+        val cmd = "java -jar ${PathUtils.getApkSigner()} sign " +
                 "--ks ${signConfig.path} " +
                 "--ks-key-alias ${signConfig.alias} " +
                 "--ks-pass pass:${signConfig.pwd} " +
@@ -126,7 +126,7 @@ object Proxy {
      * get apk signature information
      * */
     fun verifyApkSign(apkPath: String) {
-        val cmd = "java -jar ${ToolFilePath.getApkSigner()} verify -v $apkPath"
+        val cmd = "java -jar ${PathUtils.getApkSigner()} verify -v $apkPath"
         Terminal.run(cmd)
     }
 
@@ -137,7 +137,7 @@ object Proxy {
         if (apkPath.isEmpty()) return false
         if (!apkPath.endsWith(Suffix.APK)) return false
         val outPath = apkPath.substring(0, apkPath.lastIndexOf('.')) + "_aligned.apk"
-        val cmd = "${ToolFilePath.getZipalign()} -f -v 4 $apkPath $outPath"
+        val cmd = "${PathUtils.getZipalign()} -f -v 4 $apkPath $outPath"
         var success = false
         Terminal.run(cmd, object : Terminal.OnResultCallback {
             override fun onStdout(msg: String) {
@@ -176,8 +176,8 @@ object Proxy {
         println("convert dex to jar")
         val jarOfOldDexPath = "$workSpace${File.separator}old.jar"
         val jarOfNewDexPath = "$workSpace${File.separator}new.jar"
-        Terminal.run("${ToolFilePath.getDex2jar()} $oldDexWorkspace -f -o $jarOfOldDexPath")
-        Terminal.run("${ToolFilePath.getDex2jar()} $newDexWorkspace -f -o $jarOfNewDexPath")
+        Terminal.run("${PathUtils.getDex2jar()} $oldDexWorkspace -f -o $jarOfOldDexPath")
+        Terminal.run("${PathUtils.getDex2jar()} $newDexWorkspace -f -o $jarOfNewDexPath")
 
         println("unzip the jar file")
         val jarOfOldDexDir = "$workSpace${File.separator}old"
@@ -215,7 +215,7 @@ object Proxy {
 
         println("convert patch.jar to patch.dex.")
         val patchOutPath = "$outputDir${File.separator}patch.dex"
-        val jar2DexCMD = "${ToolFilePath.getJar2dex()} $jarOutPath -f -o $patchOutPath"
+        val jar2DexCMD = "${PathUtils.getJar2dex()} $jarOutPath -f -o $patchOutPath"
         Terminal.run(jar2DexCMD, null)
         FileUtils.deleteDir(workSpace)
         for (item in FileUtils.listFilesInDir("./")) {

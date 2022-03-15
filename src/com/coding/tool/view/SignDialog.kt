@@ -1,6 +1,7 @@
 package com.coding.tool.view
 
 import com.coding.tool.Proxy
+import com.coding.tool.constants.Constants
 import com.coding.tool.util.SignCfgUtil
 import com.coding.tool.util.Suffix
 import java.awt.Checkbox
@@ -33,7 +34,7 @@ object SignDialog : JDialog() {
         deleteSignBtn.addActionListener {
             val selectSign = getCurrSelectSign()
             if (selectSign.name == "defaultSign") {
-                Toast.showMsg(this,"the default signature can't be deleted！")
+                Toast.showMsg(this, "the default signature can't be deleted！")
                 return@addActionListener
             }
             SignCfgUtil.deleteSign(selectSign)
@@ -71,7 +72,8 @@ object SignDialog : JDialog() {
         pane.add(signBtn)
         pane.add(signCheckBtn)
         add(pane)
-        setSize(250, 250)
+
+        setSize(Constants.Windows_Width, Constants.Window_Height)
         setLocationRelativeTo(null)
         title = "sign"
         isVisible = true

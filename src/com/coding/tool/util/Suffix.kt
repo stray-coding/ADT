@@ -10,5 +10,6 @@ object Suffix {
     const val APK = ".apk"
     const val JAR = ".jar"
     const val DEX = ".dex"
-    const val SIGN = ".jks"
+    const val JKS = ".jks"
+    const val KEY_STORE = ".keystore"
 }

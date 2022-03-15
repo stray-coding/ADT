@@ -1,6 +1,7 @@
 package com.coding.tool.view
 
 import com.coding.tool.Proxy
+import com.coding.tool.constants.Constants
 import com.coding.tool.util.Suffix
 import javax.swing.*
 
@@ -59,7 +60,7 @@ object PatchDialog : JDialog() {
 
         pane.add(generateBtn)
         add(pane)
-        setSize(250, 250)
+        setSize(Constants.Windows_Width, Constants.Window_Height)
         setLocationRelativeTo(null)
         title = "generate patch"
         isVisible = true

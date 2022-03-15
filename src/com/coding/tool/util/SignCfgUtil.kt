@@ -26,8 +26,8 @@ object SignCfgUtil {
 
     fun initSignXml() {
         if (!FileUtils.isFileExists(SIGN_PATH)) {
-            FileUtils.copyFile(ToolFilePath.getSignConfigXml(), SIGN_PATH)
-            addSign(SignConfig("defaultSign", ToolFilePath.getDefaultSignFile(), "aa887887", "stray-coding", "aa887887"))
+            FileUtils.copyFile(PathUtils.getSignConfigXml(), SIGN_PATH)
+            addSign(SignConfig("defaultSign", PathUtils.getDefaultSignFile(), "aa887887", "stray-coding", "aa887887"))
         }
     }
 

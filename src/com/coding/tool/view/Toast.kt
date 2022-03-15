@@ -1,6 +1,5 @@
 package com.coding.tool.view
 
-import com.coding.tool.view.MainWindow
 import java.awt.Component
 import javax.swing.JOptionPane
 
