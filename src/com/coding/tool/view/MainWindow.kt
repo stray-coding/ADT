@@ -26,7 +26,7 @@ class MainWindow private constructor() : JFrame() {
     }
 
     init {
-        title = "decompile tools"
+        title = "android decompile tool"
         val jadxBtn = JButton("jadx")
         jadxBtn.addActionListener {
             Proxy.openJadx()
@@ -103,9 +103,9 @@ class MainWindow private constructor() : JFrame() {
         val helpItem = JMenuItem("help")
         authorItem.addActionListener {
             if (Terminal.isWindows()) {
-                Terminal.run("explorer https://github.com/stray-coding/decompile_tool")
+                Terminal.run("explorer ${Constants.Author_Url}")
             } else {
-                Terminal.run("open https://github.com/stray-coding/decompile_tool")
+                Terminal.run("open ${Constants.Author_Url}")
             }
         }
         helpItem.addActionListener {

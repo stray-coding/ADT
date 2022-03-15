@@ -76,8 +76,15 @@ class FileChooser private constructor(parent: Component, mode: Int, title: Strin
         }
 
         override fun getDescription(): String {
-            return if (suffixArray.isEmpty()) "all files or dir" else suffixArray.toString()
+            return if (suffixArray.isEmpty()) {
+                "all files or dir"
+            } else {
+                var des = ""
+                for (item in suffixArray) {
+                    des += "$item"
+                }
+                des
+            }
         }
     }
-
 }
