@@ -7,5 +7,5 @@
 
 # Instructions
 Please make sure your PC contains java environment and environment variables have been configured
-Download release/decompile_tool.zip in the release, and unzip it to a local directory
+Download release/android_decompile_tool.zip in the release, and unzip it to a local directory
 
