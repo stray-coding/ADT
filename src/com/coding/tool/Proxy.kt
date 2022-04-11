@@ -34,7 +34,7 @@ object Proxy {
         val dexStr = if (ignoreDex) "-s" else ""
         val srcStr = if (ignoreSrc) "-r" else ""
         val outPath = apkPath.substring(0, apkPath.length - 4)
-        val cmd = "java -jar ${PathUtils.getApkTool()} d $apkPath $dexStr $srcStr -f -o $outPath"
+        val cmd = "${PathUtils.getJava()} -jar ${PathUtils.getApkTool()} d $apkPath $dexStr $srcStr -f -o $outPath"
         Terminal.run(cmd)
     }
 
@@ -81,7 +81,7 @@ object Proxy {
     fun backToApk(srcDir: String) {
         if (srcDir.isEmpty()) return
         val outPath = "${srcDir}_btc.apk"
-        val cmd = "java -jar ${PathUtils.getApkTool()} b $srcDir -f -o $outPath"
+        val cmd = "${PathUtils.getJava()} -jar ${PathUtils.getApkTool()} b $srcDir -f -o $outPath"
         Terminal.run(cmd)
     }
 
@@ -98,7 +98,7 @@ object Proxy {
         if (apkPath.isEmpty()) return false
         if (!apkPath.endsWith(Suffix.APK)) return false
         val finalApkName = apkPath.substring(0, apkPath.length - 4) + "_signed.apk"
-        val cmd = "java -jar ${PathUtils.getApkSigner()} sign " +
+        val cmd = "${PathUtils.getJava()} -jar ${PathUtils.getApkSigner()} sign " +
                 "--ks ${signConfig.path} " +
                 "--ks-key-alias ${signConfig.alias} " +
                 "--ks-pass pass:${signConfig.pwd} " +
@@ -126,7 +126,7 @@ object Proxy {
      * get apk signature information
      * */
     fun verifyApkSign(apkPath: String) {
-        val cmd = "java -jar ${PathUtils.getApkSigner()} verify -v $apkPath"
+        val cmd = "${PathUtils.getJava()} -jar ${PathUtils.getApkSigner()} verify -v $apkPath"
         Terminal.run(cmd)
     }
 

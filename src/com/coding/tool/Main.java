@@ -10,6 +10,6 @@ import com.coding.tool.view.MainWindow;
  */
 public class Main {
     public static void main(String[] arg) {
-        MainWindow.Companion.getInstance();
+        MainWindow.Companion.getInstance().setVisible(true);
     }
 }
