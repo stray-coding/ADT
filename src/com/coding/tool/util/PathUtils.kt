@@ -37,7 +37,7 @@ object PathUtils {
     }
 
     fun getApkTool(): String {
-        val file = File("${TOOLS}${File.separator}apktool-2.4.1.jar")
+        val file = File("${TOOLS}${File.separator}apktool_2.6.1.jar")
         return file.absolutePath
     }
 

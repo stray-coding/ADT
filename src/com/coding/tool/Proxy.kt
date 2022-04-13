@@ -34,7 +34,7 @@ object Proxy {
         val dexStr = if (ignoreDex) "-s" else ""
         val srcStr = if (ignoreSrc) "-r" else ""
         val outPath = apkPath.substring(0, apkPath.length - 4)
-        val cmd = "${PathUtils.getJava()} -jar ${PathUtils.getApkTool()} d $apkPath $dexStr $srcStr -f -o $outPath"
+        val cmd = "${PathUtils.getJava()} -jar ${PathUtils.getApkTool()} d $apkPath $dexStr $srcStr -f -o $outPath --only-main-classes"
         Terminal.run(cmd)
     }
 
