@@ -15,7 +15,9 @@ import javax.swing.filechooser.FileSystemView
 class FileChooser private constructor(parent: Component, mode: Int, title: String, filterArray: Array<String>, onSelectListener: OnSelectListener) :
         JFileChooser() {
 
+
     companion object {
+        private var path = FileSystemView.getFileSystemView().homeDirectory
         fun newInstance(mode: Int, title: String, onSelectListener: OnSelectListener) {
             FileChooser(MainWindow.getInstance(), mode, title, arrayOf(""), onSelectListener)
         }
@@ -39,7 +41,7 @@ class FileChooser private constructor(parent: Component, mode: Int, title: Strin
 
     init {
         fileSelectionMode = mode
-        currentDirectory = FileSystemView.getFileSystemView().homeDirectory
+        currentDirectory = path
         fileFilter = MyFileFilter(filterArray)
         showDialog(parent, title)
         selectedFile?.let {
@@ -48,6 +50,7 @@ class FileChooser private constructor(parent: Component, mode: Int, title: Strin
             } else if (it.isFile) {
                 println("file:${it.absolutePath}")
             }
+            path = it.parentFile
             onSelectListener.onSelected(it.absolutePath)
         }
     }
