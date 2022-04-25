@@ -33,8 +33,9 @@ object Proxy {
         if (!apkPath.endsWith(Suffix.APK)) return
         val dexStr = if (ignoreDex) "-s" else ""
         val srcStr = if (ignoreSrc) "-r" else ""
+        val onlyMainClasses = if(ignoreDex) "" else "-only-main-classes"
         val outPath = apkPath.substring(0, apkPath.length - 4)
-        val cmd = "${PathUtils.getJava()} -jar ${PathUtils.getApkTool()} d $apkPath $dexStr $srcStr -f -o $outPath --only-main-classes"
+        val cmd = "${PathUtils.getJava()} -jar ${PathUtils.getApkTool()} d $apkPath $dexStr $onlyMainClasses $srcStr -f -o $outPath"
         Terminal.run(cmd)
     }
 
