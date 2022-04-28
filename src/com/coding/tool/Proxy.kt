@@ -25,15 +25,15 @@ object Proxy {
      * decompile apk file
      * */
     fun decompile(
-        apkPath: String,
-        ignoreDex: Boolean,
-        ignoreSrc: Boolean
+            apkPath: String,
+            ignoreDex: Boolean,
+            ignoreSrc: Boolean
     ) {
         if (apkPath.isEmpty()) return
         if (!apkPath.endsWith(Suffix.APK)) return
         val dexStr = if (ignoreDex) "-s" else ""
         val srcStr = if (ignoreSrc) "-r" else ""
-        val onlyMainClasses = if(ignoreDex) "" else "-only-main-classes"
+        val onlyMainClasses = if (ignoreDex) "" else "-only-main-classes"
         val outPath = apkPath.substring(0, apkPath.length - 4)
         val cmd = "${PathUtils.getJava()} -jar ${PathUtils.getApkTool()} d $apkPath $dexStr $onlyMainClasses $srcStr -f -o $outPath"
         Terminal.run(cmd)
@@ -91,10 +91,12 @@ object Proxy {
      * sign the apk
      * */
     fun apkSign(
-        apkPath: String,
-        signConfig: SignCfgUtil.SignConfig,
-        v1Enable: Boolean,
-        v2Enable: Boolean
+            apkPath: String,
+            signConfig: SignCfgUtil.SignConfig,
+            v1Enable: Boolean,
+            v2Enable: Boolean,
+            v3Enable: Boolean = false,
+            v4Enable: Boolean = false
     ): Boolean {
         if (apkPath.isEmpty()) return false
         if (!apkPath.endsWith(Suffix.APK)) return false
@@ -106,6 +108,8 @@ object Proxy {
                 "--key-pass pass:${signConfig.aliasPwd} " +
                 "--v1-signing-enabled $v1Enable " +
                 "--v2-signing-enabled $v2Enable " +
+                "--v3-signing-enabled $v3Enable " +
+                "--v4-signing-enabled $v4Enable " +
                 "-v --out $finalApkName $apkPath"
         var success = false
         Terminal.run(cmd, object : Terminal.OnResultCallback {

@@ -21,6 +21,8 @@ object SignDialog : JDialog() {
 
         val v1Cb = Checkbox("v1", true)
         val v2Cb = Checkbox("v2", true)
+        val v3Cb = Checkbox("v3", false)
+        val v4Cb = Checkbox("v4", false)
 
         val nameList = DefaultComboBoxModel<String>()
         for (item in SignCfgUtil.getSignList()) {
@@ -48,7 +50,12 @@ object SignDialog : JDialog() {
         signBtn.addActionListener {
             FileChooser.newInstance(this, JFileChooser.FILES_ONLY, "apk sign", Suffix.APK, object : FileChooser.OnSelectListener {
                 override fun onSelected(path: String) {
-                    Proxy.apkSign(path, getCurrSelectSign(), v1Enable = v1Cb.state, v2Enable = v2Cb.state)
+                    Proxy.apkSign(path, getCurrSelectSign(),
+                            v1Enable = v1Cb.state,
+                            v2Enable = v2Cb.state,
+                            v3Enable = v3Cb.state,
+                            v4Enable = v4Cb.state
+                    )
                 }
             })
         }
@@ -69,6 +76,8 @@ object SignDialog : JDialog() {
 
         pane.add(v1Cb)
         pane.add(v2Cb)
+        pane.add(v3Cb)
+        pane.add(v4Cb)
         pane.add(signBtn)
         pane.add(signCheckBtn)
         add(pane)
