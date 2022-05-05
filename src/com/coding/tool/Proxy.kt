@@ -101,6 +101,9 @@ object Proxy {
         if (apkPath.isEmpty()) return false
         if (!apkPath.endsWith(Suffix.APK)) return false
         val finalApkName = apkPath.substring(0, apkPath.length - 4) + "_signed.apk"
+        val v3EnableStr = if (v3Enable) "--v3-signing-enabled true " else ""
+        val v4EnableStr = if (v4Enable) "--v4-signing-enabled true " else ""
+
         val cmd = "${PathUtils.getJava()} -jar ${PathUtils.getApkSigner()} sign " +
                 "--ks ${signConfig.path} " +
                 "--ks-key-alias ${signConfig.alias} " +
@@ -108,8 +111,8 @@ object Proxy {
                 "--key-pass pass:${signConfig.aliasPwd} " +
                 "--v1-signing-enabled $v1Enable " +
                 "--v2-signing-enabled $v2Enable " +
-                "--v3-signing-enabled $v3Enable " +
-                "--v4-signing-enabled $v4Enable " +
+                "$v3EnableStr " +
+                "$v4EnableStr " +
                 "-v --out $finalApkName $apkPath"
         var success = false
         Terminal.run(cmd, object : Terminal.OnResultCallback {
@@ -157,6 +160,30 @@ object Proxy {
 
         })
         return success
+    }
+
+    fun aab2Apks(aabPath: String, sign: SignCfgUtil.SignConfig) {
+        if (aabPath.isEmpty()) return
+        if (!aabPath.endsWith(Suffix.AAB)) return
+        val outPath = aabPath.substring(0, aabPath.lastIndexOf('.')) + ".apks"
+        val cmd = "java -jar ${PathUtils.getBundleTool()} build-apks " +
+                "--bundle=${aabPath} " +
+                "--output=${outPath} " +
+                "--ks=${sign.path} " +
+                "--ks-pass pass:${sign.pwd} " +
+                "--ks-key-alias=${sign.alias} " +
+                "--key-pass pass:${sign.aliasPwd}"
+        Terminal.run(cmd, object : Terminal.OnResultCallback {
+            override fun onStdout(msg: String) {
+
+            }
+
+            override fun onStdErr(err: String) {
+
+            }
+
+        })
+        return
     }
 
     /**

@@ -32,12 +32,12 @@ object PathUtils {
     }
 
     fun getApkSigner(): String {
-        val file = File("${TOOLS}${File.separator}apksigner.jar")
+        val file = File(TOOLS, "apksigner.jar")
         return file.absolutePath
     }
 
     fun getApkTool(): String {
-        val file = File("${TOOLS}${File.separator}apktool_2.6.1.jar")
+        val file = File(TOOLS, "apktool_2.6.1.jar")
         return file.absolutePath
     }
 
@@ -51,9 +51,9 @@ object PathUtils {
 
     fun getZipalign(): String {
         val file = if (Terminal.isWindows())
-            File("${TOOLS}${File.separator}zipalign.exe")
+            File(TOOLS, "zipalign.exe")
         else
-            File("${TOOLS}${File.separator}zipalign")
+            File(TOOLS, "zipalign")
         return file.absolutePath
     }
 
@@ -65,22 +65,27 @@ object PathUtils {
         return file.absolutePath
     }
 
+    fun getBundleTool():String {
+        val file = File(TOOLS, "bundletool-all-1.10.0.jar")
+        return file.absolutePath
+    }
+
     fun getDex2jar(): String {
         val file = if (Terminal.isWindows()) {
-            File("${TOOLS}${File.separator}dex2jar-2.0${File.separator}d2j-dex2jar.bat")
+            File(TOOLS, "dex2jar-2.0${File.separator}d2j-dex2jar.bat")
         } else {
-            File("${TOOLS}${File.separator}dex2jar-2.0${File.separator}d2j-dex2jar.sh")
+            File(TOOLS, "dex2jar-2.0${File.separator}d2j-dex2jar.sh")
         }
         return file.absolutePath
     }
 
     fun getDefaultSignFile(): String {
-        val file = File("${TOOLS}${File.separator}stray-coding.jks")
+        val file = File(TOOLS, "stray-coding.jks")
         return file.absolutePath
     }
 
     fun getSignConfigXml(): String {
-        val file = File("${TOOLS}${File.separator}sign_config.xml")
+        val file = File(TOOLS, "sign_config.xml")
         return file.absolutePath
     }
 }

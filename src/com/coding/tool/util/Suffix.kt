@@ -7,6 +7,7 @@ package com.coding.tool.util
  * @des:
  */
 object Suffix {
+    const val AAB = ".aab"
     const val APK = ".apk"
     const val JAR = ".jar"
     const val DEX = ".dex"

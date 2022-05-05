@@ -75,6 +75,12 @@ class MainWindow private constructor() : JFrame() {
                 }
             })
         }
+
+        val aab2ApksBtn = JButton("aab2Apks")
+        aab2ApksBtn.addActionListener {
+            Aab2ApksDialog.showDialog()
+        }
+
         val generateBtn = JButton("patch")
         generateBtn.addActionListener {
             PatchDialog.showDialog()
@@ -91,6 +97,7 @@ class MainWindow private constructor() : JFrame() {
         add(jar2dexBtn)
         add(backToCompileBtn)
         add(alignBtn)
+        add(aab2ApksBtn)
         add(signBtn)
         add(generateBtn)
         isVisible = true
