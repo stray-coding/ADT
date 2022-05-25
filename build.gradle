@@ -1,0 +1,52 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.guardsquare:proguard-gradle:7.1.1'
+    }
+}
+
+
+plugins {
+    id 'java'
+    id 'application'
+
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+}
+
+//sourceSets {
+//    main {
+//        java {
+//            srcDir 'src' // 指定源码目录
+//        }
+//        resources {
+//            srcDir 'src' //资源目录
+//        }
+//    }
+//}
+//
+//jar {
+//    manifest {
+//        attributes(
+//                "Manifest-Version": "0.5.0",
+//                "Copyright": "Chengdu, SDK Studio, Hero® ",
+//                'Built-By': System.properties['user.name'],
+//                'Build-Timestamp': new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
+//                'Build-Revision': versioning.info.commit,
+//                'Created-By': "Gradle ${gradle.gradleVersion}",
+//                'Build-OS': "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}",
+//        )
+//        attributes["Main-Class"] = application.mainClass
+//    }
+//}

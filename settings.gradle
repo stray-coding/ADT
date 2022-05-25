@@ -1,0 +1,5 @@
+rootProject.name = 'ADT'
+include 'main'
+include 'dec'
+include 'ui'
+include 'utils'
