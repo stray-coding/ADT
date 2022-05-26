@@ -1,8 +1,8 @@
 package com.coding.ui
 
 import com.coding.dec.SignCfgUtil
-import com.coding.dec.utils.PathUtils
 import com.coding.dec.utils.Suffix
+import com.coding.dec.utils.Tools
 import com.coding.tool.constants.Constants
 import com.coding.utils.FileUtils
 import java.io.File
@@ -46,7 +46,7 @@ object AddSignDialog : JDialog() {
                         name = path.substring(path.lastIndexOf(File.separator) + 1, path.lastIndexOf('.'))
                         //保存签名文件的路径
                         val savePath =
-                            PathUtils.getConfigDir() + File.separator + path.substring(path.lastIndexOf(File.separator) + 1)
+                            Tools.getConfigDir() + File.separator + path.substring(path.lastIndexOf(File.separator) + 1)
                         FileUtils.copyFile(path, savePath)
                         val sign = SignCfgUtil.SignConfig(name, savePath, jksPwdTv.text, keyAliasTv.text, keyPwdTv.text)
                         SignCfgUtil.addSign(sign)

@@ -1,15 +1,11 @@
 package com.coding.dec
 
-import com.coding.dec.utils.PathUtils
+import com.coding.dec.utils.Tools
 import com.coding.utils.FileUtils
-import org.w3c.dom.Document
+import com.coding.utils.XmlUtils
 import org.w3c.dom.Element
 import java.io.File
 import javax.xml.parsers.DocumentBuilderFactory
-import javax.xml.transform.OutputKeys
-import javax.xml.transform.TransformerFactory
-import javax.xml.transform.dom.DOMSource
-import javax.xml.transform.stream.StreamResult
 
 /**
  * @author: Coding.He
@@ -28,8 +24,8 @@ object SignCfgUtil {
 
     fun initSignXml() {
         if (!FileUtils.isFileExists(SIGN_PATH)) {
-            FileUtils.copyFile(PathUtils.getSignConfigXml(), SIGN_PATH)
-            addSign(SignConfig("adt", PathUtils.getDefaultSignFile(), "adt123", "adt", "adt123"))
+            FileUtils.copyFile(Tools.getSignConfigXml(), SIGN_PATH)
+            addSign(SignConfig("adt", Tools.getDefaultSignFile(), "adt123", "adt", "adt123"))
         }
     }
 
@@ -38,11 +34,8 @@ object SignCfgUtil {
         if (!FileUtils.isFileExists(SIGN_PATH))
             return signConfigs
         try {
-            val factory = DocumentBuilderFactory.newInstance()
-            val builder = factory.newDocumentBuilder()
-
-            val doc = builder.parse(File(SIGN_PATH))
-            val signs = doc.getElementsByTagName(TAG_SIGN)
+            val doc = XmlUtils.parse(SIGN_PATH)
+            val signs = doc!!.getElementsByTagName(TAG_SIGN)
             for (i in 0 until signs.length) {
                 val element = signs.item(i) as Element
                 val sign = SignConfig.transform(element)
@@ -56,10 +49,8 @@ object SignCfgUtil {
 
     fun addSign(config: SignConfig) {
         try {
-            val factory = DocumentBuilderFactory.newInstance()
-            val builder = factory.newDocumentBuilder()
-            val doc = builder.parse(File(SIGN_PATH))
-            val signList = doc.getElementsByTagName(TAG_SIGN)
+            val doc = XmlUtils.parse(SIGN_PATH)
+            val signList = doc!!.getElementsByTagName(TAG_SIGN)
             for (i in 0 until signList.length) {
                 val element = signList.item(i) as Element
                 if (element.getAttribute("name") == config.name) {
@@ -67,7 +58,7 @@ object SignCfgUtil {
                     element.setAttribute("ks-pass", config.pwd)
                     element.setAttribute("key-alias", config.alias)
                     element.setAttribute("key-pass", config.aliasPwd)
-                    saveXml(doc, SIGN_PATH)
+                    XmlUtils.saveXml(doc, SIGN_PATH)
                     return
                 }
             }
@@ -80,7 +71,7 @@ object SignCfgUtil {
             element.setAttribute("key-pass", config.aliasPwd)
             val signs = doc.getElementsByTagName("signs").item(0)
             signs.insertBefore(element, null)
-            saveXml(doc, SIGN_PATH)
+            XmlUtils.saveXml(doc, SIGN_PATH)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -98,7 +89,7 @@ object SignCfgUtil {
                 if (element.getAttribute("name") == config.name) {
                     val signs = doc.getElementsByTagName("signs").item(0)
                     signs.removeChild(element)
-                    saveXml(doc, SIGN_PATH)
+                    XmlUtils.saveXml(doc, SIGN_PATH)
                     return
                 }
             }
@@ -107,18 +98,14 @@ object SignCfgUtil {
         }
     }
 
-    private fun saveXml(doc: Document, outPath: String) {
-        val transFactory = TransformerFactory.newInstance()
-        val transformer = transFactory.newTransformer()
-        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8")
-        transformer.setOutputProperty(OutputKeys.STANDALONE, "yes")
-        transformer.setOutputProperty(OutputKeys.VERSION, "1.0")
-        val xmlSource = DOMSource(doc)
-        val outputTag = StreamResult(outPath)
-        transformer.transform(xmlSource, outputTag)
-    }
 
-    class SignConfig(var name: String = "", var path: String = "", var pwd: String = "", var alias: String = "", var aliasPwd: String = "") {
+    class SignConfig(
+        var name: String = "",
+        var path: String = "",
+        var pwd: String = "",
+        var alias: String = "",
+        var aliasPwd: String = ""
+    ) {
         private constructor() : this("", "", "", "", "")
 
         companion object {

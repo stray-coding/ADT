@@ -9,8 +9,9 @@ import java.io.File
  * @emil: stray-coding@foxmail.com
  * @des:
  */
-object PathUtils {
+object Tools {
     private const val TOOLS = "tools"
+
     private const val CONFIG = "config"
     fun getJava(): String {
         return "java"

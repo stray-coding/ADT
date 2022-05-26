@@ -1,10 +1,8 @@
 package com.coding.dec
 
-import com.coding.dec.utils.PathUtils
 import com.coding.dec.utils.Suffix
-import com.coding.utils.FileUtils
-import com.coding.utils.Terminal
-import com.coding.utils.ZipUtils
+import com.coding.dec.utils.Tools
+import com.coding.utils.*
 import java.io.File
 
 /**
@@ -19,85 +17,75 @@ object ADT {
      * */
     fun openJadx() {
         if (Terminal.isWindows()) {
-            Terminal.run(PathUtils.getJadx())
+            Terminal.run(Tools.getJadx())
         } else {
-            Terminal.run("open ${PathUtils.getJadx()}")
+            Terminal.run("open ${Tools.getJadx()}")
         }
     }
 
     /**
      * decompile apk file
      * */
-    fun decompile(
-        apkPath: String,
-        ignoreDex: Boolean,
-        ignoreSrc: Boolean,
-        outPath: String = ""
-    ) {
-        if (apkPath.isEmpty()) return
-        if (!apkPath.endsWith(Suffix.APK)) return
-        val dexStr = if (ignoreDex) "-s" else ""
-        val srcStr = if (ignoreSrc) "-r" else ""
-        val onlyMainClasses = if (ignoreDex) "" else "-only-main-classes"
-        val newOutPath = outPath.ifEmpty {
-            apkPath.substring(0, apkPath.length - 4)
-        }
+    fun decompile(apkPath: String, ignoreDex: Boolean, ignoreRes: Boolean, outPath: String = ""): Boolean {
+        if (!apkPath.isFilePathValid(Suffix.APK)) return false
+        val srcStr = if (ignoreDex) "-s" else ""
+        val resStr = if (ignoreRes) "-r" else ""
+        val omc = if (ignoreDex) "" else "-only-main-classes"
+        val finalOutPath = outPath.ifEmpty { apkPath.removeSuffix(Suffix.APK) }
         val cmd =
-            "${PathUtils.getJava()} -jar ${PathUtils.getApkTool()} d $apkPath $dexStr $onlyMainClasses $srcStr -f -o $newOutPath"
-        Terminal.run(cmd)
+            "${Tools.getJava()} -jar ${Tools.getApkTool()} d $apkPath $srcStr $omc $resStr -f -o $finalOutPath"
+        return Terminal.run(cmd) == 0
     }
 
     /**
      * dex2jar
      * convert dex file to jar file
      * */
-    fun dex2jar(dexPath: String, outPath: String = "") {
-        if (dexPath.isEmpty()) return
-        if (!dexPath.endsWith(Suffix.DEX)) return
-        if (!Terminal.isWindows()) Terminal.run("chmod u+x ${PathUtils.getDex2jar()}", null)
-        val newOutPath = outPath.ifEmpty {
+    fun dex2jar(dexPath: String, outPath: String = ""): Boolean {
+        if (!dexPath.isFilePathValid(Suffix.DEX)) return false
+        if (!Terminal.isWindows()) Terminal.run("chmod u+x ${Tools.getDex2jar()}", null)
+        val finalOutPath = outPath.ifEmpty {
             dexPath.substring(0, dexPath.lastIndexOf('.')) + "_d2j.jar"
         }
-        val cmd = "${PathUtils.getDex2jar()} $dexPath -f -o $newOutPath"
-        Terminal.run(cmd, null)
+        val cmd = "${Tools.getDex2jar()} $dexPath -f -o $finalOutPath"
+        val code = Terminal.run(cmd)
         for (item in FileUtils.listFilesInDir("./")) {
             if (item.name.contains("-error.zip")) {
                 item.delete()
             }
         }
+        return code == 0
     }
 
     /**
      * jar2dex
      * convert jar file to dex file
      * */
-    fun jar2dex(jarPath: String, outPath: String = "") {
-        if (jarPath.isEmpty()) return
-        if (!jarPath.endsWith(Suffix.JAR)) return
-        if (!Terminal.isWindows()) Terminal.run("chmod u+x ${PathUtils.getJar2dex()}", null)
-        val newOutPath = outPath.ifEmpty {
-            jarPath.substring(0, jarPath.lastIndexOf('.')) + "_j2d.dex"
+    fun jar2dex(jarPath: String, outPath: String = ""): Boolean {
+        if (!jarPath.isFilePathValid(Suffix.JAR)) return false
+        if (!Terminal.isWindows()) Terminal.run("chmod u+x ${Tools.getJar2dex()}", null)
+        val finalOutPath = outPath.ifEmpty {
+            jarPath.substring(0, jarPath.indexOf(Suffix.JAR)) + "_j2d.dex"
         }
-        val cmd = "${PathUtils.getJar2dex()} $jarPath -f -o $newOutPath"
-        Terminal.run(cmd, null)
+        val cmd = "${Tools.getJar2dex()} $jarPath -f -o $finalOutPath"
+        val code = Terminal.run(cmd, null)
         for (item in FileUtils.listFilesInDir("./")) {
             if (item.name.contains("-error.zip")) {
                 item.delete()
             }
         }
+        return code == 0
     }
 
     /**
      * back to apk
      * convert dex and resource to apk file
      * */
-    fun backToApk(srcDir: String, outPath: String = "") {
-        if (srcDir.isEmpty()) return
-        val newOutPath = outPath.ifEmpty {
-            "${srcDir}_btc.apk"
-        }
-        val cmd = "${PathUtils.getJava()} -jar ${PathUtils.getApkTool()} b $srcDir -f -o $newOutPath"
-        Terminal.run(cmd)
+    fun backToApk(srcDir: String, outPath: String = ""): Boolean {
+        if (!srcDir.isDirPathValid()) return false
+        val newOutPath = outPath.ifEmpty { "${srcDir}_btc.apk" }
+        val cmd = "${Tools.getJava()} -jar ${Tools.getApkTool()} b $srcDir -f -o $newOutPath"
+        return Terminal.run(cmd) == 0
     }
 
     /**
@@ -113,15 +101,15 @@ object ADT {
         v3Enable: Boolean = false,
         v4Enable: Boolean = false
     ): Boolean {
-        if (apkPath.isEmpty()) return false
-        if (!apkPath.endsWith(Suffix.APK)) return false
+        if (!apkPath.isFilePathValid(Suffix.APK)) return false
         val newOutPath = outPath.ifEmpty {
             apkPath.substring(0, apkPath.length - 4) + "_signed.apk"
         }
         val v3EnableStr = if (v3Enable) "--v3-signing-enabled true " else ""
         val v4EnableStr = if (v4Enable) "--v4-signing-enabled true " else ""
 
-        val cmd = "${PathUtils.getJava()} -jar ${PathUtils.getApkSigner()} sign " +
+        val cmd = "${Tools.getJava()} -jar ${Tools.getApkSigner()} " +
+                "sign " +
                 "--ks ${signConfig.path} " +
                 "--ks-key-alias ${signConfig.alias} " +
                 "--ks-pass pass:${signConfig.pwd} " +
@@ -131,79 +119,46 @@ object ADT {
                 "$v3EnableStr " +
                 "$v4EnableStr " +
                 "-v --out $newOutPath $apkPath"
-        var success = false
-        Terminal.run(cmd, object : Terminal.OnResultListener {
-            override fun onStdout(msg: String) {
-                if (msg == "Signed") {
-                    success = true
-                }
-            }
 
-            override fun onStdErr(err: String) {
-                success = false
-            }
-        })
-        return success
+        return Terminal.run(cmd) == 0
     }
 
     /**
      * get apk signature information
      * */
-    fun verifyApkSign(apkPath: String) {
-        val cmd = "${PathUtils.getJava()} -jar ${PathUtils.getApkSigner()} verify -v $apkPath"
-        Terminal.run(cmd)
+    fun verifyApkSign(apkPath: String): Boolean {
+        if (!apkPath.isFilePathValid(Suffix.APK)) return false
+        val cmd = "${Tools.getJava()} -jar ${Tools.getApkSigner()} verify -v $apkPath"
+        return Terminal.run(cmd) == 0
     }
 
     /**
      * perform 4-byte alignment operations on apk
      * */
     fun alignApk(apkPath: String, outPath: String = ""): Boolean {
-        if (apkPath.isEmpty()) return false
-        if (!apkPath.endsWith(Suffix.APK)) return false
+        if (!apkPath.isFilePathValid(Suffix.APK)) return false
         val newOutPath = outPath.ifEmpty {
             apkPath.substring(0, apkPath.lastIndexOf('.')) + "_aligned.apk"
         }
-        val cmd = "${PathUtils.getZipalign()} -f -v 4 $apkPath $newOutPath"
-        var success = false
-        Terminal.run(cmd, object : Terminal.OnResultListener {
-            override fun onStdout(msg: String) {
-                if (msg == ("Verification succesful")) {
-                    success = true
-                }
-            }
-
-            override fun onStdErr(err: String) {
-                success = false
-            }
-
-        })
-        return success
+        val cmd = "${Tools.getZipalign()} -f -v 4 $apkPath $newOutPath"
+        return Terminal.run(cmd) == 0
     }
 
-    fun aab2Apks(aabPath: String, sign: SignCfgUtil.SignConfig, outPath: String = "") {
-        if (aabPath.isEmpty()) return
-        if (!aabPath.endsWith(Suffix.AAB)) return
+    fun aab2Apks(aabPath: String, sign: SignCfgUtil.SignConfig, outPath: String = ""): Boolean {
+        if (!aabPath.isFilePathValid(Suffix.AAB)) return false
         val newOutPath = outPath.ifEmpty {
             aabPath.substring(0, aabPath.lastIndexOf('.')) + ".apks"
         }
-        val cmd = "java -jar ${PathUtils.getBundleTool()} build-apks " +
+        val cmd = "java -jar ${Tools.getBundleTool()} " +
+                "build-apks " +
                 "--bundle=${aabPath} " +
                 "--output=${newOutPath} " +
                 "--ks=${sign.path} " +
                 "--ks-pass pass:${sign.pwd} " +
                 "--ks-key-alias=${sign.alias} " +
                 "--key-pass pass:${sign.aliasPwd}"
-        Terminal.run(cmd, object : Terminal.OnResultListener {
-            override fun onStdout(msg: String) {
 
-            }
-
-            override fun onStdErr(err: String) {
-
-            }
-
-        })
-        return
+        return Terminal.run(cmd) == 0
     }
 
     /**
@@ -228,8 +183,8 @@ object ADT {
         println("convert dex to jar")
         val jarOfOldDexPath = "$workSpace${File.separator}old.jar"
         val jarOfNewDexPath = "$workSpace${File.separator}new.jar"
-        Terminal.run("${PathUtils.getDex2jar()} $oldDexWorkspace -f -o $jarOfOldDexPath")
-        Terminal.run("${PathUtils.getDex2jar()} $newDexWorkspace -f -o $jarOfNewDexPath")
+        Terminal.run("${Tools.getDex2jar()} $oldDexWorkspace -f -o $jarOfOldDexPath")
+        Terminal.run("${Tools.getDex2jar()} $newDexWorkspace -f -o $jarOfNewDexPath")
 
         println("unzip the jar file")
         val jarOfOldDexDir = "$workSpace${File.separator}old"
@@ -267,7 +222,7 @@ object ADT {
 
         println("convert patch.jar to patch.dex.")
         val patchOutPath = "$outputDir${File.separator}patch.dex"
-        val jar2DexCMD = "${PathUtils.getJar2dex()} $jarOutPath -f -o $patchOutPath"
+        val jar2DexCMD = "${Tools.getJar2dex()} $jarOutPath -f -o $patchOutPath"
         Terminal.run(jar2DexCMD, null)
         FileUtils.deleteDir(workSpace)
         for (item in FileUtils.listFilesInDir("./")) {
@@ -277,4 +232,6 @@ object ADT {
         }
         println("patch generate success,patch path:$patchOutPath")
     }
+
+
 }

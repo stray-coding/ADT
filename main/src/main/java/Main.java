@@ -1,8 +1,8 @@
-import com.coding.ui.MainWindow;
+import com.coding.utils.Terminal;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("asdasdasd");
-        MainWindow.Companion.getInstance().setVisible(true);
+        System.out.println("run code:" + Terminal.INSTANCE.run("java -version"));
+//        MainWindow.Companion.getInstance().setVisible(true);
     }
 }
