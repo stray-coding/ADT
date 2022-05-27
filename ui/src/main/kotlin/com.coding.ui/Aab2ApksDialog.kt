@@ -1,9 +1,10 @@
 package com.coding.ui
 
 import com.coding.dec.ADT
-import com.coding.dec.SignCfgUtil
+import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
 import com.coding.tool.constants.Constants
+import java.awt.Checkbox
 import javax.swing.*
 
 
@@ -17,9 +18,9 @@ object Aab2ApksDialog : JDialog() {
 
     init {
         val pane = JPanel()
-
+        val universalCb = Checkbox("universal", false)
         val nameList = DefaultComboBoxModel<String>()
-        for (item in SignCfgUtil.getSignList()) {
+        for (item in SignUtils.getSignList()) {
             nameList.addElement(item.name)
         }
 
@@ -29,22 +30,23 @@ object Aab2ApksDialog : JDialog() {
         aab2apks.addActionListener {
             FileChooser.newInstance(
                 JFileChooser.FILES_ONLY,
-                "align aab",
+                "choose aab",
                 Suffix.AAB,
                 object : FileChooser.OnSelectListener {
                     override fun onSelected(path: String) {
-                        ADT.aab2Apks(path, getCurrSelectSign())
+                        ADT.aab2Apks(path, getCurrSelectSign(), universal = universalCb.state)
                     }
                 })
         }
 
+        pane.add(universalCb)
         pane.add(signListJCb)
         pane.add(aab2apks)
         add(pane)
 
         setSize(Constants.Windows_Width, Constants.Window_Height)
         setLocationRelativeTo(null)
-        title = "sign"
+        title = "aab2apks"
         isVisible = true
         isResizable = false
     }
@@ -53,12 +55,12 @@ object Aab2ApksDialog : JDialog() {
         isVisible = true
     }
 
-    fun getCurrSelectSign(): SignCfgUtil.SignConfig {
-        for (item in SignCfgUtil.getSignList()) {
+    fun getCurrSelectSign(): SignUtils.SignBean {
+        for (item in SignUtils.getSignList()) {
             if (signListJCb.selectedItem == item.name) {
                 return item
             }
         }
-        return SignCfgUtil.SignConfig()
+        return SignUtils.SignBean()
     }
 }

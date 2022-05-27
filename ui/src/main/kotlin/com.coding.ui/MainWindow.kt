@@ -1,7 +1,7 @@
 package com.coding.ui
 
 import com.coding.dec.ADT
-import com.coding.dec.SignCfgUtil
+import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
 import com.coding.tool.constants.Constants
 import com.coding.utils.Terminal
@@ -20,7 +20,7 @@ class MainWindow private constructor() : JFrame() {
     companion object {
         private val mainWindow = MainWindow()
         fun getInstance(): MainWindow {
-            SignCfgUtil.initSignXml()
+            SignUtils.initSignXml()
             return mainWindow
         }
     }
@@ -75,18 +75,6 @@ class MainWindow private constructor() : JFrame() {
         signBtn.addActionListener {
             SignDialog.showDialog()
         }
-        val alignBtn = JButton("align")
-        alignBtn.addActionListener {
-            FileChooser.newInstance(
-                JFileChooser.FILES_ONLY,
-                "align apk",
-                Suffix.APK,
-                object : FileChooser.OnSelectListener {
-                    override fun onSelected(path: String) {
-                        ADT.alignApk(path)
-                    }
-                })
-        }
 
         val aab2ApksBtn = JButton("aab2Apks")
         aab2ApksBtn.addActionListener {
@@ -108,9 +96,8 @@ class MainWindow private constructor() : JFrame() {
         add(dex2jarBtn)
         add(jar2dexBtn)
         add(backToCompileBtn)
-        add(alignBtn)
-        add(aab2ApksBtn)
         add(signBtn)
+        add(aab2ApksBtn)
         add(generateBtn)
         isVisible = true
         isResizable = false

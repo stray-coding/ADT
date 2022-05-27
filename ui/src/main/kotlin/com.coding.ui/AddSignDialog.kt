@@ -1,6 +1,6 @@
 package com.coding.ui
 
-import com.coding.dec.SignCfgUtil
+import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
 import com.coding.dec.utils.Tools
 import com.coding.tool.constants.Constants
@@ -48,8 +48,8 @@ object AddSignDialog : JDialog() {
                         val savePath =
                             Tools.getConfigDir() + File.separator + path.substring(path.lastIndexOf(File.separator) + 1)
                         FileUtils.copyFile(path, savePath)
-                        val sign = SignCfgUtil.SignConfig(name, savePath, jksPwdTv.text, keyAliasTv.text, keyPwdTv.text)
-                        SignCfgUtil.addSign(sign)
+                        val sign = SignUtils.SignBean(name, savePath, jksPwdTv.text, keyAliasTv.text, keyPwdTv.text)
+                        SignUtils.addSign(sign)
                         SignDialog.refreshSignList()
                         isVisible = false
                     }

@@ -10,6 +10,13 @@ import javax.xml.transform.stream.StreamResult
 
 object XmlUtils {
 
+    fun newDoc(): Document {
+        val factory = DocumentBuilderFactory.newInstance()
+        val builder = factory.newDocumentBuilder()
+        return builder.newDocument()
+    }
+
+
     fun parse(xmlPath: String): Document? {
         if (!xmlPath.isFilePathValid(".xml")) return null
         val factory = DocumentBuilderFactory.newInstance()

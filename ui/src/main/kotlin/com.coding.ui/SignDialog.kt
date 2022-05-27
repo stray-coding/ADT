@@ -1,7 +1,7 @@
 package com.coding.ui
 
 import com.coding.dec.ADT
-import com.coding.dec.SignCfgUtil
+import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
 import com.coding.tool.constants.Constants
 import java.awt.Checkbox
@@ -25,7 +25,7 @@ object SignDialog : JDialog() {
         val v4Cb = Checkbox("v4", false)
 
         val nameList = DefaultComboBoxModel<String>()
-        for (item in SignCfgUtil.getSignList()) {
+        for (item in SignUtils.getSignList()) {
             nameList.addElement(item.name)
         }
 
@@ -39,7 +39,7 @@ object SignDialog : JDialog() {
                 Toast.showMsg(this, "the default signature can't be deleted！")
                 return@addActionListener
             }
-            SignCfgUtil.deleteSign(selectSign)
+            SignUtils.deleteSign(selectSign)
             refreshSignList()
         }
         val addSignBtn = JButton("add sign")
@@ -55,8 +55,9 @@ object SignDialog : JDialog() {
                 Suffix.APK,
                 object : FileChooser.OnSelectListener {
                     override fun onSelected(path: String) {
-                        ADT.apkSign(
-                            path, getCurrSelectSign(),
+                        ADT.alignAndSign(
+                            path,
+                            getCurrSelectSign(),
                             v1Enable = v1Cb.state,
                             v2Enable = v2Cb.state,
                             v3Enable = v3Cb.state,
@@ -106,18 +107,18 @@ object SignDialog : JDialog() {
 
     fun refreshSignList() {
         val nameList = DefaultComboBoxModel<String>()
-        for (item in SignCfgUtil.getSignList()) {
+        for (item in SignUtils.getSignList()) {
             nameList.addElement(item.name)
         }
         signListJCb.model = nameList
     }
 
-    fun getCurrSelectSign(): SignCfgUtil.SignConfig {
-        for (item in SignCfgUtil.getSignList()) {
+    fun getCurrSelectSign(): SignUtils.SignBean {
+        for (item in SignUtils.getSignList()) {
             if (signListJCb.selectedItem == item.name) {
                 return item
             }
         }
-        return SignCfgUtil.SignConfig()
+        return SignUtils.SignBean()
     }
 }

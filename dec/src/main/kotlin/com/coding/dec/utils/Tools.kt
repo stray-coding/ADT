@@ -86,8 +86,4 @@ object Tools {
         return file.absolutePath
     }
 
-    fun getSignConfigXml(): String {
-        val file = File(TOOLS, "sign_config.xml")
-        return file.absolutePath
-    }
 }
