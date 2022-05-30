@@ -1,6 +1,7 @@
 package com.coding.utils
 
 import org.w3c.dom.Document
+import java.io.File
 import java.io.FileInputStream
 import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.transform.OutputKeys
@@ -39,6 +40,10 @@ object XmlUtils {
         transformer.setOutputProperty(OutputKeys.VERSION, "1.0")
         val xmlSource = DOMSource(doc)
         val outputTag = StreamResult(outPath)
+        val file = File(outPath)
+        if (!file.parentFile.exists()) {
+            file.parentFile.mkdirs()
+        }
         transformer.transform(xmlSource, outputTag)
     }
 }

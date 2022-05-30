@@ -4,6 +4,7 @@ import com.coding.utils.FileUtils
 import com.coding.utils.XmlUtils
 import com.coding.utils.XmlUtils.newDoc
 import org.w3c.dom.Element
+import java.io.File
 
 /**
  * @author: Coding.He
@@ -41,7 +42,7 @@ object SignUtils {
                 default.setAttribute(SIGN_ALIAS_PWD, "adt123")
                 root.appendChild(default)
                 doc.appendChild(root)
-                XmlUtils.saveXml(doc, SIGN_CONFIG_PATH)
+                XmlUtils.saveXml(doc, File(SIGN_CONFIG_PATH).absolutePath)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

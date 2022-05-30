@@ -13,7 +13,7 @@
 
 Command line and GUI tools for producing Java source code from Android Dex and Apk files
 
-**Main features:**
+**com.coding.Main features:**
 - decompile Dalvik bytecode to java classes from APK, dex, aar and zip files
 - decode `AndroidManifest.xml` and other resources from `resources.arsc`
 - deobfuscator included

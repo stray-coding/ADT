@@ -1,3 +1,5 @@
+package com.coding;
+
 import com.coding.ui.MainWindow;
 
 public class Main {
