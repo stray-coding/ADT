@@ -28,7 +28,7 @@ dependencies {
 }
 
 
-def adtVersion = "0.0.4"
+def adtVersion = "0.0.5"
 application {
     mainClass = 'com.coding.Main'
 }
