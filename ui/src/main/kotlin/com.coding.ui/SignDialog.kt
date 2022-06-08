@@ -55,14 +55,18 @@ object SignDialog : JDialog() {
                 Suffix.APK,
                 object : FileChooser.OnSelectListener {
                     override fun onSelected(path: String) {
-                        ADT.alignAndSign(
-                            path,
-                            getCurrSelectSign(),
-                            v1Enable = v1Cb.state,
-                            v2Enable = v2Cb.state,
-                            v3Enable = v3Cb.state,
-                            v4Enable = v4Cb.state
-                        )
+                        if (v1Cb.state && !v2Cb.state && !v3Cb.state && !v4Cb.state) {
+                            ADT.signAndAlign(path, getCurrSelectSign())
+                        } else {
+                            ADT.alignAndSign(
+                                path,
+                                getCurrSelectSign(),
+                                v1Enable = v1Cb.state,
+                                v2Enable = v2Cb.state,
+                                v3Enable = v3Cb.state,
+                                v4Enable = v4Cb.state
+                            )
+                        }
                     }
                 })
         }

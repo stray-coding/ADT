@@ -17,11 +17,7 @@ object ADT {
      * open jadx-gui
      * */
     fun openJadx() {
-        if (Terminal.isWindows()) {
-            Terminal.run(Tools.getJadx())
-        } else {
-            Terminal.run("open ${Tools.getJadx()}")
-        }
+        Terminal.run(Tools.getJadx())
     }
 
     /**
@@ -88,15 +84,28 @@ object ADT {
         return Terminal.run(cmd) == 0
     }
 
+
     /**
-     * perform 4-byte alignment operations on apk
+     * jar sign
+     * sign the apk  only v1
      * */
-    private fun alignApk(apkPath: String, outPath: String = ""): Boolean {
+    private fun signApkByJarSigner(
+        apkPath: String,
+        signBean: SignUtils.SignBean,
+        outPath: String = "",
+    ): Boolean {
         if (!apkPath.isFilePathValid(Suffix.APK)) return false
         val newOutPath = outPath.ifEmpty {
-            apkPath.removeSuffix(Suffix.APK) + "_aligned.apk"
+            apkPath.removeSuffix(Suffix.APK) + "_signed.apk"
         }
-        val cmd = "${Tools.getZipalign()} -f -v 4 $apkPath $newOutPath"
+        val cmd = "jarsigner -verbose " +
+                "-keystore ${signBean.path} " +
+                "-storepass ${signBean.pwd} " +
+                "-keypass ${signBean.aliasPwd} " +
+                "-sigfile CERT " +
+                "-signedjar $newOutPath $apkPath ${signBean.alias} " +
+                "-digestalg SHA1 " +
+                "-sigalg MD5withRSA"
         return Terminal.run(cmd) == 0
     }
 
@@ -104,7 +113,7 @@ object ADT {
      * apk sign
      * sign the apk
      * */
-    private fun signApk(
+    private fun signApkByApkSigner(
         apkPath: String,
         signBean: SignUtils.SignBean,
         outPath: String = "",
@@ -120,14 +129,59 @@ object ADT {
         val v3EnableStr = if (v3Enable) "--v3-signing-enabled true " else ""
         val v4EnableStr = if (v4Enable) "--v4-signing-enabled true " else ""
 
-        val cmd =
-            "${Tools.getJava()} -jar ${Tools.getApkSigner()} " + "sign " + "--ks ${signBean.path} " + "--ks-key-alias ${signBean.alias} " + "--ks-pass pass:${signBean.pwd} " + "--key-pass pass:${signBean.aliasPwd} " + "--v1-signing-enabled $v1Enable " + "--v2-signing-enabled $v2Enable " + "$v3EnableStr " + "$v4EnableStr " + "-v --out $newOutPath $apkPath"
+        val cmd = "${Tools.getJava()} -jar ${Tools.getApkSigner()} " +
+                "sign " + "--ks ${signBean.path} " +
+                "--ks-key-alias ${signBean.alias} " +
+                "--ks-pass pass:${signBean.pwd} " +
+                "--key-pass pass:${signBean.aliasPwd} " +
+                "--v1-signing-enabled $v1Enable " +
+                "--v2-signing-enabled $v2Enable " +
+                "$v3EnableStr " +
+                "$v4EnableStr " +
+                "-v --out $newOutPath $apkPath"
         return Terminal.run(cmd) == 0
     }
 
     /**
+     * perform 4-byte alignment operations on apk
+     * */
+    private fun alignApk(apkPath: String, outPath: String = ""): Boolean {
+        if (!apkPath.isFilePathValid(Suffix.APK)) return false
+        val newOutPath = outPath.ifEmpty {
+            apkPath.removeSuffix(Suffix.APK) + "_aligned.apk"
+        }
+        val cmd = "${Tools.getZipalign()} -f -v 4 $apkPath $newOutPath"
+        return Terminal.run(cmd) == 0
+    }
+
+    /**
+     * 1. sign apk
+     * 2. align apk
+     * 3. jarsigner apk only v1
+     */
+    fun signAndAlign(
+        apkPath: String,
+        signBean: SignUtils.SignBean,
+        outPath: String = "",
+    ): Boolean {
+        if (!apkPath.isFilePathValid(Suffix.APK)) return false
+        val signPath = apkPath.removeSuffix(Suffix.APK) + "_signed.apk"
+        if (!signApkByJarSigner(apkPath, signBean, signPath)) {
+            return false
+        }
+        val finalOutPath = outPath.ifEmpty { signPath.removeSuffix(Suffix.APK) + "_aligned.apk" }
+        return if (alignApk(signPath, finalOutPath)) {
+            FileUtils.delete(signPath)
+            true
+        } else {
+            false
+        }
+    }
+
+
+    /**
      * 1. align apk
-     * 2.sign apk
+     * 2. sign apk
      */
     fun alignAndSign(
         apkPath: String,
@@ -139,13 +193,13 @@ object ADT {
         v4Enable: Boolean = false
     ): Boolean {
         if (!apkPath.isFilePathValid(Suffix.APK)) return false
-        val alignPath = apkPath.removeSuffix(Suffix.APK) + "_align.apk"
+        val alignPath = apkPath.removeSuffix(Suffix.APK) + "_aligned.apk"
         if (!alignApk(apkPath, alignPath)) {
             println("apk align error")
             return false
         }
-        val finalOutPath = outPath.ifEmpty { apkPath.removeSuffix(Suffix.APK) + "_signed.apk" }
-        return if (signApk(alignPath, signBean, finalOutPath, v1Enable, v2Enable, v3Enable, v4Enable)) {
+        val finalOutPath = outPath.ifEmpty { alignPath.removeSuffix(Suffix.APK) + "_signed.apk" }
+        return if (signApkByApkSigner(alignPath, signBean, finalOutPath, v1Enable, v2Enable, v3Enable, v4Enable)) {
             //delete align apk
             FileUtils.delete(alignPath)
             true
@@ -153,6 +207,7 @@ object ADT {
             false
         }
     }
+
 
     /**
      * get apk signature information
@@ -163,7 +218,9 @@ object ADT {
         return Terminal.run(cmd) == 0
     }
 
-
+    /**
+     * aab file 2 apks
+     */
     fun aab2Apks(
         aabPath: String,
         signBean: SignUtils.SignBean,
@@ -176,8 +233,13 @@ object ADT {
         }
         FileUtils.delete(newOutPath)
         val universalStr = if (universal) "--mode=universal" else ""
-        val cmd =
-            "java -jar ${Tools.getBundleTool()} " + "build-apks " + "--bundle=${aabPath} " + "--output=${newOutPath} " + "--ks=${signBean.path} " + "--ks-pass pass:${signBean.pwd} " + "--ks-key-alias=${signBean.alias} " + "--key-pass pass:${signBean.aliasPwd} " + universalStr
+        val cmd = "java -jar ${Tools.getBundleTool()} " +
+                "build-apks " + "--bundle=${aabPath} " +
+                "--output=${newOutPath} " +
+                "--ks=${signBean.path} " +
+                "--ks-pass pass:${signBean.pwd} " +
+                "--ks-key-alias=${signBean.alias} " +
+                "--key-pass pass:${signBean.aliasPwd} " + universalStr
 
         return Terminal.run(cmd) == 0
     }

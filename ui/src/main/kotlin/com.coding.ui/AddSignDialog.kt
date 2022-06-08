@@ -43,7 +43,7 @@ object AddSignDialog : JDialog() {
                 arrayOf(Suffix.JKS, Suffix.KEY_STORE),
                 object : FileChooser.OnSelectListener {
                     override fun onSelected(path: String) {
-                        name = path.substring(path.lastIndexOf(File.separator) + 1, path.lastIndexOf('.'))
+                        name = path.substring(path.lastIndexOf(File.separator) + 1, path.length)
                         //保存签名文件的路径
                         val savePath =
                             Tools.getConfigDir() + File.separator + path.substring(path.lastIndexOf(File.separator) + 1)
