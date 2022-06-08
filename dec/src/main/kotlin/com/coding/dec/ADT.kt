@@ -322,4 +322,26 @@ object ADT {
         println("patch generate success,patch path:$patchOutPath")
         return true
     }
+
+    /**
+     * extract apk
+     */
+    fun extractApk(pkgName: String, outDir: String): Boolean {
+        if (pkgName.isEmpty()) return false
+        if (!outDir.isDirPathValid()) return false
+        var apkPath = ""
+        Terminal.run("adb shell pm path $pkgName", object : Terminal.OnResultListener {
+            override fun onStdout(msg: String) {
+                apkPath = msg.replace("package:", "")
+            }
+
+            override fun onStdErr(err: String) {
+            }
+        })
+        if (apkPath.isEmpty()) return false
+        val time = System.currentTimeMillis()
+        val outPath = File(outDir, "${pkgName}_${time}.apk").absolutePath
+
+        return Terminal.run("adb pull $apkPath $outPath") == 0
+    }
 }

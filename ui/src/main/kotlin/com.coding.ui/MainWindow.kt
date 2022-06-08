@@ -86,6 +86,11 @@ class MainWindow private constructor() : JFrame() {
             PatchDialog.showDialog()
         }
 
+        val extractApkBtn = JButton("extract apk")
+        extractApkBtn.addActionListener {
+            ExtractApkDialog.showDialog()
+        }
+
         defaultCloseOperation = EXIT_ON_CLOSE
         layout = GridLayout(0, 2)
         setSize(Constants.Windows_Width, Constants.Window_Height)
@@ -99,6 +104,7 @@ class MainWindow private constructor() : JFrame() {
         add(signBtn)
         add(aab2ApksBtn)
         add(generateBtn)
+        add(extractApkBtn)
         isVisible = true
         isResizable = false
     }
