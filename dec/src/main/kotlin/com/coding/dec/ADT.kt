@@ -326,6 +326,15 @@ object ADT {
     /**
      * extract apk
      */
+    fun installApk(device: String, debug: Boolean = false, apkPath: String): Boolean {
+        if (!apkPath.isFilePathValid()) return false
+        val debugStr = if (debug) "-t" else ""
+        return Terminal.run("adb -s $device $debugStr install -r $apkPath") == 0
+    }
+
+    /**
+     * extract apk
+     */
     fun extractApk(pkgName: String, outDir: String): Boolean {
         if (pkgName.isEmpty()) return false
         if (!outDir.isDirPathValid()) return false

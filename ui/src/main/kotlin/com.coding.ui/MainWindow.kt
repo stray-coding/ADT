@@ -86,9 +86,9 @@ class MainWindow private constructor() : JFrame() {
             PatchDialog.showDialog()
         }
 
-        val extractApkBtn = JButton("extract apk")
-        extractApkBtn.addActionListener {
-            ExtractApkDialog.showDialog()
+        val adbBtn = JButton("adb")
+        adbBtn.addActionListener {
+            ADBDialog.showDialog()
         }
 
         defaultCloseOperation = EXIT_ON_CLOSE
@@ -104,7 +104,7 @@ class MainWindow private constructor() : JFrame() {
         add(signBtn)
         add(aab2ApksBtn)
         add(generateBtn)
-        add(extractApkBtn)
+        add(adbBtn)
         isVisible = true
         isResizable = false
     }
