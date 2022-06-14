@@ -1,5 +1,7 @@
 package com.coding.utils
 
+import java.util.concurrent.TimeUnit
+
 /**
  * @author: Coding.He
  * @date: 2021/1/4
@@ -7,7 +9,6 @@ package com.coding.utils
  * @des:
  */
 object Terminal {
-
     fun isWindows(): Boolean {
         return System.getProperty("os.name").contains("Windows")
     }
@@ -18,55 +19,44 @@ object Terminal {
      * cmd /c start dir 会打开一个新窗口后执行dir指令，原窗口会关闭。
      * cmd /k start dir 会打开一个新窗口后执行dir指令，原窗口不会关闭。
      */
-    fun run(cmd: String): Int {
-        return run(cmd, null)
-    }
-
-    fun run(cmd: String, callback: OnResultListener?): Int {
-        val p: Process
-        try {
-            println("cmd:$cmd")
-            p = Runtime.getRuntime().exec(cmd)
-            p.dealStdoutResult(callback)
-            p.dealStderrResult(callback)
-            return p.waitFor()
-        } catch (e: Exception) {
-            e.printStackTrace()
+    //自动把cmd分割  去除""串
+    fun run(cmd: String, timeout: Long = 0, listener: OnStdoutListener? = null): Boolean {
+        val list = mutableListOf<String>()
+        cmd.split(" ").forEach {
+            val trim = it.trim()
+            if (trim.isNotEmpty()) {
+                list.add(trim)
+            }
         }
-        //默认错误状态码
-        return -404
+        return run(list, timeout, listener)
     }
 
-    //处理标准输入
-    private fun Process.dealStdoutResult(callback: OnResultListener?) {
-        Thread {
-            this.inputStream.use { ins ->
-                val reader = ins.bufferedReader()
-                var line: String?
-                while (reader.readLine().also { line = it } != null) {
-                    println("stdout:$line")
-                    callback?.onStdout(line ?: "")
-                }
+    fun run(cmd: List<String>, timeout: Long = 0, listener: OnStdoutListener? = null): Boolean {
+        println("cmd:$cmd")
+        val pb = ProcessBuilder(cmd)
+            //合并标准输出和标准错误
+            .redirectErrorStream(true)
+        val p: Process = pb.start()
+        p.inputStream.use { ins ->
+            val reader = ins.bufferedReader()
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                println("stdout:$line")
+                listener?.callback(line ?: "")
             }
-        }.start()
+        }
+        if (timeout > 0) {
+            return p.waitFor(timeout, TimeUnit.MILLISECONDS)
+        }
+        //判断code码
+        val code = p.waitFor()
+        if (code != 0) {
+            println("$cmd run code:$code")
+        }
+        return code == 0
     }
 
-    //处理异常输出
-    private fun Process.dealStderrResult(callback: OnResultListener?) {
-        Thread {
-            this.errorStream.use { errs ->
-                val reader = errs.bufferedReader()
-                var line: String?
-                while (reader.readLine().also { line = it } != null) {
-                    println("stderr:$line")
-                    callback?.onStdErr(line ?: "")
-                }
-            }
-        }.start()
-    }
-
-    interface OnResultListener {
-        fun onStdout(msg: String)
-        fun onStdErr(err: String)
+    interface OnStdoutListener {
+        fun callback(line: String)
     }
 }

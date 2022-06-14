@@ -62,29 +62,22 @@ object ADBDialog : JDialog() {
         title = "adb"
         isVisible = true
         isResizable = false
-        Terminal.run("adb shell pm list package", object : Terminal.OnResultListener {
-            override fun onStdout(msg: String) {
-                if (msg.isNotEmpty()) {
-                    val pkg = msg.replace("package:", "")
+        Terminal.run("adb shell pm list package", listener = object : Terminal.OnStdoutListener {
+            override fun callback(line: String) {
+                if (line.isNotEmpty()) {
+                    val pkg = line.replace("package:", "")
                     apkList.addElement(pkg)
                 }
-            }
-
-            override fun onStdErr(err: String) {
             }
 
         })
         apkJCb.model = apkList
 
-        Terminal.run("adb devices", object : Terminal.OnResultListener {
-            override fun onStdout(msg: String) {
-                if (msg.endsWith("device")) {
-                    devicesList.addElement(msg.removeSuffix("device").trim())
+        Terminal.run("adb devices", listener = object : Terminal.OnStdoutListener {
+            override fun callback(line: String) {
+                if (line.endsWith("device")) {
+                    devicesList.addElement(line.removeSuffix("device").trim())
                 }
-            }
-
-            override fun onStdErr(err: String) {
-
             }
 
         })

@@ -30,7 +30,7 @@ object ADT {
         val omc = if (ignoreDex) "" else "-only-main-classes"
         val finalOutPath = outPath.ifEmpty { apkPath.removeSuffix(Suffix.APK) }
         val cmd = "${Tools.getJava()} -jar ${Tools.getApkTool()} d $apkPath $srcStr $omc $resStr -f -o $finalOutPath"
-        return Terminal.run(cmd) == 0
+        return Terminal.run(cmd)
     }
 
     /**
@@ -39,18 +39,18 @@ object ADT {
      * */
     fun dex2jar(dexPath: String, outPath: String = ""): Boolean {
         if (!dexPath.isFilePathValid(Suffix.DEX)) return false
-        if (!Terminal.isWindows()) Terminal.run("chmod u+x ${Tools.getDex2jar()}", null)
+        if (!Terminal.isWindows()) Terminal.run("chmod u+x ${Tools.getDex2jar()}")
         val finalOutPath = outPath.ifEmpty {
             dexPath.removeSuffix(Suffix.DEX) + "_d2j.jar"
         }
         val cmd = "${Tools.getDex2jar()} $dexPath -f -o $finalOutPath"
-        val code = Terminal.run(cmd)
+        val isSuc = Terminal.run(cmd)
         for (item in FileUtils.listFilesInDir("./")) {
             if (item.name.endsWith("-error.zip")) {
                 item.delete()
             }
         }
-        return code == 0
+        return isSuc
     }
 
     /**
@@ -59,18 +59,18 @@ object ADT {
      * */
     fun jar2dex(jarPath: String, outPath: String = ""): Boolean {
         if (!jarPath.isFilePathValid(Suffix.JAR)) return false
-        if (!Terminal.isWindows()) Terminal.run("chmod u+x ${Tools.getJar2dex()}", null)
+        if (!Terminal.isWindows()) Terminal.run("chmod u+x ${Tools.getJar2dex()}")
         val finalOutPath = outPath.ifEmpty {
             jarPath.removeSuffix(Suffix.JAR) + "_j2d.dex"
         }
         val cmd = "${Tools.getJar2dex()} $jarPath -f -o $finalOutPath"
-        val code = Terminal.run(cmd, null)
+        val isSuc = Terminal.run(cmd)
         for (item in FileUtils.listFilesInDir("./")) {
             if (item.name.endsWith("-error.zip")) {
                 item.delete()
             }
         }
-        return code == 0
+        return isSuc
     }
 
     /**
@@ -81,7 +81,7 @@ object ADT {
         if (!srcDir.isDirPathValid()) return false
         val newOutPath = outPath.ifEmpty { "${srcDir}_btc.apk" }
         val cmd = "${Tools.getJava()} -jar ${Tools.getApkTool()} b $srcDir -f -o $newOutPath"
-        return Terminal.run(cmd) == 0
+        return Terminal.run(cmd)
     }
 
 
@@ -106,7 +106,7 @@ object ADT {
                 "-signedjar $newOutPath $apkPath ${signBean.alias} " +
                 "-digestalg SHA1 " +
                 "-sigalg MD5withRSA"
-        return Terminal.run(cmd) == 0
+        return Terminal.run(cmd)
     }
 
     /**
@@ -139,7 +139,7 @@ object ADT {
                 "$v3EnableStr " +
                 "$v4EnableStr " +
                 "-v --out $newOutPath $apkPath"
-        return Terminal.run(cmd) == 0
+        return Terminal.run(cmd)
     }
 
     /**
@@ -151,7 +151,7 @@ object ADT {
             apkPath.removeSuffix(Suffix.APK) + "_aligned.apk"
         }
         val cmd = "${Tools.getZipalign()} -f -v 4 $apkPath $newOutPath"
-        return Terminal.run(cmd) == 0
+        return Terminal.run(cmd)
     }
 
     /**
@@ -215,7 +215,7 @@ object ADT {
     fun verifyApkSign(apkPath: String): Boolean {
         if (!apkPath.isFilePathValid(Suffix.APK)) return false
         val cmd = "${Tools.getJava()} -jar ${Tools.getApkSigner()} verify -v $apkPath"
-        return Terminal.run(cmd) == 0
+        return Terminal.run(cmd)
     }
 
     /**
@@ -241,7 +241,7 @@ object ADT {
                 "--ks-key-alias=${signBean.alias} " +
                 "--key-pass pass:${signBean.aliasPwd} " + universalStr
 
-        return Terminal.run(cmd) == 0
+        return Terminal.run(cmd)
     }
 
     /**
@@ -307,7 +307,7 @@ object ADT {
         println("convert patch dir to patch.jar.")
         val jarOutPath = File(tempDir, "patch.jar")
         val dir2JarCMD = "jar -cvf ${jarOutPath.absolutePath} ${patchDir.absolutePath}"
-        if (Terminal.run(dir2JarCMD) != 0) {
+        if (!Terminal.run(dir2JarCMD)) {
             println("convert dir2jar cause error.")
             return false
         }
@@ -329,7 +329,7 @@ object ADT {
     fun installApk(device: String, debug: Boolean = false, apkPath: String): Boolean {
         if (!apkPath.isFilePathValid()) return false
         val debugStr = if (debug) "-t" else ""
-        return Terminal.run("adb -s $device $debugStr install -r $apkPath") == 0
+        return Terminal.run("adb -s $device $debugStr install -r $apkPath")
     }
 
     /**
@@ -339,18 +339,15 @@ object ADT {
         if (pkgName.isEmpty()) return false
         if (!outDir.isDirPathValid()) return false
         var apkPath = ""
-        Terminal.run("adb shell pm path $pkgName", object : Terminal.OnResultListener {
-            override fun onStdout(msg: String) {
-                apkPath = msg.replace("package:", "")
-            }
-
-            override fun onStdErr(err: String) {
+        Terminal.run("adb shell pm path $pkgName", listener = object : Terminal.OnStdoutListener {
+            override fun callback(line: String) {
+                apkPath = line.replace("package:", "")
             }
         })
         if (apkPath.isEmpty()) return false
         val time = System.currentTimeMillis()
         val outPath = File(outDir, "${pkgName}_${time}.apk").absolutePath
 
-        return Terminal.run("adb pull $apkPath $outPath") == 0
+        return Terminal.run("adb pull $apkPath $outPath")
     }
 }
