@@ -3,7 +3,6 @@ package com.coding.ui
 import com.coding.dec.ADT
 import com.coding.dec.utils.Suffix
 import com.coding.tool.constants.Constants
-import com.coding.utils.Terminal
 import java.awt.Checkbox
 import javax.swing.*
 
@@ -15,10 +14,10 @@ import javax.swing.*
  */
 object ADBDialog : JDialog() {
     private val apkJCb = JComboBox<String>()
-    val apkList = DefaultComboBoxModel<String>()
+    private val apkList = DefaultComboBoxModel<String>()
 
     private val devicesJCb = JComboBox<String>()
-    val devicesList = DefaultComboBoxModel<String>()
+    private val devicesList = DefaultComboBoxModel<String>()
 
     init {
         val extraPane = JPanel()
@@ -52,36 +51,24 @@ object ADBDialog : JDialog() {
                 })
         }
 
+        val refreshBtn = JButton("refresh")
+        refreshBtn.addActionListener {
+            refresh()
+        }
+
 
         extraPane.add(debugCb)
         extraPane.add(devicesJCb)
         extraPane.add(installApk)
+        extraPane.add(refreshBtn)
 
         setSize(Constants.Windows_Width, Constants.Window_Height)
         setLocationRelativeTo(null)
         title = "adb"
         isVisible = true
         isResizable = false
-        Terminal.run("adb shell pm list package", listener = object : Terminal.OnStdoutListener {
-            override fun callback(line: String) {
-                if (line.isNotEmpty()) {
-                    val pkg = line.replace("package:", "")
-                    apkList.addElement(pkg)
-                }
-            }
 
-        })
-        apkJCb.model = apkList
-
-        Terminal.run("adb devices", listener = object : Terminal.OnStdoutListener {
-            override fun callback(line: String) {
-                if (line.endsWith("device")) {
-                    devicesList.addElement(line.removeSuffix("device").trim())
-                }
-            }
-
-        })
-        devicesJCb.model = devicesList
+        refresh()
     }
 
     fun showDialog() {
@@ -94,5 +81,23 @@ object ADBDialog : JDialog() {
 
     fun getCurDevice(): String {
         return devicesList.selectedItem as String
+    }
+
+    private fun refresh() {
+        apkList.removeAllElements()
+        devicesList.removeAllElements()
+        val apks = ADT.getAllApkPackageNames()
+        for (pkg in apks) {
+            apkList.addElement(pkg)
+        }
+        apkJCb.model = apkList
+
+
+        val devices = ADT.getAllDevices()
+        for (device in devices) {
+            devicesList.addElement(device)
+        }
+
+        devicesJCb.model = devicesList
     }
 }

@@ -324,6 +324,38 @@ object ADT {
     }
 
     /**
+     * get all connect android devices
+     */
+    fun getAllDevices(): List<String> {
+        val list = mutableListOf<String>()
+        Terminal.run("adb devices", listener = object : Terminal.OnStdoutListener {
+            override fun callback(line: String) {
+                if (line.endsWith("device")) {
+                    list.add(line.removeSuffix("device").trim())
+                }
+            }
+        })
+        return list
+    }
+
+    /**
+     * get all apk's package names in android devices
+     */
+    fun getAllApkPackageNames(): List<String> {
+        val list = mutableListOf<String>()
+        Terminal.run("adb shell pm list package", listener = object : Terminal.OnStdoutListener {
+            override fun callback(line: String) {
+                if (line.isNotEmpty()) {
+                    val pkg = line.replace("package:", "")
+                    list.add(pkg)
+                }
+            }
+        })
+        return list
+    }
+
+
+    /**
      * install apk
      */
     fun installApk(device: String, debug: Boolean = false, apkPath: String): Boolean {
