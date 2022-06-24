@@ -1,4 +1,5 @@
 import java.nio.charset.StandardCharsets
+import java.text.SimpleDateFormat
 
 buildscript {
     repositories {
@@ -28,42 +29,81 @@ dependencies {
 }
 
 
-def adtVersion = "0.0.6"
+def versionName = "0.0.7"
+def versionCode = 7
 application {
     mainClass = 'com.coding.Main'
 }
 
-
-task release(dependsOn: assemble) {
+task createProperties() {
     doLast {
-        println("----- create release start -----")
-        String dir = "./release"
+        print("createProperties start")
+        File dir = new File(projectDir, "main/src/main/resources/VERSION-INF")
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+        String name = "adt.properties"
+        File out = new File(dir, name)
+        HashMap<String, Object> params = new HashMap<>()
+        params.put("versionName", versionName)
+        params.put("versionCode", versionCode)
+        params.put("data", getCurDate())
+        FileOutputStream fos = new FileOutputStream(out)
+        for (Map.Entry<String, Object> entry : params) {
+            String str = "${entry.key}=${entry.value}\n"
+            fos.write(str.getBytes(StandardCharsets.UTF_8))
+        }
+        fos.close()
+        print("createProperties end")
+    }
+}
+
+task release() {
+    dependsOn(createProperties)
+    dependsOn(assemble)
+    assemble.mustRunAfter(createProperties)
+    doLast {
+        print("create release start")
+        String dir = projectDir.absolutePath + File.separator + "release"
         delete(dir)
         String src = dir + File.separator + "src"
-        new File(src).mkdirs()
+        mkdir(src)
+        //new File(src).mkdirs()
         copy {
             from "./build/libs/ADT-all.jar"
             into src
-            println("ADT.jar copy success.")
+            print("ADT.jar copy success")
         }
         copy {
             from "./tools"
             into src + File.separator + "tools"
-            println("tools dir copy success.")
+            print("tools dir copy success")
         }
         createBootBat(src)
         project.ant.zip(
                 basedir: src,
-                destfile: dir + File.separator + "adt_" + adtVersion + ".zip"
+                destfile: dir + File.separator + "adt.zip"
         )
-        println("----- create release end -----")
+        print("create release end")
     }
 }
 
+//获取当前日期
+private static def getCurDate() {
+    def date = new Date()
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
+    return formatter.format(date)
+}
+
+//创建.bat启动文件
 private static def createBootBat(String dir) {
     File bat = new File(dir, "ADT.bat")
     FileOutputStream fos = new FileOutputStream(bat)
     fos.write("java -jar ADT-all.jar".getBytes(StandardCharsets.UTF_8))
     fos.flush()
     fos.close()
+}
+
+private static print(String msg) {
+    System.out.println("----- $msg -----")
 }
