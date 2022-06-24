@@ -25,11 +25,11 @@ object ADT {
      * */
     fun decompile(apkPath: String, ignoreDex: Boolean, ignoreRes: Boolean, outPath: String = ""): Boolean {
         if (!apkPath.isFilePathValid(Suffix.APK)) return false
-        val srcStr = if (ignoreDex) "-s" else ""
+        val dexStr = if (ignoreDex) "-s" else ""
         val resStr = if (ignoreRes) "-r" else ""
         val omc = if (ignoreDex) "" else "-only-main-classes"
         val finalOutPath = outPath.ifEmpty { apkPath.removeSuffix(Suffix.APK) }
-        val cmd = "${Tools.getJava()} -jar ${Tools.getApkTool()} d $apkPath $srcStr $omc $resStr -f -o $finalOutPath"
+        val cmd = "${Tools.getJava()} -jar ${Tools.getApkTool()} d $apkPath $dexStr $omc $resStr -f -o $finalOutPath"
         return Terminal.run(cmd)
     }
 
@@ -324,7 +324,7 @@ object ADT {
     }
 
     /**
-     * extract apk
+     * install apk
      */
     fun installApk(device: String, debug: Boolean = false, apkPath: String): Boolean {
         if (!apkPath.isFilePathValid()) return false
