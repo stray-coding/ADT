@@ -9,4 +9,4 @@
 
 tips:
 
-请确保您的PC包含java环境并配置了环境变量 下载release中的release/adt.zip，解压到本地目录,双击adt.bat文件即可
+请确保您的PC包含java 1.8环境并配置了环境变量 下载release中的release/adt.zip，解压到本地目录,双击adt.bat文件即可
