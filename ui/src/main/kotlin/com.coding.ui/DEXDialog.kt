@@ -11,9 +11,38 @@ import javax.swing.*
  * @emil: stray-coding@foxmail.com
  * @des: ui of generate patch
  */
-object PatchDialog : JDialog() {
+object DEXDialog : JDialog() {
+
+
     init {
         val pane = JPanel()
+
+
+        val dex2jarBtn = JButton("dex2jar")
+        dex2jarBtn.addActionListener {
+            FileChooser.newInstance(
+                JFileChooser.FILES_ONLY,
+                "dex2jar",
+                Suffix.DEX,
+                object : FileChooser.OnSelectListener {
+                    override fun onSelected(path: String) {
+                        ADT.dex2jar(path)
+                    }
+                })
+        }
+
+        val jar2dexBtn = JButton("jar2dex")
+        jar2dexBtn.addActionListener {
+            FileChooser.newInstance(
+                JFileChooser.FILES_ONLY,
+                "jar2dex",
+                Suffix.JAR,
+                object : FileChooser.OnSelectListener {
+                    override fun onSelected(path: String) {
+                        ADT.jar2dex(path)
+                    }
+                })
+        }
 
         val oldDexPathTv = JTextField(10)
         val oldDexPathBtn = JButton("old dex")
@@ -65,6 +94,9 @@ object PatchDialog : JDialog() {
                     }
                 })
         }
+
+        pane.add(dex2jarBtn)
+        pane.add(jar2dexBtn)
 
         pane.add(oldDexPathBtn)
         pane.add(oldDexPathTv)

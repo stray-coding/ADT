@@ -13,7 +13,7 @@ import javax.swing.*
  *  author hdl
  *  Description:签名界面
  */
-object Aab2ApksDialog : JDialog() {
+object AABDialog : JDialog() {
     private val signListJCb = JComboBox<String>()
 
     init {
@@ -46,7 +46,7 @@ object Aab2ApksDialog : JDialog() {
 
         setSize(Constants.Windows_Width, Constants.Window_Height)
         setLocationRelativeTo(null)
-        title = "aab2apks"
+        title = "aab"
         isVisible = true
         isResizable = false
     }

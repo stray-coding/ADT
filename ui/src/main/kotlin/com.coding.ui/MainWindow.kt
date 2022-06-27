@@ -2,7 +2,6 @@ package com.coding.ui
 
 import com.coding.dec.ADT
 import com.coding.dec.utils.SignUtils
-import com.coding.dec.utils.Suffix
 import com.coding.tool.constants.Constants
 import com.coding.utils.Terminal
 import java.awt.GridLayout
@@ -26,7 +25,7 @@ class MainWindow private constructor() : JFrame() {
     }
 
     init {
-        title = "android decompile tool"
+        title = "ADT"
         val jadxBtn = JButton("jadx")
         jadxBtn.addActionListener {
             ADT.openJadx()
@@ -37,30 +36,9 @@ class MainWindow private constructor() : JFrame() {
             DecompileDialog.showDialog()
         }
 
-        val dex2jarBtn = JButton("dex2jar")
-        dex2jarBtn.addActionListener {
-            FileChooser.newInstance(
-                JFileChooser.FILES_ONLY,
-                "dex2jar",
-                Suffix.DEX,
-                object : FileChooser.OnSelectListener {
-                    override fun onSelected(path: String) {
-                        ADT.dex2jar(path)
-                    }
-                })
-        }
-
-        val jar2dexBtn = JButton("jar2dex")
-        jar2dexBtn.addActionListener {
-            FileChooser.newInstance(
-                JFileChooser.FILES_ONLY,
-                "jar2dex",
-                Suffix.JAR,
-                object : FileChooser.OnSelectListener {
-                    override fun onSelected(path: String) {
-                        ADT.jar2dex(path)
-                    }
-                })
+        val dexBtn = JButton("dex")
+        dexBtn.addActionListener {
+            DEXDialog.showDialog()
         }
 
         val backToCompileBtn = JButton("backToApk")
@@ -76,15 +54,11 @@ class MainWindow private constructor() : JFrame() {
             SignDialog.showDialog()
         }
 
-        val aab2ApksBtn = JButton("aab2Apks")
-        aab2ApksBtn.addActionListener {
-            Aab2ApksDialog.showDialog()
+        val aabBtn = JButton("aab")
+        aabBtn.addActionListener {
+            AABDialog.showDialog()
         }
 
-        val generateBtn = JButton("patch")
-        generateBtn.addActionListener {
-            PatchDialog.showDialog()
-        }
 
         val adbBtn = JButton("adb")
         adbBtn.addActionListener {
@@ -98,12 +72,10 @@ class MainWindow private constructor() : JFrame() {
         jMenuBar = createMenuBar()
         add(jadxBtn)
         add(decompileBtn)
-        add(dex2jarBtn)
-        add(jar2dexBtn)
+        add(dexBtn)
         add(backToCompileBtn)
         add(signBtn)
-        add(aab2ApksBtn)
-        add(generateBtn)
+        add(aabBtn)
         add(adbBtn)
         isVisible = true
         isResizable = false
