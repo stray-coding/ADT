@@ -21,27 +21,10 @@ object ADBDialog : JDialog() {
 
     init {
         val extraPane = JPanel()
-        val extractApk = JButton("extract apk")
-        extractApk.addActionListener {
-            FileChooser.newInstance(
-                JFileChooser.DIRECTORIES_ONLY,
-                "choose dir",
-                object : FileChooser.OnSelectListener {
-                    override fun onSelected(path: String) {
-                        println("extract apk:" + ADT.extractApk(getChooseApk(), path))
-                    }
-                })
-        }
-
-        extraPane.add(apkJCb)
-        extraPane.add(extractApk)
-        add(extraPane)
-
         val debugCb = Checkbox("debug", false)
         val installApk = JButton("install apk")
         installApk.addActionListener {
-            FileChooser.newInstance(
-                JFileChooser.FILES_ONLY,
+            FileChooser.newInstance(JFileChooser.FILES_ONLY,
                 "choose apk",
                 Suffix.APK,
                 object : FileChooser.OnSelectListener {
@@ -51,16 +34,41 @@ object ADBDialog : JDialog() {
                 })
         }
 
+
+        val extractApk = JButton("extract apk")
+        extractApk.addActionListener {
+            FileChooser.newInstance(JFileChooser.DIRECTORIES_ONLY, "choose dir", object : FileChooser.OnSelectListener {
+                override fun onSelected(path: String) {
+                    println("extract apk:" + ADT.extractApk(devicesJCb.selectedItem as String, getChooseApk(), path))
+                }
+            })
+        }
+
         val refreshBtn = JButton("refresh")
         refreshBtn.addActionListener {
             refresh()
+        }
+
+        devicesJCb.addActionListener {
+            devicesJCb.selectedItem?.let {
+                val apks = ADT.getAllApkPackageNames(devicesJCb.selectedItem as String)
+                for (pkg in apks) {
+                    apkList.addElement(pkg)
+                }
+                apkJCb.model = apkList
+            }
         }
 
 
         extraPane.add(debugCb)
         extraPane.add(devicesJCb)
         extraPane.add(installApk)
+
+        extraPane.add(apkJCb)
+        extraPane.add(extractApk)
         extraPane.add(refreshBtn)
+
+        add(extraPane)
 
         setSize(Constants.Windows_Width, Constants.Window_Height)
         setLocationRelativeTo(null)
@@ -86,18 +94,19 @@ object ADBDialog : JDialog() {
     private fun refresh() {
         apkList.removeAllElements()
         devicesList.removeAllElements()
-        val apks = ADT.getAllApkPackageNames()
-        for (pkg in apks) {
-            apkList.addElement(pkg)
-        }
-        apkJCb.model = apkList
-
-
         val devices = ADT.getAllDevices()
         for (device in devices) {
             devicesList.addElement(device)
         }
-
         devicesJCb.model = devicesList
+
+        if (devices.isNotEmpty()) {
+            devicesJCb.selectedItem = 0
+            val apks = ADT.getAllApkPackageNames(devicesJCb.selectedItem as String)
+            for (pkg in apks) {
+                apkList.addElement(pkg)
+            }
+            apkJCb.model = apkList
+        }
     }
 }

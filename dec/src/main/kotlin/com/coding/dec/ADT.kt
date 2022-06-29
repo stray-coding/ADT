@@ -341,9 +341,9 @@ object ADT {
     /**
      * get all apk's package names in android devices
      */
-    fun getAllApkPackageNames(): List<String> {
+    fun getAllApkPackageNames(device: String): List<String> {
         val list = mutableListOf<String>()
-        Terminal.run("adb shell pm list package", listener = object : Terminal.OnStdoutListener {
+        Terminal.run("adb -s $device shell pm list package", listener = object : Terminal.OnStdoutListener {
             override fun callback(line: String) {
                 if (line.isNotEmpty()) {
                     val pkg = line.replace("package:", "")
@@ -367,11 +367,11 @@ object ADT {
     /**
      * extract apk
      */
-    fun extractApk(pkgName: String, outDir: String): Boolean {
+    fun extractApk(device: String, pkgName: String, outDir: String): Boolean {
         if (pkgName.isEmpty()) return false
         if (!outDir.isDirPathValid()) return false
         var apkPath = ""
-        Terminal.run("adb shell pm path $pkgName", listener = object : Terminal.OnStdoutListener {
+        Terminal.run("adb -s $device shell pm path $pkgName", listener = object : Terminal.OnStdoutListener {
             override fun callback(line: String) {
                 apkPath = line.replace("package:", "")
             }
@@ -380,6 +380,6 @@ object ADT {
         val time = System.currentTimeMillis()
         val outPath = File(outDir, "${pkgName}_${time}.apk").absolutePath
 
-        return Terminal.run("adb pull $apkPath $outPath")
+        return Terminal.run("adb -s $device pull $apkPath $outPath")
     }
 }
