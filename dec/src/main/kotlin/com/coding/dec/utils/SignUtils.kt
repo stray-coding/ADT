@@ -69,6 +69,15 @@ object SignUtils {
         return signArray
     }
 
+    fun getSign(name: String): SignBean {
+        for (item in getSignList()) {
+            if (name == item.name) {
+                return item
+            }
+        }
+        return SignBean()
+    }
+
     fun addSign(config: SignBean) {
         try {
             val doc = XmlUtils.parse(SIGN_CONFIG_PATH)
