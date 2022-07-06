@@ -18,23 +18,35 @@ class FileChooser private constructor(parent: Component, mode: Int, title: Strin
 
     companion object {
         private var path = FileSystemView.getFileSystemView().homeDirectory
-        fun newInstance(mode: Int, title: String, onSelectListener: OnSelectListener) {
-            FileChooser(MainWindow.getInstance(), mode, title, arrayOf(""), onSelectListener)
-        }
-
-        fun newInstance(mode: Int, title: String, filterStr: String, onSelectListener: OnSelectListener) {
-            FileChooser(MainWindow.getInstance(), mode, title, arrayOf(filterStr), onSelectListener)
-        }
+//        fun newInstance(mode: Int, title: String, onSelectListener: OnSelectListener) {
+//            FileChooser(, mode, title, arrayOf(""), onSelectListener)
+//        }
+//
+//        fun newInstance(mode: Int, title: String, filterStr: String, onSelectListener: OnSelectListener) {
+//            FileChooser(, mode, title, arrayOf(filterStr), onSelectListener)
+//        }
 
         fun newInstance(parent: Component, mode: Int, title: String, onSelectListener: OnSelectListener) {
             FileChooser(parent, mode, title, arrayOf(""), onSelectListener)
         }
 
-        fun newInstance(parent: Component, mode: Int, title: String, filterStr: String, onSelectListener: OnSelectListener) {
+        fun newInstance(
+            parent: Component,
+            mode: Int,
+            title: String,
+            filterStr: String,
+            onSelectListener: OnSelectListener
+        ) {
             FileChooser(parent, mode, title, arrayOf(filterStr), onSelectListener)
         }
 
-        fun newInstance(parent: Component, mode: Int, title: String, filterArray: Array<String>, onSelectListener: OnSelectListener) {
+        fun newInstance(
+            parent: Component,
+            mode: Int,
+            title: String,
+            filterArray: Array<String>,
+            onSelectListener: OnSelectListener
+        ) {
             FileChooser(parent, mode, title, filterArray, onSelectListener)
         }
     }
