@@ -21,6 +21,7 @@ object Terminal {
      */
     //自动把cmd分割  去除""串
     fun run(cmd: String, timeout: Long = 0, listener: OnStdoutListener? = null): Boolean {
+        println("cmd string:$cmd")
         val list = mutableListOf<String>()
         cmd.split(" ").forEach {
             val trim = it.trim()
@@ -32,7 +33,7 @@ object Terminal {
     }
 
     fun run(cmd: List<String>, timeout: Long = 0, listener: OnStdoutListener? = null): Boolean {
-        println("cmd:$cmd")
+        println("cmd param list:$cmd")
         val pb = ProcessBuilder(cmd)
             //合并标准输出和标准错误
             .redirectErrorStream(true)
