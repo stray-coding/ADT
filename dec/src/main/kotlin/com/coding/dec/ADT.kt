@@ -39,7 +39,6 @@ object ADT {
      * */
     fun dex2jar(dexPath: String, outPath: String = ""): Boolean {
         if (!dexPath.isFilePathValid(Suffix.DEX)) return false
-        if (!Terminal.isWindows()) Terminal.run("chmod u+x ${Tools.getDex2jar()}")
         val finalOutPath = outPath.ifEmpty {
             dexPath.removeSuffix(Suffix.DEX) + "_d2j.jar"
         }
@@ -59,7 +58,6 @@ object ADT {
      * */
     fun jar2dex(jarPath: String, outPath: String = ""): Boolean {
         if (!jarPath.isFilePathValid(Suffix.JAR)) return false
-        if (!Terminal.isWindows()) Terminal.run("chmod u+x ${Tools.getJar2dex()}")
         val finalOutPath = outPath.ifEmpty {
             jarPath.removeSuffix(Suffix.JAR) + "_j2d.dex"
         }
