@@ -29,8 +29,8 @@ dependencies {
 }
 
 
-def versionName = "0.0.9"
-def versionCode = 9
+def versionName = "0.1.0"
+def versionCode = 10
 application {
     mainClass = 'com.coding.Main'
 }
@@ -68,7 +68,6 @@ task release() {
         delete(dir)
         String src = dir + File.separator + "src"
         mkdir(src)
-        //new File(src).mkdirs()
         copy {
             from "./build/libs/ADT-all.jar"
             into src

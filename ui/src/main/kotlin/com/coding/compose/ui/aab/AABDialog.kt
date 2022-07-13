@@ -20,12 +20,12 @@ import androidx.compose.ui.unit.dp
 import com.coding.compose.base.Button
 import com.coding.compose.base.CheckBox
 import com.coding.compose.base.Dialog
+import com.coding.compose.base.FileChooser
 import com.coding.compose.listener.OnSelectListener
 import com.coding.compose.ui.sign.SignListDialog
 import com.coding.dec.ADT
 import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
-import com.coding.ui.FileChooser
 import javax.swing.JFileChooser
 
 @OptIn(ExperimentalUnitApi::class)

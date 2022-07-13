@@ -15,10 +15,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.coding.compose.base.Button
 import com.coding.compose.base.Dialog
+import com.coding.compose.base.FileChooser
+import com.coding.compose.base.Toast
 import com.coding.dec.ADT
 import com.coding.dec.utils.Suffix
-import com.coding.ui.FileChooser
-import com.coding.ui.Toast
 import javax.swing.JFileChooser
 
 @Composable

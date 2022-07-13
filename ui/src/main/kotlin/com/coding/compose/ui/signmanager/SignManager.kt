@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.coding.compose.base.Button
 import com.coding.compose.base.Dialog
+import com.coding.compose.base.Toast
 import com.coding.dec.utils.SignUtils
-import com.coding.ui.Toast
 
 private var curSelect = ""
 

@@ -14,6 +14,7 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import com.coding.compose.base.Button
+import com.coding.compose.base.FileChooser
 import com.coding.compose.ui.aab.AABDialog
 import com.coding.compose.ui.adb.ADBDialog
 import com.coding.compose.ui.dec.DecDialog
@@ -21,7 +22,6 @@ import com.coding.compose.ui.dex.DexDialog
 import com.coding.compose.ui.sign.SignDialog
 import com.coding.compose.ui.signmanager.SignManagerDialog
 import com.coding.dec.ADT
-import com.coding.ui.FileChooser
 import javax.swing.JFileChooser
 
 

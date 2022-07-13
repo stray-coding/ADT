@@ -1,4 +1,4 @@
-package com.coding.ui
+package com.coding.compose.base
 
 import java.awt.Component
 import javax.swing.JOptionPane
