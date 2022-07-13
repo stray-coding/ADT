@@ -10,10 +10,6 @@ import javax.swing.JOptionPane
  * @des:
  */
 object Toast : JOptionPane() {
-    fun showMsg(msg: String) {
-        showMessageDialog(MainWindow.getInstance(), msg)
-    }
-
     fun showMsg(parent: Component, msg: String) {
         showMessageDialog(parent, msg)
     }

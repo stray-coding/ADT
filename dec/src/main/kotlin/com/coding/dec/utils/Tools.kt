@@ -61,9 +61,9 @@ object Tools {
 
     fun getJar2dex(): String {
         val file = if (Terminal.isWindows())
-            File("$TOOLS${File.separator}dex2jar-2.0${File.separator}d2j-jar2dex.bat")
+            File("$TOOLS${File.separator}dex2jar-2.1${File.separator}d2j-jar2dex.bat")
         else
-            File("$TOOLS${File.separator}dex2jar-2.0${File.separator}d2j-jar2dex.sh")
+            File("$TOOLS${File.separator}dex2jar-2.1${File.separator}d2j-jar2dex.sh")
         return file.absolutePath
     }
 
@@ -74,9 +74,9 @@ object Tools {
 
     fun getDex2jar(): String {
         val file = if (Terminal.isWindows()) {
-            File(TOOLS, "dex2jar-2.0${File.separator}d2j-dex2jar.bat")
+            File(TOOLS, "dex2jar-2.1${File.separator}d2j-dex2jar.bat")
         } else {
-            File(TOOLS, "dex2jar-2.0${File.separator}d2j-dex2jar.sh")
+            File(TOOLS, "dex2jar-2.1${File.separator}d2j-dex2jar.sh")
         }
         return file.absolutePath
     }

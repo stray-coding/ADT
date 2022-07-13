@@ -39,7 +39,6 @@ object ADT {
      * */
     fun dex2jar(dexPath: String, outPath: String = ""): Boolean {
         if (!dexPath.isFilePathValid(Suffix.DEX)) return false
-        if (!Terminal.isWindows()) Terminal.run("chmod u+x ${Tools.getDex2jar()}")
         val finalOutPath = outPath.ifEmpty {
             dexPath.removeSuffix(Suffix.DEX) + "_d2j.jar"
         }
@@ -59,7 +58,6 @@ object ADT {
      * */
     fun jar2dex(jarPath: String, outPath: String = ""): Boolean {
         if (!jarPath.isFilePathValid(Suffix.JAR)) return false
-        if (!Terminal.isWindows()) Terminal.run("chmod u+x ${Tools.getJar2dex()}")
         val finalOutPath = outPath.ifEmpty {
             jarPath.removeSuffix(Suffix.JAR) + "_j2d.dex"
         }
@@ -335,15 +333,21 @@ object ADT {
                 }
             }
         })
+        list.sort()
         return list
     }
 
     /**
      * get all apk's package names in android devices
      */
-    fun getAllApkPackageNames(device: String): List<String> {
+    fun getAllApkPackageNames(device: String = ""): List<String> {
         val list = mutableListOf<String>()
-        Terminal.run("adb -s $device shell pm list package", listener = object : Terminal.OnStdoutListener {
+        val cmd = if (device.isNotEmpty()) {
+            "adb -s $device shell pm list package"
+        } else {
+            "adb shell pm list package"
+        }
+        Terminal.run(cmd, listener = object : Terminal.OnStdoutListener {
             override fun callback(line: String) {
                 if (line.isNotEmpty()) {
                     val pkg = line.replace("package:", "")
@@ -351,6 +355,7 @@ object ADT {
                 }
             }
         })
+        list.sort()
         return list
     }
 
@@ -358,20 +363,30 @@ object ADT {
     /**
      * install apk
      */
-    fun installApk(device: String, debug: Boolean = false, apkPath: String): Boolean {
+    fun installApk(device: String = "", debug: Boolean = false, apkPath: String): Boolean {
         if (!apkPath.isFilePathValid()) return false
         val debugStr = if (debug) "-t" else ""
-        return Terminal.run("adb -s $device $debugStr install -r $apkPath")
+        val cmd = if (device.isNotEmpty()) {
+            "adb -s $device $debugStr install -r $apkPath"
+        } else {
+            "adb $debugStr install -r $apkPath"
+        }
+        return Terminal.run(cmd)
     }
 
     /**
      * extract apk
      */
-    fun extractApk(device: String, pkgName: String, outDir: String): Boolean {
+    fun extractApk(device: String = "", pkgName: String, outDir: String): Boolean {
         if (pkgName.isEmpty()) return false
         if (!outDir.isDirPathValid()) return false
         var apkPath = ""
-        Terminal.run("adb -s $device shell pm path $pkgName", listener = object : Terminal.OnStdoutListener {
+        val cmd = if (device.isNotEmpty()) {
+            "adb -s $device shell pm path $pkgName"
+        } else {
+            "adb shell pm path $pkgName"
+        }
+        Terminal.run(cmd, listener = object : Terminal.OnStdoutListener {
             override fun callback(line: String) {
                 apkPath = line.replace("package:", "")
             }
@@ -379,7 +394,11 @@ object ADT {
         if (apkPath.isEmpty()) return false
         val time = System.currentTimeMillis()
         val outPath = File(outDir, "${pkgName}_${time}.apk").absolutePath
-
-        return Terminal.run("adb -s $device pull $apkPath $outPath")
+        val pullCmd = if (device.isNotEmpty()) {
+            "adb -s $device pull $apkPath $outPath"
+        } else {
+            "adb pull $apkPath $outPath"
+        }
+        return Terminal.run(pullCmd)
     }
 }

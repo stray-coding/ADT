@@ -1,9 +1,10 @@
 package com.coding;
 
-import com.coding.ui.MainWindow;
+
+import com.coding.compose.MainKt;
 
 public class Main {
     public static void main(String[] args) {
-        MainWindow.Companion.getInstance().setVisible(true);
+        MainKt.main();
     }
 }
