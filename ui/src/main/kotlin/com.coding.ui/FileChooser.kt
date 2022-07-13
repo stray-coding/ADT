@@ -12,32 +12,22 @@ import javax.swing.filechooser.FileSystemView
  * @emil: stray-coding@foxmail.com
  * @des::file chooser
  */
-class FileChooser private constructor(parent: Component, mode: Int, title: String, filterArray: Array<String>, onSelectListener: OnSelectListener) :
-        JFileChooser() {
+class FileChooser private constructor(
+    parent: Component, mode: Int, title: String, filterArray: Array<String>, onFileSelectListener: OnFileSelectListener
+) : JFileChooser() {
 
 
     companion object {
         private var path = FileSystemView.getFileSystemView().homeDirectory
-//        fun newInstance(mode: Int, title: String, onSelectListener: OnSelectListener) {
-//            FileChooser(, mode, title, arrayOf(""), onSelectListener)
-//        }
-//
-//        fun newInstance(mode: Int, title: String, filterStr: String, onSelectListener: OnSelectListener) {
-//            FileChooser(, mode, title, arrayOf(filterStr), onSelectListener)
-//        }
 
-        fun newInstance(parent: Component, mode: Int, title: String, onSelectListener: OnSelectListener) {
-            FileChooser(parent, mode, title, arrayOf(""), onSelectListener)
+        fun newInstance(parent: Component, mode: Int, title: String, onFileSelectListener: OnFileSelectListener) {
+            FileChooser(parent, mode, title, arrayOf(""), onFileSelectListener)
         }
 
         fun newInstance(
-            parent: Component,
-            mode: Int,
-            title: String,
-            filterStr: String,
-            onSelectListener: OnSelectListener
+            parent: Component, mode: Int, title: String, filterStr: String, onFileSelectListener: OnFileSelectListener
         ) {
-            FileChooser(parent, mode, title, arrayOf(filterStr), onSelectListener)
+            FileChooser(parent, mode, title, arrayOf(filterStr), onFileSelectListener)
         }
 
         fun newInstance(
@@ -45,9 +35,9 @@ class FileChooser private constructor(parent: Component, mode: Int, title: Strin
             mode: Int,
             title: String,
             filterArray: Array<String>,
-            onSelectListener: OnSelectListener
+            onFileSelectListener: OnFileSelectListener
         ) {
-            FileChooser(parent, mode, title, filterArray, onSelectListener)
+            FileChooser(parent, mode, title, filterArray, onFileSelectListener)
         }
     }
 
@@ -63,11 +53,11 @@ class FileChooser private constructor(parent: Component, mode: Int, title: Strin
                 println("file:${it.absolutePath}")
             }
             path = it.parentFile
-            onSelectListener.onSelected(it.absolutePath)
+            onFileSelectListener.onSelected(it.absolutePath)
         }
     }
 
-    interface OnSelectListener {
+    interface OnFileSelectListener {
         fun onSelected(path: String)
     }
 
@@ -96,7 +86,7 @@ class FileChooser private constructor(parent: Component, mode: Int, title: Strin
             } else {
                 var des = ""
                 for (item in suffixArray) {
-                    des += "$item"
+                    des += item
                 }
                 des
             }

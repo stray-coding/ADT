@@ -1,4 +1,4 @@
-package com.compose.ui
+package com.coding.compose.ui.signmanager
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,15 +10,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.coding.compose.base.Button
+import com.coding.compose.base.Dialog
+import com.coding.compose.base.OutlinedTextField
 import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
 import com.coding.dec.utils.Tools
 import com.coding.ui.FileChooser
 import com.coding.ui.Toast
 import com.coding.utils.FileUtils
-import com.compose.base.Button
-import com.compose.base.Dialog
-import com.compose.base.EditText
 import java.io.File
 import javax.swing.JFileChooser
 
@@ -33,19 +33,20 @@ fun AddSignDialog(show: MutableState<Boolean>) {
             val pwd = remember { mutableStateOf("") }
             val alias = remember { mutableStateOf("") }
             val alias_pwd = remember { mutableStateOf("") }
-            EditText(pwd, "password:")
-            EditText(alias, "alias:")
-            EditText(alias_pwd, "alias password:")
+            OutlinedTextField(pwd, "password")
+            OutlinedTextField(alias, "alias")
+            OutlinedTextField(alias_pwd, "alias password")
             Button("sign file path") {
                 if (pwd.value.isEmpty() || alias.value.isEmpty() || alias_pwd.value.isEmpty()) {
                     Toast.showMsg(window, "please complete the signature configuration information")
                     return@Button
                 }
-                FileChooser.newInstance(window,
+                FileChooser.newInstance(
+                    window,
                     JFileChooser.FILES_ONLY,
                     "choose sign",
                     arrayOf(Suffix.JKS, Suffix.KEY_STORE),
-                    object : FileChooser.OnSelectListener {
+                    object : FileChooser.OnFileSelectListener {
                         override fun onSelected(path: String) {
                             val name = path.substring(path.lastIndexOf(File.separator) + 1, path.length)
                             //保存签名文件的路径

@@ -1,4 +1,4 @@
-package com.compose.base
+package com.coding.compose.base
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button

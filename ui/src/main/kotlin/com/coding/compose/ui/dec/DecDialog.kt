@@ -1,4 +1,4 @@
-package com.compose.ui
+package com.coding.compose.ui.dec
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,12 +10,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.coding.compose.base.Button
+import com.coding.compose.base.CheckBox
+import com.coding.compose.base.Dialog
 import com.coding.dec.ADT
 import com.coding.dec.utils.Suffix
 import com.coding.ui.FileChooser
-import com.compose.base.Button
-import com.compose.base.CheckBox
-import com.compose.base.Dialog
 import javax.swing.JFileChooser
 
 
@@ -37,7 +37,7 @@ fun DecDialog(show: MutableState<Boolean>) {
                     JFileChooser.FILES_ONLY,
                     "choose apk",
                     Suffix.APK,
-                    object : FileChooser.OnSelectListener {
+                    object : FileChooser.OnFileSelectListener {
                         override fun onSelected(path: String) {
                             ADT.decompile(path, ignoreDex.value, ignoreResource.value)
                         }

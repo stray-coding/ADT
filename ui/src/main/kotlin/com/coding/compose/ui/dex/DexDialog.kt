@@ -1,23 +1,24 @@
-package com.compose.ui
+package com.coding.compose.ui.dex
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.coding.compose.base.Button
+import com.coding.compose.base.Dialog
 import com.coding.dec.ADT
 import com.coding.dec.utils.Suffix
 import com.coding.ui.FileChooser
 import com.coding.ui.Toast
-import com.compose.base.Button
-import com.compose.base.Dialog
-import com.compose.base.EditText
 import javax.swing.JFileChooser
 
 @Composable
@@ -28,14 +29,14 @@ fun DexDialog(show: MutableState<Boolean>) {
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
                 Button("dex2jar") {
                     FileChooser.newInstance(
                         window,
                         JFileChooser.FILES_ONLY,
                         "dex2jar",
                         Suffix.DEX,
-                        object : FileChooser.OnSelectListener {
+                        object : FileChooser.OnFileSelectListener {
                             override fun onSelected(path: String) {
                                 ADT.dex2jar(path)
                             }
@@ -47,7 +48,7 @@ fun DexDialog(show: MutableState<Boolean>) {
                         JFileChooser.FILES_ONLY,
                         "jar2dex",
                         Suffix.JAR,
-                        object : FileChooser.OnSelectListener {
+                        object : FileChooser.OnFileSelectListener {
                             override fun onSelected(path: String) {
                                 ADT.jar2dex(path)
                             }
@@ -60,35 +61,51 @@ fun DexDialog(show: MutableState<Boolean>) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically
             ) {
-                Button("old dex") {
-                    FileChooser.newInstance(window,
-                        JFileChooser.FILES_ONLY,
-                        "old dex",
-                        Suffix.DEX,
-                        object : FileChooser.OnSelectListener {
-                            override fun onSelected(path: String) {
-                                oldDexPath.value = path
-                            }
-                        })
-                }
-                EditText(oldDexPath)
+                OutlinedTextField(
+                    value = oldDexPath.value,
+                    onValueChange = { oldDexPath.value = it },
+                    enabled = false,
+                    readOnly = true,
+                    modifier = Modifier.width(300.dp).height(60.dp).clickable {
+                        FileChooser.newInstance(window,
+                            JFileChooser.FILES_ONLY,
+                            "new dex",
+                            Suffix.DEX,
+                            object : FileChooser.OnFileSelectListener {
+                                override fun onSelected(path: String) {
+                                    oldDexPath.value = path
+                                }
+                            })
+                    },
+                    label = { Text("choose old dex", modifier = Modifier.width(120.dp)) },
+                    textStyle = TextStyle(textAlign = TextAlign.Center),
+                    maxLines = 1,
+                )
             }
             val newDexPath = remember { mutableStateOf("") }
             Row(
                 horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically
             ) {
-                Button("new dex") {
-                    FileChooser.newInstance(window,
-                        JFileChooser.FILES_ONLY,
-                        "new dex",
-                        Suffix.DEX,
-                        object : FileChooser.OnSelectListener {
-                            override fun onSelected(path: String) {
-                                newDexPath.value = path
-                            }
-                        })
-                }
-                EditText(newDexPath)
+                OutlinedTextField(
+                    value = newDexPath.value,
+                    onValueChange = { newDexPath.value = it },
+                    enabled = false,
+                    readOnly = true,
+                    modifier = Modifier.width(300.dp).height(60.dp).clickable {
+                        FileChooser.newInstance(window,
+                            JFileChooser.FILES_ONLY,
+                            "new dex",
+                            Suffix.DEX,
+                            object : FileChooser.OnFileSelectListener {
+                                override fun onSelected(path: String) {
+                                    newDexPath.value = path
+                                }
+                            })
+                    },
+                    label = { Text("choose new dex", modifier = Modifier.width(120.dp)) },
+                    textStyle = TextStyle(textAlign = TextAlign.Center),
+                    maxLines = 1,
+                )
             }
 
             Button("generate patch") {
@@ -100,7 +117,7 @@ fun DexDialog(show: MutableState<Boolean>) {
                     window,
                     JFileChooser.DIRECTORIES_ONLY,
                     "generate patch",
-                    object : FileChooser.OnSelectListener {
+                    object : FileChooser.OnFileSelectListener {
                         override fun onSelected(path: String) {
                             ADT.generatePatch(
                                 oldDexPath.value, newDexPath.value, path
