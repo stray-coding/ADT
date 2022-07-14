@@ -35,11 +35,11 @@ fun SignDialog(show: MutableState<Boolean>) {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             val btnLabel = remember { mutableStateOf("choose sign") }
-            var selectedName = ""
+            val selectedName = remember { mutableStateOf("") }
             val showSignList = remember { mutableStateOf(false) }
             SignListDialog(showSignList, object : OnSelectListener {
                 override fun onSelected(name: String) {
-                    selectedName = name
+                    selectedName.value = name
                     btnLabel.value = name
                     showSignList.value = false
                     println("selectedName:" + name)
@@ -62,6 +62,7 @@ fun SignDialog(show: MutableState<Boolean>) {
                 CheckBox("v4", v4, Modifier.width(20.dp))
             }
             Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+
                 Button("sign") {
                     FileChooser.newInstance(
                         window,
@@ -70,12 +71,13 @@ fun SignDialog(show: MutableState<Boolean>) {
                         Suffix.APK,
                         object : FileChooser.OnFileSelectListener {
                             override fun onSelected(path: String) {
+                                println("sign selectedName:" + selectedName.value)
                                 if (v1.value && !v2.value && !v3.value && !v4.value) {
-                                    ADT.signAndAlign(path, SignUtils.getSign(selectedName))
+                                    ADT.signAndAlign(path, SignUtils.getSign(selectedName.value))
                                 } else {
                                     ADT.alignAndSign(
                                         path,
-                                        SignUtils.getSign(selectedName),
+                                        SignUtils.getSign(selectedName.value),
                                         v1Enable = v1.value,
                                         v2Enable = v2.value,
                                         v3Enable = v3.value,

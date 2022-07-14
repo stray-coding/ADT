@@ -69,11 +69,11 @@ fun ADBDialog(show: MutableState<Boolean>) {
 
 
                 val pkgNameLabel = remember { mutableStateOf("choose package name") }
-                var selectedPkg = ""
+                val selectedPkg = remember { mutableStateOf("") }
                 val showPkgNamesList = remember { mutableStateOf(false) }
                 AppPkgListDialog(selectedDevice, showPkgNamesList, object : OnSelectListener {
                     override fun onSelected(name: String) {
-                        selectedPkg = name
+                        selectedPkg.value = name
                         pkgNameLabel.value = name
                         showPkgNamesList.value = false
                     }
@@ -90,7 +90,7 @@ fun ADBDialog(show: MutableState<Boolean>) {
                             "choose dir",
                             object : FileChooser.OnFileSelectListener {
                                 override fun onSelected(path: String) {
-                                    ADT.extractApk(selectedDevice.value, selectedPkg, path)
+                                    ADT.extractApk(selectedDevice.value, selectedPkg.value, path)
                                 }
                             })
                     }

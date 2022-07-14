@@ -16,7 +16,6 @@ import com.coding.compose.base.Dialog
 import com.coding.compose.base.Toast
 import com.coding.dec.utils.SignUtils
 
-private var curSelect = ""
 
 @Composable
 fun SignManagerDialog(show: MutableState<Boolean>) {
@@ -38,8 +37,6 @@ fun SignManagerDialog(show: MutableState<Boolean>) {
                 RadioGroup(select, list)
             }
 
-            curSelect = select.value
-
             val addSign_show = remember { mutableStateOf(false) }
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 Button("delete sign") {
@@ -59,8 +56,4 @@ fun SignManagerDialog(show: MutableState<Boolean>) {
             AddSignDialog(addSign_show)
         }
     }
-}
-
-fun getCurSign(): SignUtils.SignBean {
-    return SignUtils.getSign(curSelect)
 }

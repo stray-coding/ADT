@@ -38,11 +38,11 @@ fun AABDialog(show: MutableState<Boolean>) {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             val btnLabel = remember { mutableStateOf("choose sign") }
-            var selectedName = ""
+            val selectedName = remember { mutableStateOf("") }
             val showSignList = remember { mutableStateOf(false) }
             SignListDialog(showSignList, object : OnSelectListener {
                 override fun onSelected(name: String) {
-                    selectedName = name
+                    selectedName.value = name
                     btnLabel.value = name
                     showSignList.value = false
                     println("selectedName:$name")
@@ -69,7 +69,7 @@ fun AABDialog(show: MutableState<Boolean>) {
                         override fun onSelected(path: String) {
                             ADT.aab2Apks(
                                 path,
-                                SignUtils.getSign(selectedName),
+                                SignUtils.getSign(selectedName.value),
                                 universal = universal.value
                             )
                         }
