@@ -33,7 +33,7 @@ fun SignManagerDialog(show: MutableState<Boolean>) {
             }
             val select = remember { mutableStateOf("choose sign") }
             val scrollState = rememberScrollState()
-            Column(modifier = Modifier.verticalScroll(scrollState).height(150.dp)) {
+            Column(modifier = Modifier.height(190.dp).verticalScroll(scrollState)) {
                 RadioGroup(select, list)
             }
 
