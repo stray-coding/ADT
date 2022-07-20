@@ -12,15 +12,17 @@ import com.coding.compose.listener.OnSelectListener
 
 @Composable
 fun RadioGroup(
-    select: MutableState<String>, tags: MutableList<String>, listener: OnSelectListener? = null
+    select: MutableState<String>,
+    array: MutableList<String>,
+    listener: OnSelectListener? = null
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        if (tags.isNotEmpty()) {
-            tags.forEach {
+        if (array.isNotEmpty()) {
+            array.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(modifier = Modifier.height(25.dp), selected = it == select.value, onClick = {
                         select.value = it

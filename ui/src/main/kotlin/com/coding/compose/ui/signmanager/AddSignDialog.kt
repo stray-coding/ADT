@@ -29,9 +29,9 @@ fun AddSignDialog(show: MutableState<Boolean>) {
             val pwd = remember { mutableStateOf("") }
             val alias = remember { mutableStateOf("") }
             val alias_pwd = remember { mutableStateOf("") }
-            OutlinedTextField(pwd, "password")
-            OutlinedTextField(alias, "alias")
-            OutlinedTextField(alias_pwd, "alias password")
+            OutlinedTextField("password", pwd)
+            OutlinedTextField("alias", alias)
+            OutlinedTextField("alias password", alias_pwd)
             Button("sign file path") {
                 if (pwd.value.isEmpty() || alias.value.isEmpty() || alias_pwd.value.isEmpty()) {
                     Toast.showMsg(window, "please complete the signature configuration information")

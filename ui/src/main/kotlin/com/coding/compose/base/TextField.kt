@@ -12,8 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TextField(text: MutableState<String>, label: String = "") {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+fun TextField(
+    label: String = "",
+    text: MutableState<String>
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         if (label.isNotEmpty()) {
             Text(label, modifier = Modifier.width(120.dp))
         }

@@ -6,7 +6,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogWindowScope
 
 @Composable
-fun Dialog(title: String, state: MutableState<Boolean>, content: @Composable DialogWindowScope.() -> Unit) {
+fun Dialog(
+    title: String,
+    state: MutableState<Boolean>,
+    content: @Composable DialogWindowScope.() -> Unit
+) {
     Dialog(
         visible = state.value,
         resizable = false,

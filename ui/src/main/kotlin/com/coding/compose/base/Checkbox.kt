@@ -19,14 +19,24 @@ fun CheckBox(
     modifier: Modifier = Modifier.width(120.dp),
     listener: OnCheckListener? = null
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         if (title.isNotEmpty()) {
-            Text(text = title, textAlign = TextAlign.Start, modifier = modifier, maxLines = 1)
+            Text(
+                text = title,
+                textAlign = TextAlign.Start,
+                modifier = modifier,
+                maxLines = 1
+            )
         }
-        Checkbox(checked = state.value, onCheckedChange = {
-            state.value = it
-            listener?.onCheckedChange(it)
-        })
+        Checkbox(
+            checked = state.value,
+            onCheckedChange = {
+                state.value = it
+                listener?.onCheckedChange(it)
+            }
+        )
     }
 }
 

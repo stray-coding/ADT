@@ -12,7 +12,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun OutlinedTextField(text: MutableState<String>, label: String = "") {
+fun OutlinedTextField(
+    label: String = "",
+    text: MutableState<String>,
+) {
     OutlinedTextField(
         value = text.value,
         onValueChange = { text.value = it },
