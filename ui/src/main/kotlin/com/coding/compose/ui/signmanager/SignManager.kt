@@ -4,16 +4,14 @@ import RadioGroup
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.coding.compose.base.Button
 import com.coding.compose.base.Dialog
 import com.coding.compose.base.Toast
+import com.coding.compose.listener.OnDialogCloseListener
 import com.coding.dec.utils.SignUtils
 
 
@@ -25,8 +23,8 @@ fun SignManagerDialog(show: MutableState<Boolean>) {
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-
-            val list = remember { mutableListOf<String>() }
+            println("aaaa")
+            val list = remember { mutableStateListOf<String>() }
             list.clear()
             for (item in SignUtils.getSignList()) {
                 list.add(item.name)
@@ -53,7 +51,17 @@ fun SignManagerDialog(show: MutableState<Boolean>) {
                     addSign_show.value = true
                 }
             }
-            AddSignDialog(addSign_show)
+            AddSignDialog(addSign_show, object : OnDialogCloseListener {
+                override fun onClose() {
+                    println("onClose")
+                    list.clear()
+                    for (item in SignUtils.getSignList()) {
+                        list.add(item.name)
+                    }
+                }
+            })
         }
     }
 }
+
+

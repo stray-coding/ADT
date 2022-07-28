@@ -3,6 +3,7 @@ import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
@@ -13,7 +14,7 @@ import com.coding.compose.listener.OnSelectListener
 @Composable
 fun RadioGroup(
     select: MutableState<String>,
-    array: MutableList<String>,
+    array: SnapshotStateList<String>,
     listener: OnSelectListener? = null
 ) {
     Column(
@@ -21,6 +22,7 @@ fun RadioGroup(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        println("ccc")
         if (array.isNotEmpty()) {
             array.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {

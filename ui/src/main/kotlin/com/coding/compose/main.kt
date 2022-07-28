@@ -24,7 +24,6 @@ import com.coding.compose.ui.signmanager.SignManagerDialog
 import com.coding.dec.ADT
 import javax.swing.JFileChooser
 
-
 @OptIn(ExperimentalUnitApi::class)
 fun main() = application {
     val dec_show = remember { mutableStateOf(false) }

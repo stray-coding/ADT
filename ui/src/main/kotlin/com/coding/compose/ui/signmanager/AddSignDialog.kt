@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.coding.compose.base.*
+import com.coding.compose.listener.OnDialogCloseListener
 import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
 import com.coding.dec.utils.Tools
@@ -19,8 +20,8 @@ import java.io.File
 import javax.swing.JFileChooser
 
 @Composable
-fun AddSignDialog(show: MutableState<Boolean>) {
-    Dialog(title = "sign manager", state = show) {
+fun AddSignDialog(show: MutableState<Boolean>, closeListener: OnDialogCloseListener) {
+    Dialog(title = "sign manager", state = show, onCloseRequest = closeListener) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -51,6 +52,8 @@ fun AddSignDialog(show: MutableState<Boolean>) {
                             FileUtils.copyFile(path, savePath)
                             val sign = SignUtils.SignBean(name, savePath, pwd.value, alias.value, alias_pwd.value)
                             SignUtils.addSign(sign)
+                            show.value = false
+                            closeListener.onClose()
                         }
                     })
             }
