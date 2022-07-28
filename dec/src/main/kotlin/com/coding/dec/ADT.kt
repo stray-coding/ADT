@@ -349,7 +349,7 @@ object ADT {
         }
         Terminal.run(cmd, listener = object : Terminal.OnStdoutListener {
             override fun callback(line: String) {
-                if (line.isNotEmpty()) {
+                if (line.isNotEmpty() && line.contains("package:")) {
                     val pkg = line.replace("package:", "")
                     list.add(pkg)
                 }
