@@ -22,7 +22,6 @@ fun RadioGroup(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        println("ccc")
         if (array.isNotEmpty()) {
             array.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {

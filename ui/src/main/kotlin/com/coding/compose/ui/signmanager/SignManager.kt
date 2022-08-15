@@ -23,7 +23,6 @@ fun SignManagerDialog(show: MutableState<Boolean>) {
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            println("aaaa")
             val list = remember { mutableStateListOf<String>() }
             list.clear()
             for (item in SignUtils.getSignList()) {
