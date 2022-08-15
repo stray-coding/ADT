@@ -29,15 +29,15 @@ dependencies {
 }
 
 
-def versionName = "0.1.2"
-def versionCode = 12
+def versionName = "0.1.4"
+def versionCode = 14
 application {
     mainClass = 'com.coding.Main'
 }
 
 task createProperties() {
     doLast {
-        print("createProperties start")
+        systemOut("createProperties start")
         File dir = new File(projectDir, "main/src/main/resources/VERSION-INF")
         if (!dir.exists()) {
             dir.mkdirs()
@@ -54,7 +54,7 @@ task createProperties() {
             fos.write(str.getBytes(StandardCharsets.UTF_8))
         }
         fos.close()
-        print("createProperties end")
+        systemOut("createProperties end")
     }
 }
 
@@ -63,7 +63,7 @@ task release() {
     dependsOn(assemble)
     assemble.mustRunAfter(createProperties)
     doLast {
-        print("create release start")
+        systemOut("create release start")
         String dir = projectDir.absolutePath + File.separator + "release"
         delete(dir)
         String src = dir + File.separator + "src"
@@ -71,19 +71,19 @@ task release() {
         copy {
             from "./build/libs/ADT-all.jar"
             into src
-            print("ADT.jar copy success")
+            systemOut("ADT.jar copy success")
         }
         copy {
             from "./tools"
             into src + File.separator + "tools"
-            print("tools dir copy success")
+            systemOut("tools dir copy success")
         }
         createBootBat(src)
         project.ant.zip(
                 basedir: src,
                 destfile: dir + File.separator + "adt.zip"
         )
-        print("create release end")
+        systemOut("create release end")
     }
 }
 
@@ -103,6 +103,6 @@ private static def createBootBat(String dir) {
     fos.close()
 }
 
-private static print(String msg) {
-    System.out.println("----- $msg -----")
+private static def systemOut(String msg) {
+    println("----- $msg -----")
 }
