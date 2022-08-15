@@ -22,13 +22,15 @@ fun SignListDialog(show: MutableState<Boolean>, listener: OnSelectListener) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            val list = remember { mutableStateListOf<String>() }
-            list.clear()
-            for (item in SignUtils.getSignList()) {
-                list.add(item.name)
+            if (show.value) {
+                val list = remember { mutableStateListOf<String>() }
+                list.clear()
+                for (item in SignUtils.getSignList()) {
+                    list.add(item.name)
+                }
+                val select = remember { mutableStateOf("choose sign") }
+                RadioGroup(select, list, listener)
             }
-            val select = remember { mutableStateOf("choose sign") }
-            RadioGroup(select, list, listener)
         }
     }
 }

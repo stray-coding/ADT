@@ -11,7 +11,6 @@ import androidx.compose.ui.unit.dp
 import com.coding.compose.base.Button
 import com.coding.compose.base.Dialog
 import com.coding.compose.base.Toast
-import com.coding.compose.listener.OnDialogCloseListener
 import com.coding.dec.utils.SignUtils
 
 
@@ -23,42 +22,43 @@ fun SignManagerDialog(show: MutableState<Boolean>) {
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            val list = remember { mutableStateListOf<String>() }
-            list.clear()
-            for (item in SignUtils.getSignList()) {
-                list.add(item.name)
-            }
-            val select = remember { mutableStateOf("choose sign") }
-            val scrollState = rememberScrollState()
-            Column(modifier = Modifier.height(190.dp).verticalScroll(scrollState)) {
-                RadioGroup(select, list)
-            }
+            if (show.value) {
+                val list = remember { mutableStateListOf<String>() }
+                list.clear()
+                for (item in SignUtils.getSignList()) {
+                    list.add(item.name)
+                }
+                val select = remember { mutableStateOf("choose sign") }
+                val scrollState = rememberScrollState()
+                Column(modifier = Modifier.height(190.dp).verticalScroll(scrollState)) {
+                    RadioGroup(select, list)
+                }
 
-            val addSign_show = remember { mutableStateOf(false) }
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Button("delete sign") {
-                    val selectSign = SignUtils.getSign(select.value)
-                    if (selectSign.name == "defaultSign") {
-                        Toast.showMsg(window, "the default signature can't be deleted!")
-                        return@Button
+                val addSign_show = remember { mutableStateOf(false) }
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Button("delete sign") {
+                        val selectSign = SignUtils.getSign(select.value)
+                        if (selectSign.name == "defaultSign") {
+                            Toast.showMsg(window, "the default signature can't be deleted!")
+                            return@Button
+                        }
+                        SignUtils.deleteSign(selectSign)
+                        list.remove(select.value)
                     }
-                    SignUtils.deleteSign(selectSign)
-                    list.remove(select.value)
-                }
 
-                Button("add sign") {
-                    addSign_show.value = true
+                    Button("add sign") {
+                        addSign_show.value = true
+                    }
                 }
-            }
-            AddSignDialog(addSign_show, object : OnDialogCloseListener {
-                override fun onClose() {
-                    println("onClose")
+                AddSignDialog(addSign_show)
+                //界面关闭后，刷新list
+                if (!addSign_show.value) {
                     list.clear()
                     for (item in SignUtils.getSignList()) {
                         list.add(item.name)
                     }
                 }
-            })
+            }
         }
     }
 }

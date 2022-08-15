@@ -20,7 +20,7 @@ import java.io.File
 import javax.swing.JFileChooser
 
 @Composable
-fun AddSignDialog(show: MutableState<Boolean>, closeListener: OnDialogCloseListener) {
+fun AddSignDialog(show: MutableState<Boolean>, closeListener: OnDialogCloseListener? = null) {
     Dialog(title = "sign manager", state = show, onCloseRequest = closeListener) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -53,7 +53,7 @@ fun AddSignDialog(show: MutableState<Boolean>, closeListener: OnDialogCloseListe
                             val sign = SignUtils.SignBean(name, savePath, pwd.value, alias.value, alias_pwd.value)
                             SignUtils.addSign(sign)
                             show.value = false
-                            closeListener.onClose()
+                            closeListener?.onClose()
                         }
                     })
             }

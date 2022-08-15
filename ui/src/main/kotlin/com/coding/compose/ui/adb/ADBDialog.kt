@@ -32,7 +32,6 @@ import javax.swing.JFileChooser
 fun ADBDialog(show: MutableState<Boolean>) {
     Dialog(title = "adb", state = show) {
         Row {
-            val curDevice = remember { mutableStateOf("") }
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
