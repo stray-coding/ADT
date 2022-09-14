@@ -42,7 +42,7 @@ fun SignDialog(show: MutableState<Boolean>) {
                     selectedName.value = name
                     btnLabel.value = name
                     showSignList.value = false
-                    println("selectedName:" + name)
+                    println("selected sign:$name")
                 }
             })
 

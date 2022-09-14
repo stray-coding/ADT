@@ -22,13 +22,15 @@ fun AppPkgListDialog(device: MutableState<String>, show: MutableState<Boolean>, 
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            val list = remember { mutableStateListOf<String>() }
-            list.clear()
-            for (item in ADT.getAllApkPackageNames(device.value)) {
-                list.add(item)
+            if (show.value) {
+                val list = remember { mutableStateListOf<String>() }
+                list.clear()
+                for (item in ADT.getAllApkPackageNames(device.value)) {
+                    list.add(item)
+                }
+                val select = remember { mutableStateOf("choose pkg") }
+                RadioGroup(select, list, listener)
             }
-            val select = remember { mutableStateOf("choose pkg") }
-            RadioGroup(select, list, listener)
         }
     }
 }

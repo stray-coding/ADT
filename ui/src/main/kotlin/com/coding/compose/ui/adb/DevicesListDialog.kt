@@ -22,13 +22,15 @@ fun DevicesListDialog(show: MutableState<Boolean>, listener: OnSelectListener) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            val list = remember { mutableStateListOf<String>() }
-            list.clear()
-            for (item in ADT.getAllDevices()) {
-                list.add(item)
+            if (show.value) {
+                val list = remember { mutableStateListOf<String>() }
+                list.clear()
+                for (item in ADT.getAllDevices()) {
+                    list.add(item)
+                }
+                val select = remember { mutableStateOf("choose device") }
+                RadioGroup(select, list, listener)
             }
-            val select = remember { mutableStateOf("choose device") }
-            RadioGroup(select, list, listener)
         }
     }
 }
