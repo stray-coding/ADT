@@ -7,6 +7,12 @@
 * 集成bundletool，实现aab转apks
 * 根据新旧dex快速生成增量包patch.dex
 
-tips:
 
-请确保您的PC包含java 11环境并配置了环境变量 下载release中的release/adt.zip，解压到本地目录,双击adt.bat文件即可
+使用方法
+1. 直接下载release中的release/adt.zip，解压到本地目录,双击adt.bat文件即可
+2. 通过gradle的task命令生成      生成路径：**项目的根目录/release/adt.zip**
+```
+./gradlew release
+```
+提示:
+请确保您的PC包含java 11环境并配置了环境变量
