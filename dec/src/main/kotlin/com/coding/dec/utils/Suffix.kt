@@ -13,4 +13,5 @@ object Suffix {
     const val DEX = ".dex"
     const val JKS = ".jks"
     const val KEY_STORE = ".keystore"
+    const val IDSIG = ".idsig"
 }

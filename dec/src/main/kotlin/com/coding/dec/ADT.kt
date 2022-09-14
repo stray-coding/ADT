@@ -200,6 +200,8 @@ object ADT {
         return if (signApkByApkSigner(alignPath, signBean, finalOutPath, v1Enable, v2Enable, v3Enable, v4Enable)) {
             //delete align apk
             FileUtils.delete(alignPath)
+            //delete idsig file
+            FileUtils.delete("$finalOutPath${Suffix.IDSIG}")
             true
         } else {
             false
