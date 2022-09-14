@@ -19,4 +19,5 @@
 ```
 如果觉得本工具对你有帮助，不妨请作者喝杯奶茶😊😊😊
 ```
-![收款码](./tools/wx_payment_code.jpg)
+
+<img src="./tools/wx_payment_code.jpg" width = "300" height = "300" />
