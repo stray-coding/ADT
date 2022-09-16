@@ -86,4 +86,9 @@ object Tools {
         return file.absolutePath
     }
 
+    fun getUnsignedApk(): String {
+        val file = File(TOOLS, "adt-unsigned.apk")
+        return file.absolutePath
+    }
+
 }
