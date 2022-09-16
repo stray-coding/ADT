@@ -29,8 +29,8 @@ dependencies {
 }
 
 
-def versionName = "0.1.4"
-def versionCode = 14
+def versionName = "0.1.5"
+def versionCode = 15
 application {
     mainClass = 'com.coding.Main'
 }
