@@ -38,8 +38,11 @@ fun SignManagerDialog(show: MutableState<Boolean>) {
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Button("delete sign") {
                         val selectSign = SignUtils.getSign(select.value)
-                        if (selectSign.name == "defaultSign") {
+                        if (selectSign.name == "adt") {
                             Toast.showMsg(window, "the default signature can't be deleted!")
+                            return@Button
+                        }
+                        if(selectSign.name == "") {
                             return@Button
                         }
                         SignUtils.deleteSign(selectSign)
