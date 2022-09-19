@@ -22,7 +22,7 @@ import javax.swing.JFileChooser
 
 @Composable
 fun AddSignDialog(show: MutableState<Boolean>, closeListener: OnDialogCloseListener? = null) {
-    Dialog(title = "sign manager", state = show, onCloseRequest = closeListener) {
+    Dialog(title = "add sign", state = show, onCloseRequest = closeListener) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(10.dp),
