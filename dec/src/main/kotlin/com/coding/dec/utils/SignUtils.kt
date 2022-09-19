@@ -56,7 +56,7 @@ object SignUtils {
             val doc = XmlUtils.parse(SIGN_CONFIG_PATH)
             val root = doc!!.documentElement
             val signList = doc.getElementsByTagName(ELEMENT_SIGN)
-            for (i in 0 until signList.length) {
+            for (i in signList.length - 1 downTo 0) {
                 val item = signList.item(i) as Element
                 SignBean.transform(item)?.let {
                     val file = File(it.path)
