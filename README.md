@@ -2,10 +2,10 @@
 
 * 集成jadx快速查看apk包内容
 * 集成apktool可以快速实现包体的反编译和回编译
-* 集成jar2dex、dex2jar，实现文件格式类型转换
+* 集成jar2dex、dex2jar，实现文件格式类型转换，可根据新旧dex快速生成增量包patch.dex
 * 集成apksigner和zipalign，快速实现包体的签名和对齐
-* 集成bundletool，实现aab转apks
-* 根据新旧dex快速生成增量包patch.dex
+* 集成bundletool，快速将aab文件转化为apks
+* 集成adb可快速安装apk和提取手机内的apk包体(需配置adb环境变量)
 
 
 使用方法
