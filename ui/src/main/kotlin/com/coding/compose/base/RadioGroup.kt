@@ -15,7 +15,8 @@ import com.coding.compose.listener.OnSelectListener
 fun RadioGroup(
     select: MutableState<String>,
     array: SnapshotStateList<String>,
-    listener: OnSelectListener? = null
+    listener: OnSelectListener? = null,
+    tips: String = "数据不见了 -_-!"
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -36,7 +37,7 @@ fun RadioGroup(
         } else {
             Text(
                 modifier = Modifier.fillMaxSize(),
-                text = "数据不见了 -_-!",
+                text = tips,
                 style = TextStyle(textAlign = TextAlign.Center)
             )
         }
