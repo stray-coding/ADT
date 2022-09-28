@@ -17,7 +17,7 @@ import com.coding.compose.base.Button
 import com.coding.compose.base.Dialog
 import com.coding.compose.base.FileChooser
 import com.coding.compose.base.Toast
-import com.coding.dec.ADT
+import com.coding.dec.DexTool
 import com.coding.dec.utils.Suffix
 import javax.swing.JFileChooser
 
@@ -38,7 +38,7 @@ fun DexDialog(show: MutableState<Boolean>) {
                         Suffix.DEX,
                         object : FileChooser.OnFileSelectListener {
                             override fun onSelected(path: String) {
-                                ADT.dex2jar(path)
+                                DexTool.dex2jar(path)
                             }
                         })
                 }
@@ -50,7 +50,7 @@ fun DexDialog(show: MutableState<Boolean>) {
                         Suffix.JAR,
                         object : FileChooser.OnFileSelectListener {
                             override fun onSelected(path: String) {
-                                ADT.jar2dex(path)
+                                DexTool.jar2dex(path)
                             }
                         })
                 }
@@ -119,7 +119,7 @@ fun DexDialog(show: MutableState<Boolean>) {
                     "generate patch",
                     object : FileChooser.OnFileSelectListener {
                         override fun onSelected(path: String) {
-                            ADT.generatePatch(
+                            DexTool.generatePatch(
                                 oldDexPath.value, newDexPath.value, path
                             )
                         }

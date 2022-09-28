@@ -21,7 +21,9 @@ import com.coding.compose.ui.dec.DecDialog
 import com.coding.compose.ui.dex.DexDialog
 import com.coding.compose.ui.sign.SignDialog
 import com.coding.compose.ui.signmanager.SignManagerDialog
-import com.coding.dec.ADT
+import com.coding.dec.ApkTool
+import com.coding.dec.utils.Tools
+import com.coding.utils.Terminal
 import javax.swing.JFileChooser
 
 @OptIn(ExperimentalUnitApi::class)
@@ -51,7 +53,7 @@ fun main() = application {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button("jadx") {
-                    ADT.openJadx()
+                    Terminal.run(Tools.getJadx())
                 }
                 Button("decompile") {
                     dec_show.value = true
@@ -65,7 +67,7 @@ fun main() = application {
                         "backToApk",
                         object : FileChooser.OnFileSelectListener {
                             override fun onSelected(path: String) {
-                                ADT.backToApk(path)
+                                ApkTool.backToApk(path)
                             }
                         })
                 }

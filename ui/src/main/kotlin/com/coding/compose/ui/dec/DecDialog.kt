@@ -14,7 +14,7 @@ import com.coding.compose.base.Button
 import com.coding.compose.base.CheckBox
 import com.coding.compose.base.Dialog
 import com.coding.compose.base.FileChooser
-import com.coding.dec.ADT
+import com.coding.dec.ApkTool
 import com.coding.dec.utils.Suffix
 import javax.swing.JFileChooser
 
@@ -39,7 +39,7 @@ fun DecDialog(show: MutableState<Boolean>) {
                     Suffix.APK,
                     object : FileChooser.OnFileSelectListener {
                         override fun onSelected(path: String) {
-                            ADT.decompile(path, ignoreDex.value, ignoreResource.value)
+                            ApkTool.decompile(path, ignoreDex.value, ignoreResource.value)
                         }
                     })
             }

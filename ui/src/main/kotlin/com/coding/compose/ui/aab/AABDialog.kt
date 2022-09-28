@@ -23,7 +23,7 @@ import com.coding.compose.base.Dialog
 import com.coding.compose.base.FileChooser
 import com.coding.compose.listener.OnSelectListener
 import com.coding.compose.ui.sign.SignListDialog
-import com.coding.dec.ADT
+import com.coding.dec.BundleTool
 import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
 import javax.swing.JFileChooser
@@ -67,7 +67,7 @@ fun AABDialog(show: MutableState<Boolean>) {
                     Suffix.AAB,
                     object : FileChooser.OnFileSelectListener {
                         override fun onSelected(path: String) {
-                            ADT.aab2Apks(
+                            BundleTool.aab2Apks(
                                 path,
                                 SignUtils.getSign(selectedName.value),
                                 universal = universal.value

@@ -20,7 +20,7 @@ import com.coding.compose.base.CheckBox
 import com.coding.compose.base.Dialog
 import com.coding.compose.base.FileChooser
 import com.coding.compose.listener.OnSelectListener
-import com.coding.dec.ADT
+import com.coding.dec.SignTool
 import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
 import javax.swing.JFileChooser
@@ -73,9 +73,9 @@ fun SignDialog(show: MutableState<Boolean>) {
                             override fun onSelected(path: String) {
                                 println("sign selectedName:" + selectedName.value)
                                 if (v1.value && !v2.value && !v3.value && !v4.value) {
-                                    ADT.signAndAlign(path, SignUtils.getSign(selectedName.value))
+                                    SignTool.signAndAlign(path, SignUtils.getSign(selectedName.value))
                                 } else {
-                                    ADT.alignAndSign(
+                                    SignTool.alignAndSign(
                                         path,
                                         SignUtils.getSign(selectedName.value),
                                         v1Enable = v1.value,
@@ -94,7 +94,7 @@ fun SignDialog(show: MutableState<Boolean>) {
                         Suffix.APK,
                         object : FileChooser.OnFileSelectListener {
                             override fun onSelected(path: String) {
-                                ADT.verifyApkSign(path)
+                                SignTool.verifyApkSign(path)
                             }
                         })
                 }

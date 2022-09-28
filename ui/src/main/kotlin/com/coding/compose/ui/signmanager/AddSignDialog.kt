@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.coding.compose.base.*
 import com.coding.compose.listener.OnDialogCloseListener
-import com.coding.dec.ADT
+import com.coding.dec.SignTool
 import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
 import com.coding.dec.utils.Tools
@@ -52,12 +52,18 @@ fun AddSignDialog(show: MutableState<Boolean>, closeListener: OnDialogCloseListe
                                 Tools.getConfigDir() + File.separator + path.substring(path.lastIndexOf(File.separator) + 1)
                             FileUtils.copyFile(path, savePath)
                             val sign = SignUtils.SignBean(name, savePath, pwd.value, alias.value, alias_pwd.value)
-                            if (!ADT.alignAndSign(Tools.getUnsignedApk(), sign, v1Enable = true, v2Enable = true)) {
+                            if (!SignTool.alignAndSign(
+                                    Tools.getUnsignedApk(),
+                                    sign,
+                                    v1Enable = true,
+                                    v2Enable = true
+                                )
+                            ) {
                                 FileUtils.deleteFile(savePath)
                                 Toast.showMsg(window, "Configuration information does not match signature file.")
                                 return
                             }
-                            FileUtils.deleteFile(Tools.getUnsignedApk().replace(".apk","_aligned_signed.apk"))
+                            FileUtils.deleteFile(Tools.getUnsignedApk().replace(".apk", "_aligned_signed.apk"))
                             SignUtils.addSign(sign)
                             show.value = false
                             closeListener?.onClose()
