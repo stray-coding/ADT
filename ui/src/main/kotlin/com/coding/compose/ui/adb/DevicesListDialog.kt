@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.coding.compose.base.Dialog
 import com.coding.compose.listener.OnSelectListener
-import com.coding.dec.ADT
+import com.coding.dec.AdbTool
 
 @Composable
 fun DevicesListDialog(show: MutableState<Boolean>, listener: OnSelectListener) {
@@ -25,7 +25,7 @@ fun DevicesListDialog(show: MutableState<Boolean>, listener: OnSelectListener) {
             if (show.value) {
                 val list = remember { mutableStateListOf<String>() }
                 list.clear()
-                for (item in ADT.getAllDevices()) {
+                for (item in AdbTool.getAllDevices()) {
                     list.add(item)
                 }
                 val select = remember { mutableStateOf("choose device") }

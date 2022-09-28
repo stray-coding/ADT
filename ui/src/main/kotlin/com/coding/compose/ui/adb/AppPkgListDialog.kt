@@ -11,10 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.coding.compose.base.Dialog
 import com.coding.compose.listener.OnSelectListener
-import com.coding.dec.ADT
+import com.coding.dec.AdbTool
 
 @Composable
-fun AppPkgListDialog(device: MutableState<String>, show: MutableState<Boolean>, listener: OnSelectListener) {
+fun AppPkgListDialog(
+    device: MutableState<String>, mode: MutableState<String>, show: MutableState<Boolean>, listener: OnSelectListener
+) {
     Dialog(title = "app pkg names list", state = show) {
         val scrollState = rememberScrollState()
         Column(
@@ -25,7 +27,7 @@ fun AppPkgListDialog(device: MutableState<String>, show: MutableState<Boolean>, 
             if (show.value) {
                 val list = remember { mutableStateListOf<String>() }
                 list.clear()
-                for (item in ADT.getAllApkPackageNames(device.value)) {
+                for (item in AdbTool.getAllApkPackageNames(device.value, mode.value)) {
                     list.add(item)
                 }
                 val select = remember { mutableStateOf("choose pkg") }
