@@ -82,32 +82,27 @@ fun ADBDialog(show: MutableState<Boolean>) {
 
                 val only_system = remember { mutableStateOf(false) }
                 val only_third = remember { mutableStateOf(false) }
-                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    CheckBox("only system app", only_system, listener = object : OnCheckListener {
-                        override fun onCheckedChange(checked: Boolean) {
-                            if (checked) {
-                                only_third.value = false
-                                mode.value = AdbTool.ONLY_SYSTEM_APP
-                                return
-                            }
-                            mode.value = AdbTool.ALL_APP
+                CheckBox("only system app", only_system, listener = object : OnCheckListener {
+                    override fun onCheckedChange(checked: Boolean) {
+                        if (checked) {
+                            only_third.value = false
+                            mode.value = AdbTool.ONLY_SYSTEM_APP
+                            return
                         }
-                    })
+                        mode.value = AdbTool.ALL_APP
+                    }
+                })
 
-                    CheckBox("only third app", only_third, listener = object : OnCheckListener {
-                        override fun onCheckedChange(checked: Boolean) {
-                            if (checked) {
-                                only_system.value = false
-                                mode.value = AdbTool.ONLY_THIRD_APP
-                                return
-                            }
-                            mode.value = AdbTool.ALL_APP
+                CheckBox("only third app", only_third, listener = object : OnCheckListener {
+                    override fun onCheckedChange(checked: Boolean) {
+                        if (checked) {
+                            only_system.value = false
+                            mode.value = AdbTool.ONLY_THIRD_APP
+                            return
                         }
-                    })
-                }
-
-
-
+                        mode.value = AdbTool.ALL_APP
+                    }
+                })
 
                 ClickableText(text = AnnotatedString(pkgNameLabel.value), style = TextStyle(
                     color = Color.Blue, fontSize = TextUnit(16.0f, TextUnitType.Sp)
