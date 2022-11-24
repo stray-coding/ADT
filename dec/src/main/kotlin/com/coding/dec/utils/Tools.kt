@@ -13,6 +13,8 @@ object Tools {
     private const val TOOLS = "tools"
 
     private const val CONFIG = "config"
+
+    private const val SIGN = "sign"
     fun getJava(): String {
         return "java"
     }
@@ -27,6 +29,14 @@ object Tools {
 
     fun getConfigDir(): String {
         val dir = File(CONFIG)
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+        return dir.absolutePath
+    }
+
+    fun getSignDir(): String {
+        val dir = File(CONFIG, SIGN)
         if (!dir.exists()) {
             dir.mkdirs()
         }
@@ -67,7 +77,7 @@ object Tools {
         return file.absolutePath
     }
 
-    fun getBundleTool():String {
+    fun getBundleTool(): String {
         val file = File(TOOLS, "bundletool-all-1.10.0.jar")
         return file.absolutePath
     }

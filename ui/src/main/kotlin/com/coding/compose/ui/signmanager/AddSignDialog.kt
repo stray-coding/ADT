@@ -49,7 +49,11 @@ fun AddSignDialog(show: MutableState<Boolean>, closeListener: OnDialogCloseListe
                             val name = path.substring(path.lastIndexOf(File.separator) + 1, path.length)
                             //保存签名文件的路径
                             val savePath =
-                                Tools.getConfigDir() + File.separator + path.substring(path.lastIndexOf(File.separator) + 1)
+                                Tools.getSignDir() + File.separator + path.substring(
+                                    path.lastIndexOf(
+                                        File.separator
+                                    ) + 1
+                                )
                             FileUtils.copyFile(path, savePath)
                             val sign = SignUtils.SignBean(name, savePath, pwd.value, alias.value, alias_pwd.value)
                             if (!SignTool.alignAndSign(
