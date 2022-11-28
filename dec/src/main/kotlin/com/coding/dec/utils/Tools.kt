@@ -36,7 +36,7 @@ object Tools {
     }
 
     fun getSignDir(): String {
-        val dir = File(CONFIG, SIGN)
+        val dir = File(SIGN)
         if (!dir.exists()) {
             dir.mkdirs()
         }
