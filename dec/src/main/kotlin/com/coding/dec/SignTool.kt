@@ -2,7 +2,7 @@ package com.coding.dec
 
 import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
-import com.coding.dec.utils.Tools
+import com.coding.dec.utils.Paths
 import com.coding.utils.FileUtils
 import com.coding.utils.Terminal
 import com.coding.utils.isFilePathValid
@@ -52,7 +52,7 @@ object SignTool {
         val v3EnableStr = if (v3Enable) "--v3-signing-enabled true " else ""
         val v4EnableStr = if (v4Enable) "--v4-signing-enabled true " else ""
 
-        val cmd = "${Tools.getJava()} -jar ${Tools.getApkSigner()} " +
+        val cmd = "${Paths.getJava()} -jar ${Paths.getApkSigner()} " +
                 "sign " + "--ks ${signBean.path} " +
                 "--ks-key-alias ${signBean.alias} " +
                 "--ks-pass pass:${signBean.pwd} " +
@@ -73,7 +73,7 @@ object SignTool {
         val newOutPath = outPath.ifEmpty {
             apkPath.removeSuffix(Suffix.APK) + "_aligned.apk"
         }
-        val cmd = "${Tools.getZipalign()} -f -v 4 $apkPath $newOutPath"
+        val cmd = "${Paths.getZipalign()} -f -v 4 $apkPath $newOutPath"
         return Terminal.run(cmd)
     }
 
@@ -139,7 +139,7 @@ object SignTool {
      * */
     fun verifyApkSign(apkPath: String): Boolean {
         if (!apkPath.isFilePathValid(Suffix.APK)) return false
-        val cmd = "${Tools.getJava()} -jar ${Tools.getApkSigner()} verify -v $apkPath"
+        val cmd = "${Paths.getJava()} -jar ${Paths.getApkSigner()} verify -v $apkPath"
         return Terminal.run(cmd)
     }
 }

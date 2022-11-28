@@ -22,7 +22,7 @@ import com.coding.compose.ui.dex.DexDialog
 import com.coding.compose.ui.sign.SignDialog
 import com.coding.compose.ui.signmanager.SignManagerDialog
 import com.coding.dec.ApkTool
-import com.coding.dec.utils.Tools
+import com.coding.dec.utils.Paths
 import com.coding.utils.Terminal
 import javax.swing.JFileChooser
 
@@ -53,7 +53,7 @@ fun main() = application {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button("jadx") {
-                    Terminal.run(Tools.getJadx())
+                    Terminal.run(Paths.getJadx())
                 }
                 Button("decompile") {
                     dec_show.value = true

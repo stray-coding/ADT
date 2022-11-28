@@ -15,7 +15,7 @@ import com.coding.compose.listener.OnDialogCloseListener
 import com.coding.dec.SignTool
 import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
-import com.coding.dec.utils.Tools
+import com.coding.dec.utils.Paths
 import com.coding.utils.FileUtils
 import java.io.File
 import javax.swing.JFileChooser
@@ -49,7 +49,7 @@ fun AddSignDialog(show: MutableState<Boolean>, closeListener: OnDialogCloseListe
                             val name = path.substring(path.lastIndexOf(File.separator) + 1, path.length)
                             //保存签名文件的路径
                             val savePath =
-                                Tools.getSignDir() + File.separator + path.substring(
+                                Paths.getSignDir() + File.separator + path.substring(
                                     path.lastIndexOf(
                                         File.separator
                                     ) + 1
@@ -57,7 +57,7 @@ fun AddSignDialog(show: MutableState<Boolean>, closeListener: OnDialogCloseListe
                             FileUtils.copyFile(path, savePath)
                             val sign = SignUtils.SignBean(name, savePath, pwd.value, alias.value, alias_pwd.value)
                             if (!SignTool.alignAndSign(
-                                    Tools.getUnsignedApk(),
+                                    Paths.getUnsignedApk(),
                                     sign,
                                     v1Enable = true,
                                     v2Enable = true
@@ -67,7 +67,7 @@ fun AddSignDialog(show: MutableState<Boolean>, closeListener: OnDialogCloseListe
                                 Toast.showMsg(window, "Configuration information does not match signature file.")
                                 return
                             }
-                            FileUtils.deleteFile(Tools.getUnsignedApk().replace(".apk", "_aligned_signed.apk"))
+                            FileUtils.deleteFile(Paths.getUnsignedApk().replace(".apk", "_aligned_signed.apk"))
                             SignUtils.addSign(sign)
                             show.value = false
                             closeListener?.onClose()

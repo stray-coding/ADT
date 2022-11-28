@@ -9,7 +9,7 @@ import java.io.File
  * @emil: stray-coding@foxmail.com
  * @des:
  */
-object Tools {
+object Paths {
     private const val TOOLS = "tools"
 
     private const val CONFIG = "config"
@@ -54,26 +54,21 @@ object Tools {
     }
 
     fun getJadx(): String {
-        val file = if (Terminal.isWindows())
-            File("$TOOLS${File.separator}jadx${File.separator}bin${File.separator}jadx-gui.bat")
-        else
-            File("$TOOLS${File.separator}jadx${File.separator}bin${File.separator}jadx-gui")
+        val file =
+            if (Terminal.isWindows()) File("$TOOLS${File.separator}jadx${File.separator}bin${File.separator}jadx-gui.bat")
+            else File("$TOOLS${File.separator}jadx${File.separator}bin${File.separator}jadx-gui")
         return file.absolutePath
     }
 
     fun getZipalign(): String {
-        val file = if (Terminal.isWindows())
-            File(TOOLS, "zipalign.exe")
-        else
-            File(TOOLS, "zipalign")
+        val file = if (Terminal.isWindows()) File(TOOLS, "zipalign.exe")
+        else File(TOOLS, "zipalign")
         return file.absolutePath
     }
 
     fun getJar2dex(): String {
-        val file = if (Terminal.isWindows())
-            File("$TOOLS${File.separator}dex2jar-2.1${File.separator}d2j-jar2dex.bat")
-        else
-            File("$TOOLS${File.separator}dex2jar-2.1${File.separator}d2j-jar2dex.sh")
+        val file = if (Terminal.isWindows()) File("$TOOLS${File.separator}dex2jar-2.1${File.separator}d2j-jar2dex.bat")
+        else File("$TOOLS${File.separator}dex2jar-2.1${File.separator}d2j-jar2dex.sh")
         return file.absolutePath
     }
 
@@ -91,6 +86,11 @@ object Tools {
         return file.absolutePath
     }
 
+    fun getSignConfigFile(): String {
+        val file = File(CONFIG, "sign_config.xml")
+        return file.absolutePath
+    }
+
     fun getDefaultSignFile(): String {
         val file = File(TOOLS, "adt.jks")
         return file.absolutePath
@@ -100,5 +100,6 @@ object Tools {
         val file = File(TOOLS, "adt-unsigned.apk")
         return file.absolutePath
     }
+
 
 }

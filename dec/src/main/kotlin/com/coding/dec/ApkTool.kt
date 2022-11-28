@@ -1,7 +1,7 @@
 package com.coding.dec
 
 import com.coding.dec.utils.Suffix
-import com.coding.dec.utils.Tools
+import com.coding.dec.utils.Paths
 import com.coding.utils.Terminal
 import com.coding.utils.isDirPathValid
 import com.coding.utils.isFilePathValid
@@ -16,7 +16,7 @@ object ApkTool {
         val resStr = if (ignoreRes) "-r" else ""
         val omc = if (ignoreDex) "" else "-only-main-classes"
         val finalOutPath = outPath.ifEmpty { apkPath.removeSuffix(Suffix.APK) }
-        val cmd = "${Tools.getJava()} -jar ${Tools.getApkTool()} d $apkPath $dexStr $omc $resStr -f -o $finalOutPath"
+        val cmd = "${Paths.getJava()} -jar ${Paths.getApkTool()} d $apkPath $dexStr $omc $resStr -f -o $finalOutPath"
         return Terminal.run(cmd)
     }
 
@@ -27,7 +27,7 @@ object ApkTool {
     fun backToApk(srcDir: String, outPath: String = ""): Boolean {
         if (!srcDir.isDirPathValid()) return false
         val newOutPath = outPath.ifEmpty { "${srcDir}_btc.apk" }
-        val cmd = "${Tools.getJava()} -jar ${Tools.getApkTool()} b $srcDir -f -o $newOutPath"
+        val cmd = "${Paths.getJava()} -jar ${Paths.getApkTool()} b $srcDir -f -o $newOutPath"
         return Terminal.run(cmd)
     }
 }

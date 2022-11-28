@@ -1,7 +1,7 @@
 package com.coding.dec
 
 import com.coding.dec.utils.Suffix
-import com.coding.dec.utils.Tools
+import com.coding.dec.utils.Paths
 import com.coding.utils.FileUtils
 import com.coding.utils.Terminal
 import com.coding.utils.ZipUtils
@@ -18,7 +18,7 @@ object DexTool {
         val finalOutPath = outPath.ifEmpty {
             dexPath.removeSuffix(Suffix.DEX) + "_d2j.jar"
         }
-        val cmd = "${Tools.getDex2jar()} $dexPath -f -o $finalOutPath"
+        val cmd = "${Paths.getDex2jar()} $dexPath -f -o $finalOutPath"
         val isSuc = Terminal.run(cmd)
         for (item in FileUtils.listFilesInDir("./")) {
             if (item.name.endsWith("-error.zip")) {
@@ -37,7 +37,7 @@ object DexTool {
         val finalOutPath = outPath.ifEmpty {
             jarPath.removeSuffix(Suffix.JAR) + "_j2d.dex"
         }
-        val cmd = "${Tools.getJar2dex()} $jarPath -f -o $finalOutPath"
+        val cmd = "${Paths.getJar2dex()} $jarPath -f -o $finalOutPath"
         val isSuc = Terminal.run(cmd)
         for (item in FileUtils.listFilesInDir("./")) {
             if (item.name.endsWith("-error.zip")) {

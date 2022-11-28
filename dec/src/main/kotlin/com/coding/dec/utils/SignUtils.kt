@@ -13,8 +13,6 @@ import java.io.File
  * @des:
  */
 object SignUtils {
-
-    private const val SIGN_CONFIG_PATH = "config/sign_config.xml"
     private const val ELEMENT_SIGNS = "signs"
     private const val ELEMENT_SIGN = "sign"
 
@@ -25,24 +23,30 @@ object SignUtils {
     private const val SIGN_ALIAS = "alias"
     private const val SIGN_ALIAS_PWD = "alias_pwd"
 
+    //默认签名文件的值
+    private const val SIGN_NAME_VALUE = "adt"
+    private const val SIGN_PWD_VALUE = "adt123"
+    private const val SIGN_ALIAS_VALUE = "alias"
+    private const val SIGN_ALIAS_PWD_VALUE = "adt"
+
     init {
         initSignXml()
     }
 
     private fun initSignXml() {
-        if (!FileUtils.isFileExists(SIGN_CONFIG_PATH)) {
+        if (!FileUtils.isFileExists(Paths.getSignConfigFile())) {
             try {
                 val doc = newDoc()
                 val root = doc.createElement(ELEMENT_SIGNS)
                 val adtElement = doc.createElement(ELEMENT_SIGN)
-                adtElement.setAttribute(SIGN_NAME, "adt")
-                adtElement.setAttribute(SIGN_PATH, Tools.getDefaultSignFile())
-                adtElement.setAttribute(SIGN_PWD, "adt123")
-                adtElement.setAttribute(SIGN_ALIAS, "adt")
-                adtElement.setAttribute(SIGN_ALIAS_PWD, "adt123")
+                adtElement.setAttribute(SIGN_NAME, SIGN_NAME_VALUE)
+                adtElement.setAttribute(SIGN_PATH, Paths.getDefaultSignFile())
+                adtElement.setAttribute(SIGN_PWD, SIGN_PWD_VALUE)
+                adtElement.setAttribute(SIGN_ALIAS, SIGN_ALIAS_VALUE)
+                adtElement.setAttribute(SIGN_ALIAS_PWD, SIGN_ALIAS_PWD_VALUE)
                 root.appendChild(adtElement)
                 doc.appendChild(root)
-                XmlUtils.saveXml(doc, File(SIGN_CONFIG_PATH).absolutePath)
+                XmlUtils.saveXml(doc, Paths.getSignConfigFile())
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -51,9 +55,9 @@ object SignUtils {
 
     fun getSignList(): ArrayList<SignBean> {
         val signArray = arrayListOf<SignBean>()
-        if (!FileUtils.isFileExists(SIGN_CONFIG_PATH)) return signArray
+        if (!FileUtils.isFileExists(Paths.getSignConfigFile())) return signArray
         try {
-            val doc = XmlUtils.parse(SIGN_CONFIG_PATH)
+            val doc = XmlUtils.parse(Paths.getSignConfigFile())
             val root = doc!!.documentElement
             val signList = doc.getElementsByTagName(ELEMENT_SIGN)
             for (i in signList.length - 1 downTo 0) {
@@ -68,7 +72,7 @@ object SignUtils {
                     signArray.add(it)
                 }
             }
-            XmlUtils.saveXml(doc, SIGN_CONFIG_PATH)
+            XmlUtils.saveXml(doc, Paths.getSignConfigFile())
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -97,7 +101,7 @@ object SignUtils {
      */
     fun addSign(config: SignBean) {
         try {
-            val doc = XmlUtils.parse(SIGN_CONFIG_PATH)
+            val doc = XmlUtils.parse(Paths.getSignConfigFile())
             doc?.let {
                 val element = doc.createElement(ELEMENT_SIGN)
                 element.setAttribute(SIGN_NAME, config.name)
@@ -108,7 +112,7 @@ object SignUtils {
                 //添加节点
                 val root = doc.documentElement
                 root.insertBefore(element, null)
-                XmlUtils.saveXml(doc, SIGN_CONFIG_PATH)
+                XmlUtils.saveXml(doc, Paths.getSignConfigFile())
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -123,7 +127,7 @@ object SignUtils {
     fun deleteSign(config: SignBean?) {
         if (config == null) return
         try {
-            val doc = XmlUtils.parse(SIGN_CONFIG_PATH)
+            val doc = XmlUtils.parse(Paths.getSignConfigFile())
             doc?.let {
                 val signList = doc.getElementsByTagName(ELEMENT_SIGN)
                 for (i in 0 until signList.length) {
@@ -131,7 +135,7 @@ object SignUtils {
                     if (element.getAttribute("name") == config.name) {
                         val root = doc.documentElement
                         root.removeChild(element)
-                        XmlUtils.saveXml(doc, SIGN_CONFIG_PATH)
+                        XmlUtils.saveXml(doc, Paths.getSignConfigFile())
                         return
                     }
                 }

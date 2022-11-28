@@ -7,3 +7,4 @@
 /.gradle
 /release
 main/src/main/resources/VERSION-INF/adt.properties
+/sign/

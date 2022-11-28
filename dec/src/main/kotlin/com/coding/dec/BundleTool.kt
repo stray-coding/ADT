@@ -2,7 +2,7 @@ package com.coding.dec
 
 import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
-import com.coding.dec.utils.Tools
+import com.coding.dec.utils.Paths
 import com.coding.utils.FileUtils
 import com.coding.utils.Terminal
 import com.coding.utils.isFilePathValid
@@ -23,7 +23,7 @@ object BundleTool {
         }
         FileUtils.delete(newOutPath)
         val universalStr = if (universal) "--mode=universal" else ""
-        val cmd = "java -jar ${Tools.getBundleTool()} " +
+        val cmd = "java -jar ${Paths.getBundleTool()} " +
                 "build-apks " + "--bundle=${aabPath} " +
                 "--output=${newOutPath} " +
                 "--ks=${signBean.path} " +
