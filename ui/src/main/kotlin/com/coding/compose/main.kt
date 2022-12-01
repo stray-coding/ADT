@@ -8,6 +8,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asComposeImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
@@ -24,7 +26,11 @@ import com.coding.compose.ui.signmanager.SignManagerDialog
 import com.coding.dec.ApkTool
 import com.coding.dec.utils.Paths
 import com.coding.utils.Terminal
+import org.jetbrains.skiko.toBitmap
+import java.io.File
+import javax.imageio.ImageIO
 import javax.swing.JFileChooser
+
 
 @OptIn(ExperimentalUnitApi::class)
 fun main() = application {
@@ -40,9 +46,12 @@ fun main() = application {
     SignDialog(sign_show)
     AABDialog(aab_show)
     ADBDialog(adb_show)
+    val buffer = ImageIO.read(File("tools\\icon.jpg"))
+    val painter = BitmapPainter(buffer.toBitmap().asComposeImageBitmap())
     Window(
         onCloseRequest = ::exitApplication,
         title = "ADT",
+        icon = painter,
         state = rememberWindowState(width = 300.dp, height = 520.dp),
         resizable = false
     ) {
