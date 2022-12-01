@@ -24,10 +24,10 @@ object SignUtils {
     private const val SIGN_ALIAS_PWD = "alias_pwd"
 
     //默认签名文件的值
-    private const val SIGN_NAME_VALUE = "adt"
+    private const val SIGN_NAME_VALUE = "default_adt"
     private const val SIGN_PWD_VALUE = "adt123"
-    private const val SIGN_ALIAS_VALUE = "alias"
-    private const val SIGN_ALIAS_PWD_VALUE = "adt"
+    private const val SIGN_ALIAS_VALUE = "adt"
+    private const val SIGN_ALIAS_PWD_VALUE = "adt123"
 
     init {
         initSignXml()
