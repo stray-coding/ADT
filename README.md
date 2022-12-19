@@ -1,6 +1,5 @@
 # android_decompile_tool
 
-* 集成jadx快速查看apk包内容
 * 集成apktool可以快速实现包体的反编译和回编译
 * 集成jar2dex、dex2jar，实现文件格式类型转换，可根据新旧dex快速生成增量包patch.dex
 * 集成apksigner和zipalign，快速实现包体的签名和对齐

@@ -61,9 +61,6 @@ fun main() = application {
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Button("jadx") {
-                    Terminal.run(Paths.getJadx())
-                }
                 Button("decompile") {
                     dec_show.value = true
                 }
