@@ -62,16 +62,19 @@ fun SignDialog(show: MutableState<Boolean>) {
                 CheckBox("v4", v4, Modifier.width(20.dp))
             }
             Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-
                 Button("sign") {
                     FileChooser.newInstance(
                         window,
                         JFileChooser.FILES_ONLY,
                         "apk sign",
-                        Suffix.APK,
+                        arrayOf(Suffix.APK, Suffix.AAB),
                         object : FileChooser.OnFileSelectListener {
                             override fun onSelected(path: String) {
                                 println("sign selectedName:" + selectedName.value)
+                                if (path.endsWith(Suffix.AAB)) {
+                                    SignTool.signAAB(path, SignUtils.getSign(selectedName.value))
+                                    return
+                                }
                                 if (v1.value && !v2.value && !v3.value && !v4.value) {
                                     SignTool.signAndAlign(path, SignUtils.getSign(selectedName.value))
                                 } else {

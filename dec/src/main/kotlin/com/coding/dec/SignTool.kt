@@ -1,13 +1,95 @@
 package com.coding.dec
 
+import com.coding.dec.utils.Paths
 import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
-import com.coding.dec.utils.Paths
 import com.coding.utils.FileUtils
 import com.coding.utils.Terminal
 import com.coding.utils.isFilePathValid
 
 object SignTool {
+
+    /**
+     * sign the aab file
+     *
+     * @param aabPath
+     * @param signBean
+     * @return
+     */
+    fun signAAB(
+        aabPath: String,
+        signBean: SignUtils.SignBean
+    ): Boolean {
+        if (!aabPath.isFilePathValid(Suffix.AAB)) return false
+        return Terminal.run(
+            "jarsigner " +
+                    "-digestalg SHA1 " +
+                    "-sigalg SHA1withRSA " +
+                    "-keystore ${signBean.path} " +
+                    "-storepass ${signBean.pwd} " +
+                    "-keypass ${signBean.aliasPwd} " +
+                    "$aabPath " +
+                    signBean.alias
+        )
+    }
+
+    /**
+     * 1. sign apk
+     * 2. align apk
+     * 3. jarsigner apk only v1
+     */
+    fun signAndAlign(
+        apkPath: String,
+        signBean: SignUtils.SignBean,
+        outPath: String = "",
+    ): Boolean {
+        if (!apkPath.isFilePathValid(Suffix.APK)) return false
+        val signPath = apkPath.removeSuffix(Suffix.APK) + "_signed.apk"
+        if (!signApkByJarSigner(apkPath, signBean, signPath)) {
+            return false
+        }
+        val finalOutPath = outPath.ifEmpty { signPath.removeSuffix(Suffix.APK) + "_aligned.apk" }
+        return if (alignApk(signPath, finalOutPath)) {
+            FileUtils.delete(signPath)
+            true
+        } else {
+            false
+        }
+    }
+
+
+    /**
+     * 1. align apk
+     * 2. sign apk
+     */
+    fun alignAndSign(
+        apkPath: String,
+        signBean: SignUtils.SignBean,
+        outPath: String = "",
+        v1Enable: Boolean,
+        v2Enable: Boolean,
+        v3Enable: Boolean = false,
+        v4Enable: Boolean = false
+    ): Boolean {
+        if (!apkPath.isFilePathValid(Suffix.APK)) return false
+        val alignPath = apkPath.removeSuffix(Suffix.APK) + "_aligned.apk"
+        if (!alignApk(apkPath, alignPath)) {
+            println("apk align error")
+            return false
+        }
+        val finalOutPath = outPath.ifEmpty { alignPath.removeSuffix(Suffix.APK) + "_signed.apk" }
+        return if (signApkByApkSigner(alignPath, signBean, finalOutPath, v1Enable, v2Enable, v3Enable, v4Enable)) {
+            //delete align apk
+            FileUtils.delete(alignPath)
+            //delete idsig file
+            FileUtils.delete("$finalOutPath${Suffix.IDSIG}")
+            true
+        } else {
+            false
+        }
+    }
+
+
     /**
      * jar sign
      * sign the apk  only v1
@@ -75,62 +157,6 @@ object SignTool {
         }
         val cmd = "${Paths.getZipalign()} -f -v 4 $apkPath $newOutPath"
         return Terminal.run(cmd)
-    }
-
-    /**
-     * 1. sign apk
-     * 2. align apk
-     * 3. jarsigner apk only v1
-     */
-    fun signAndAlign(
-        apkPath: String,
-        signBean: SignUtils.SignBean,
-        outPath: String = "",
-    ): Boolean {
-        if (!apkPath.isFilePathValid(Suffix.APK)) return false
-        val signPath = apkPath.removeSuffix(Suffix.APK) + "_signed.apk"
-        if (!signApkByJarSigner(apkPath, signBean, signPath)) {
-            return false
-        }
-        val finalOutPath = outPath.ifEmpty { signPath.removeSuffix(Suffix.APK) + "_aligned.apk" }
-        return if (alignApk(signPath, finalOutPath)) {
-            FileUtils.delete(signPath)
-            true
-        } else {
-            false
-        }
-    }
-
-
-    /**
-     * 1. align apk
-     * 2. sign apk
-     */
-    fun alignAndSign(
-        apkPath: String,
-        signBean: SignUtils.SignBean,
-        outPath: String = "",
-        v1Enable: Boolean,
-        v2Enable: Boolean,
-        v3Enable: Boolean = false,
-        v4Enable: Boolean = false
-    ): Boolean {
-        if (!apkPath.isFilePathValid(Suffix.APK)) return false
-        val alignPath = apkPath.removeSuffix(Suffix.APK) + "_aligned.apk"
-        if (!alignApk(apkPath, alignPath)) {
-            println("apk align error")
-            return false
-        }
-        val finalOutPath = outPath.ifEmpty { alignPath.removeSuffix(Suffix.APK) + "_signed.apk" }
-        return if (signApkByApkSigner(alignPath, signBean, finalOutPath, v1Enable, v2Enable, v3Enable, v4Enable)) {
-            //delete align apk
-            FileUtils.delete(alignPath)
-            //delete idsig file
-            FileUtils.delete("$finalOutPath${Suffix.IDSIG}")
-            true
-        } else {
-            false
-        }
     }
 
 

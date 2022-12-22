@@ -24,8 +24,6 @@ import com.coding.compose.ui.dex.DexDialog
 import com.coding.compose.ui.sign.SignDialog
 import com.coding.compose.ui.signmanager.SignManagerDialog
 import com.coding.dec.ApkTool
-import com.coding.dec.utils.Paths
-import com.coding.utils.Terminal
 import org.jetbrains.skiko.toBitmap
 import java.io.File
 import javax.imageio.ImageIO
@@ -52,7 +50,7 @@ fun main() = application {
         onCloseRequest = ::exitApplication,
         title = "ADT",
         icon = painter,
-        state = rememberWindowState(width = 300.dp, height = 520.dp),
+        state = rememberWindowState(width = 280.dp, height = (110 + 7 * 50).dp),
         resizable = false
     ) {
         MaterialTheme {

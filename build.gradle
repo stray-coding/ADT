@@ -29,11 +29,11 @@ dependencies {
 }
 
 
-def versionName = "0.1.8"
-def versionCode = 18
-def apktoolVersion = "2.7.0"
-def bundletoolVersion = "1.13.2"
-def dex2jarVersion = "2.1"
+def versionName = "0.1.9"
+def versionCode = 19
+def apktool = "2.7.0"
+def bundletool = "1.13.2"
+def dex2jar = "2.1"
 application {
     mainClass = 'com.coding.Main'
 }
@@ -50,9 +50,13 @@ task createProperties() {
         HashMap<String, Object> params = new HashMap<>()
         params.put("versionName", versionName)
         params.put("versionCode", versionCode)
-        params.put("apktool", apktoolVersion)
-        arams.put("bundletool", bundletoolVersion)
-        arams.put("dex2jar", dex2jarVersion)
+
+        HashMap<String, Object> thirds = new HashMap<>()
+        thirds.put("apktool", apktool)
+        thirds.put("bundletool", bundletool)
+        thirds.put("dex2jar", dex2jar)
+
+        params.put("third", thirds)
         params.put("data", getCurDate())
         FileOutputStream fos = new FileOutputStream(out)
         for (Map.Entry<String, Object> entry : params) {
