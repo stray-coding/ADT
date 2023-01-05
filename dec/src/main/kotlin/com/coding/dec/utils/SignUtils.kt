@@ -85,13 +85,13 @@ object SignUtils {
      * @param name  签名name
      * @return
      */
-    fun getSign(name: String): SignBean {
+    fun getSign(name: String): SignBean? {
         for (item in getSignList()) {
             if (name == item.name) {
                 return item
             }
         }
-        return SignBean()
+        return null
     }
 
     /**

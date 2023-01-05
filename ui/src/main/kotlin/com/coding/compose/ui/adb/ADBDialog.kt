@@ -56,6 +56,10 @@ fun ADBDialog(show: MutableState<Boolean>) {
                 val debug = remember { mutableStateOf(false) }
                 CheckBox("debug", debug)
                 Button("install apk") {
+                    if (selectedDevice.value.isEmpty()) {
+                        Toast.showMsg(window, "Please select the device first.")
+                        return@Button
+                    }
                     FileChooser.newInstance(window,
                         JFileChooser.FILES_ONLY,
                         "choose apk",

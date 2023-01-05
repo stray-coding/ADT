@@ -15,10 +15,7 @@ import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import com.coding.compose.base.Button
-import com.coding.compose.base.CheckBox
-import com.coding.compose.base.Dialog
-import com.coding.compose.base.FileChooser
+import com.coding.compose.base.*
 import com.coding.compose.listener.OnSelectListener
 import com.coding.dec.SignTool
 import com.coding.dec.utils.SignUtils
@@ -63,6 +60,12 @@ fun SignDialog(show: MutableState<Boolean>) {
             }
             Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
                 Button("sign") {
+                    println("sign selectedName:" + selectedName.value)
+                    val signBean = SignUtils.getSign(selectedName.value)
+                    if (signBean == null) {
+                        Toast.showMsg(window, "Please select a signature first.")
+                        return@Button
+                    }
                     FileChooser.newInstance(
                         window,
                         JFileChooser.FILES_ONLY,
@@ -70,17 +73,16 @@ fun SignDialog(show: MutableState<Boolean>) {
                         arrayOf(Suffix.APK, Suffix.AAB),
                         object : FileChooser.OnFileSelectListener {
                             override fun onSelected(path: String) {
-                                println("sign selectedName:" + selectedName.value)
                                 if (path.endsWith(Suffix.AAB)) {
-                                    SignTool.signAAB(path, SignUtils.getSign(selectedName.value))
+                                    SignTool.signAAB(path, signBean)
                                     return
                                 }
                                 if (v1.value && !v2.value && !v3.value && !v4.value) {
-                                    SignTool.signAndAlign(path, SignUtils.getSign(selectedName.value))
+                                    SignTool.signAndAlign(path, signBean)
                                 } else {
                                     SignTool.alignAndSign(
                                         path,
-                                        SignUtils.getSign(selectedName.value),
+                                        signBean,
                                         v1Enable = v1.value,
                                         v2Enable = v2.value,
                                         v3Enable = v3.value,

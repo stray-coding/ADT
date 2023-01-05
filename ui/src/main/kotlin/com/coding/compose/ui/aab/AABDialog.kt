@@ -17,10 +17,7 @@ import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import com.coding.compose.base.Button
-import com.coding.compose.base.CheckBox
-import com.coding.compose.base.Dialog
-import com.coding.compose.base.FileChooser
+import com.coding.compose.base.*
 import com.coding.compose.listener.OnSelectListener
 import com.coding.compose.ui.sign.SignListDialog
 import com.coding.dec.BundleTool
@@ -49,19 +46,21 @@ fun AABDialog(show: MutableState<Boolean>) {
                 }
             })
 
-            ClickableText(text = AnnotatedString(btnLabel.value),
-                style = TextStyle(
-                    color = Color.Blue,
-                    fontSize = TextUnit(16.0f, TextUnitType.Sp)
-                ), onClick = {
-                    showSignList.value = true
-                })
+            ClickableText(text = AnnotatedString(btnLabel.value), style = TextStyle(
+                color = Color.Blue, fontSize = TextUnit(16.0f, TextUnitType.Sp)
+            ), onClick = {
+                showSignList.value = true
+            })
 
             val universal = remember { mutableStateOf(false) }
             CheckBox("universal", universal)
             Button("aab2apks") {
-                FileChooser.newInstance(
-                    window,
+                val signBean = SignUtils.getSign(selectedName.value)
+                if (signBean == null) {
+                    Toast.showMsg(window, "Please select a signature first.")
+                    return@Button
+                }
+                FileChooser.newInstance(window,
                     JFileChooser.FILES_ONLY,
                     "choose aab",
                     Suffix.AAB,
@@ -69,7 +68,7 @@ fun AABDialog(show: MutableState<Boolean>) {
                         override fun onSelected(path: String) {
                             BundleTool.aab2Apks(
                                 path,
-                                SignUtils.getSign(selectedName.value),
+                                signBean,
                                 universal = universal.value
                             )
                         }
