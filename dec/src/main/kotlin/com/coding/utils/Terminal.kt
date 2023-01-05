@@ -9,8 +9,34 @@ import java.util.concurrent.TimeUnit
  * @des:
  */
 object Terminal {
+    private var curCMDCharset = CMDCharset.CMD_GBK
+
+    init {
+        curCMDCharset = getCMDCharset()
+    }
+
+    enum class CMDCharset {
+        CMD_UTF_8,
+        CMD_GBK
+    }
+
+
     fun isWindows(): Boolean {
         return System.getProperty("os.name").contains("Windows")
+    }
+
+    private fun getCMDCharset(): CMDCharset {
+        var charset: CMDCharset = CMDCharset.CMD_GBK
+        run("cmd /c chcp", listener = object : OnStdoutListener {
+            override fun callback(line: String) {
+                if (line.contains("936")) {
+                    charset = CMDCharset.CMD_GBK
+                } else if (line.contains("65001")) {
+                    charset = CMDCharset.CMD_UTF_8
+                }
+            }
+        })
+        return charset
     }
 
     /**
@@ -21,7 +47,7 @@ object Terminal {
      */
     //自动把cmd分割  去除""串
     fun run(cmd: String, timeout: Long = 0, listener: OnStdoutListener? = null): Boolean {
-        println("cmd string:$cmd")
+        println("cmd:$cmd")
         val list = mutableListOf<String>()
         cmd.split(" ").forEach {
             val trim = it.trim()
@@ -33,16 +59,19 @@ object Terminal {
     }
 
     fun run(cmd: List<String>, timeout: Long = 0, listener: OnStdoutListener? = null): Boolean {
-        println("cmd param list:$cmd")
+        println("cmd:$cmd")
         val pb = ProcessBuilder(cmd)
             //合并标准输出和标准错误
             .redirectErrorStream(true)
         val p: Process = pb.start()
         p.inputStream.use { ins ->
-            val reader = ins.bufferedReader()
+            val reader = when (curCMDCharset) {
+                CMDCharset.CMD_UTF_8 -> ins.bufferedReader()
+                CMDCharset.CMD_GBK -> ins.bufferedReader(charset("GBK"))
+            }
             var line: String?
             while (reader.readLine().also { line = it } != null) {
-                println("stdout:$line")
+                println(line)
                 listener?.callback(line ?: "")
             }
         }
