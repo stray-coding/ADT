@@ -13,4 +13,5 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation 'net.lingala.zip4j:zip4j:2.11.2'
 }

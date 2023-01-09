@@ -87,6 +87,21 @@ object Paths {
         return file.absolutePath
     }
 
+    fun getAndroidJar(): String {
+        val file = File(TOOLS, "android.jar")
+        return file.absolutePath
+    }
+
+    fun getSmaliJar(): String {
+        val file = File(TOOLS, "smali.jar")
+        return file.absolutePath
+    }
+
+    fun getBundleConfigJson(): String {
+        val file = File(TOOLS, "BundleConfig.json")
+        return file.absolutePath
+    }
+
     fun getSignConfigFile(): String {
         val file = File(CONFIG, "sign_config.xml")
         return file.absolutePath
