@@ -66,7 +66,7 @@ fun DexDialog(show: MutableState<Boolean>) {
                     onValueChange = { oldDexPath.value = it },
                     enabled = false,
                     readOnly = true,
-                    modifier = Modifier.width(300.dp).height(60.dp).clickable {
+                    modifier = Modifier.width(300.dp).height(50.dp).clickable {
                         FileChooser.newInstance(window,
                             JFileChooser.FILES_ONLY,
                             "new dex",
@@ -77,7 +77,7 @@ fun DexDialog(show: MutableState<Boolean>) {
                                 }
                             })
                     },
-                    label = { Text("choose old dex", modifier = Modifier.width(120.dp)) },
+                    placeholder = { Text("choose old dex") },
                     textStyle = TextStyle(textAlign = TextAlign.Center),
                     maxLines = 1,
                 )
@@ -91,7 +91,7 @@ fun DexDialog(show: MutableState<Boolean>) {
                     onValueChange = { newDexPath.value = it },
                     enabled = false,
                     readOnly = true,
-                    modifier = Modifier.width(300.dp).height(60.dp).clickable {
+                    modifier = Modifier.width(300.dp).height(50.dp).clickable {
                         FileChooser.newInstance(window,
                             JFileChooser.FILES_ONLY,
                             "new dex",
@@ -102,7 +102,7 @@ fun DexDialog(show: MutableState<Boolean>) {
                                 }
                             })
                     },
-                    label = { Text("choose new dex", modifier = Modifier.width(120.dp)) },
+                    placeholder = { Text("choose new dex") },
                     textStyle = TextStyle(textAlign = TextAlign.Center),
                     maxLines = 1,
                 )
