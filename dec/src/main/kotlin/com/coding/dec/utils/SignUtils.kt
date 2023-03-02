@@ -72,6 +72,7 @@ object SignUtils {
                     signArray.add(it)
                 }
             }
+            signArray.sortBy { it.name.lowercase() }
             XmlUtils.saveXml(doc, Paths.getSignConfigFile())
         } catch (e: Exception) {
             e.printStackTrace()

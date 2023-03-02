@@ -47,7 +47,7 @@ object AdbTool {
                 }
             }
         })
-        list.sort()
+        list.sortBy { it.lowercase() }
         return list
     }
 
