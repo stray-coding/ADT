@@ -3,10 +3,7 @@ package com.coding.dec
 import com.coding.dec.utils.Paths
 import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
-import com.coding.utils.FileUtils
-import com.coding.utils.Terminal
-import com.coding.utils.ZipUtils
-import com.coding.utils.isFilePathValid
+import com.coding.utils.*
 import net.lingala.zip4j.ZipFile
 import java.io.File
 
@@ -54,7 +51,7 @@ object BundleTool {
         println("-----2. decompile apk-----")
         val decompilePath = File(tempPath, "decompile").absolutePath
         Terminal.run("${Paths.getJava()} -jar ${Paths.getApkTool()} d $apkPath -f -o $decompilePath -only-main-classes")
-        val apkInfo = getValueFromApkToolYml("$decompilePath${File.separator}apktool.yml")
+        val apkInfo = YmlUtils.getValueFromApkToolYml("$decompilePath${File.separator}apktool.yml")
 
         println("-----3. compile resource-----")
         val compiledResourcesZipPath = File(tempPath, "compiled_resources.zip").absolutePath
@@ -193,66 +190,4 @@ object BundleTool {
                     signBean.alias
         )
     }
-}
-
-class ApkInfo {
-    var apkName: String = ""
-    var minsdk: Int = 0
-    var targetsdk: Int = 0
-    var versionCode: Int = 0
-    var versionName: String = ""
-    override fun toString(): String {
-        return "ApkInfo(apkName='$apkName', minsdk=$minsdk, targetsdk=$targetsdk, versionCode=$versionCode, versionName='$versionName')"
-    }
-}
-
-object ApktoolTAG {
-    const val MIN_SDK_VERSION = "minSdkVersion"
-    const val TARGET_SDK_VERSION = "targetSdkVersion"
-    const val VERSION_CODE = "versionCode"
-    const val VERSION_NAME = "versionName"
-    const val APK_FILE_NAME = "apkFileName"
-}
-
-val TAG_LIST = arrayListOf(
-    ApktoolTAG.APK_FILE_NAME,
-    ApktoolTAG.MIN_SDK_VERSION,
-    ApktoolTAG.TARGET_SDK_VERSION,
-    ApktoolTAG.VERSION_CODE,
-    ApktoolTAG.VERSION_NAME
-)
-
-private fun getValueFromApkToolYml(ymlPath: String): ApkInfo {
-    val apkInfo = ApkInfo()
-    if (!ymlPath.isFilePathValid()) return apkInfo
-    try {
-        for (line in File(ymlPath).readLines()) {
-            for (tag in TAG_LIST) {
-                if (line.contains(tag)) {
-                    val array = line.split(":")
-                    if (array.size >= 2) {
-                        val value = array[1].replace("\"", "").replace("'", "").trim()
-                        when (tag) {
-                            ApktoolTAG.APK_FILE_NAME -> apkInfo.apkName = value
-                            ApktoolTAG.MIN_SDK_VERSION -> apkInfo.minsdk = value.toInt()
-                            ApktoolTAG.TARGET_SDK_VERSION -> apkInfo.targetsdk = value.toInt()
-                            ApktoolTAG.VERSION_CODE -> apkInfo.versionCode = value.toInt()
-                            ApktoolTAG.VERSION_NAME -> apkInfo.versionName = value
-                        }
-                    }
-                }
-            }
-        }
-    } catch (_: Exception) {
-    }
-    return apkInfo
-}
-
-fun main() {
-    println(
-        BundleTool.apk2AAB(
-            "C:\\Users\\root\\Desktop\\app-debug.apk",
-            SignUtils.getSign("adt.jks")!!
-        )
-    )
 }

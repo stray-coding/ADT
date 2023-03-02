@@ -74,6 +74,23 @@ fun AABDialog(show: MutableState<Boolean>) {
                         }
                     })
             }
+
+            Button("apk2aab") {
+                val signBean = SignUtils.getSign(selectedName.value)
+                if (signBean == null) {
+                    Toast.showMsg(window, "Please select a signature first.")
+                    return@Button
+                }
+                FileChooser.newInstance(window,
+                    JFileChooser.FILES_ONLY,
+                    "choose apk",
+                    Suffix.APK,
+                    object : FileChooser.OnFileSelectListener {
+                        override fun onSelected(path: String) {
+                            BundleTool.apk2AAB(path, signBean)
+                        }
+                    })
+            }
         }
     }
 }
