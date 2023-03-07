@@ -1,4 +1,4 @@
-# android_decompile_tool
+# ADT
 
 * 集成apktool可以快速实现包体的反编译和回编译
 * 集成jar2dex、dex2jar，实现文件格式类型转换，可根据新旧dex快速生成增量包patch.dex
