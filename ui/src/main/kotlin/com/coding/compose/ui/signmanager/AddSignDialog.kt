@@ -13,9 +13,9 @@ import androidx.compose.ui.unit.dp
 import com.coding.compose.base.*
 import com.coding.compose.listener.OnDialogCloseListener
 import com.coding.dec.SignTool
+import com.coding.dec.utils.Paths
 import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
-import com.coding.dec.utils.Paths
 import com.coding.utils.FileUtils
 import java.io.File
 import javax.swing.JFileChooser
@@ -46,14 +46,9 @@ fun AddSignDialog(show: MutableState<Boolean>, closeListener: OnDialogCloseListe
                     arrayOf(Suffix.JKS, Suffix.KEY_STORE),
                     object : FileChooser.OnFileSelectListener {
                         override fun onSelected(path: String) {
-                            val name = path.substring(path.lastIndexOf(File.separator) + 1, path.length)
+                            val name = path.substring(path.lastIndexOf(File.separator) + 1)
                             //保存签名文件的路径
-                            val savePath =
-                                Paths.getSignDir() + File.separator + path.substring(
-                                    path.lastIndexOf(
-                                        File.separator
-                                    ) + 1
-                                )
+                            val savePath = Paths.getSignDir() + File.separator + name
                             FileUtils.copyFile(path, savePath)
                             val sign = SignUtils.SignBean(name, savePath, pwd.value, alias.value, alias_pwd.value)
                             if (!SignTool.alignAndSign(
