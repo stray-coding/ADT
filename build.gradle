@@ -29,16 +29,25 @@ dependencies {
 }
 
 
-def versionName = "0.2.1"
-def versionCode = 21
-def apktool = "2.7.0"
-def bundletool = "1.13.2"
-def dex2jar = "2.1"
+def VERSION_NAME = "0.2.1"
+def VERSION_CODE = 21
+
+def THIRDS = [
+        dex2jar   : "2.1",
+        aapt2     : "31.0.0",
+        android   : "30",
+        apksigner : "31.0.0",
+        apktool   : "2.7.0",
+        bundletool: "1.13.2",
+        zipalign  : "31.0.0",
+        smail     : "2.5.2",
+]
+
 application {
     mainClass = 'com.coding.Main'
 }
 
-task createProperties() {
+tasks.register('createProperties') {
     doLast {
         systemOut("createProperties start")
         File dir = new File(projectDir, "main/src/main/resources/VERSION-INF")
@@ -48,15 +57,9 @@ task createProperties() {
         String name = "adt.properties"
         File out = new File(dir, name)
         HashMap<String, Object> params = new HashMap<>()
-        params.put("versionName", versionName)
-        params.put("versionCode", versionCode)
-
-        HashMap<String, Object> thirds = new HashMap<>()
-        thirds.put("apktool", apktool)
-        thirds.put("bundletool", bundletool)
-        thirds.put("dex2jar", dex2jar)
-
-        params.put("third", thirds)
+        params.put("versionName", VERSION_NAME)
+        params.put("versionCode", VERSION_CODE)
+        params.put("thirds", THIRDS)
         params.put("data", getCurDate())
         FileOutputStream fos = new FileOutputStream(out)
         for (Map.Entry<String, Object> entry : params) {
@@ -68,7 +71,7 @@ task createProperties() {
     }
 }
 
-task release() {
+tasks.register('release') {
     dependsOn(createProperties)
     dependsOn(assemble)
     assemble.mustRunAfter(createProperties)
