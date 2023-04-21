@@ -161,7 +161,7 @@ object SignUtils {
                 try {
                     val signBean = SignBean()
                     signBean.name = element.getAttribute(SIGN_NAME)
-                    signBean.path = element.getAttribute(SIGN_PATH)
+                    signBean.path = File(element.getAttribute(SIGN_PATH)).absolutePath
                     signBean.pwd = element.getAttribute(SIGN_PWD)
                     signBean.alias = element.getAttribute(SIGN_ALIAS)
                     signBean.aliasPwd = element.getAttribute(SIGN_ALIAS_PWD)

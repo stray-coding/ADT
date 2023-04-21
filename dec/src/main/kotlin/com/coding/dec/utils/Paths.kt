@@ -19,6 +19,10 @@ object Paths {
         return "java"
     }
 
+    fun getCurDir(): String {
+        return File("").absolutePath
+    }
+
     fun getToolsDir(): String {
         val dir = File(TOOLS)
         if (!dir.exists()) {
