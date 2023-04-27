@@ -29,8 +29,8 @@ dependencies {
 }
 
 
-def VERSION_NAME = "0.2.1"
-def VERSION_CODE = 21
+def VERSION_NAME = "0.2.2"
+def VERSION_CODE = 22
 
 def THIRDS = [
         dex2jar   : "2.1",
@@ -94,7 +94,7 @@ tasks.register('release') {
         createBootBat(src)
         project.ant.zip(
                 basedir: src,
-                destfile: dir + File.separator + "adt.zip"
+                destfile: dir + File.separator + "ADT.zip"
         )
         systemOut("create release end")
     }
