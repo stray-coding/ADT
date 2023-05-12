@@ -1,5 +1,6 @@
 package com.coding.dec
 
+import com.coding.utils.FileUtils
 import com.coding.utils.Terminal
 import com.coding.utils.isDirPathValid
 import com.coding.utils.isFilePathValid
@@ -72,7 +73,7 @@ object AdbTool {
     fun extractApk(device: String = "", pkgName: String, outDir: String): Boolean {
         if (pkgName.isEmpty()) return false
         if (!outDir.isDirPathValid()) return false
-        var apkPath = ""
+        val list = arrayListOf<String>()
         val cmd = if (device.isNotEmpty()) {
             "adb -s $device shell pm path $pkgName"
         } else {
@@ -80,17 +81,33 @@ object AdbTool {
         }
         Terminal.run(cmd, listener = object : Terminal.OnStdoutListener {
             override fun callback(line: String) {
-                apkPath = line.replace("package:", "")
+                list.add(line.replace("package:", ""))
             }
         })
-        if (apkPath.isEmpty()) return false
-        val time = System.currentTimeMillis()
-        val outPath = File(outDir, "${pkgName}_${time}.apk").absolutePath
-        val pullCmd = if (device.isNotEmpty()) {
-            "adb -s $device pull $apkPath $outPath"
+        if (list.isEmpty()) return false
+        if (list.size == 1) {
+            val time = System.currentTimeMillis()
+            val outPath = File(outDir, "${pkgName}_${time}.apk").absolutePath
+            val pullCmd = if (device.isNotEmpty()) {
+                "adb -s $device pull ${list[0]} $outPath"
+            } else {
+                "adb pull ${list[0]} $outPath"
+            }
+            return Terminal.run(pullCmd)
         } else {
-            "adb pull $apkPath $outPath"
+            val time = System.currentTimeMillis()
+            val apksDir = outDir + File.separator + pkgName + "_" + time
+            FileUtils.createOrExistsDir(apksDir)
+            for (item in list) {
+                val outPath = File(apksDir, item.substring(item.lastIndexOf("/"))).absolutePath
+                val pullCmd = if (device.isNotEmpty()) {
+                    "adb -s $device pull $item $outPath"
+                } else {
+                    "adb pull $item $outPath"
+                }
+                Terminal.run(pullCmd)
+            }
+            return true
         }
-        return Terminal.run(pullCmd)
     }
 }
