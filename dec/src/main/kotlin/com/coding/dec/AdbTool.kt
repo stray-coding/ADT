@@ -1,9 +1,7 @@
 package com.coding.dec
 
-import com.coding.utils.FileUtils
-import com.coding.utils.Terminal
-import com.coding.utils.isDirPathValid
-import com.coding.utils.isFilePathValid
+import com.coding.dec.utils.Paths
+import com.coding.utils.*
 import java.io.File
 
 /**
@@ -33,13 +31,12 @@ object AdbTool {
     /**
      * get all apk's package names in android devices
      */
-    fun getAllApkPackageNames(device: String = "", filter: String = ""): List<String> {
+    fun getAllApkPackageNames(device: String = "", filter: String = ALL_APP): List<String> {
+        val cmd = mutableListOf<String>()
+                .put("adb")
+                .put(device.isNotEmpty(), "-s", device)
+                .put("shell", "pm", "list", "packages", filter)
         val list = mutableListOf<String>()
-        val cmd = if (device.isNotEmpty()) {
-            "adb -s $device shell pm list packages $filter"
-        } else {
-            "adb shell pm list packages $filter"
-        }
         Terminal.run(cmd, listener = object : Terminal.OnStdoutListener {
             override fun callback(line: String) {
                 if (line.isNotEmpty() && line.contains("package:")) {
@@ -58,12 +55,11 @@ object AdbTool {
      */
     fun installApk(device: String = "", debug: Boolean = false, apkPath: String): Boolean {
         if (!apkPath.isFilePathValid()) return false
-        val debugStr = if (debug) "-t" else ""
-        val cmd = if (device.isNotEmpty()) {
-            "adb -s $device $debugStr install -r $apkPath"
-        } else {
-            "adb $debugStr install -r $apkPath"
-        }
+        val cmd = mutableListOf<String>()
+                .put("adb")
+                .put(device.isNotEmpty(), "-s", device)
+                .put(debug, "-t")
+                .put("install", "-r", apkPath)
         return Terminal.run(cmd)
     }
 
@@ -73,12 +69,11 @@ object AdbTool {
     fun extractApk(device: String = "", pkgName: String, outDir: String): Boolean {
         if (pkgName.isEmpty()) return false
         if (!outDir.isDirPathValid()) return false
+        val cmd = mutableListOf<String>()
+                .put("adb")
+                .put(device.isNotEmpty(), "-s", device)
+                .put("shell", "pm", "path", pkgName)
         val list = arrayListOf<String>()
-        val cmd = if (device.isNotEmpty()) {
-            "adb -s $device shell pm path $pkgName"
-        } else {
-            "adb shell pm path $pkgName"
-        }
         Terminal.run(cmd, listener = object : Terminal.OnStdoutListener {
             override fun callback(line: String) {
                 list.add(line.replace("package:", ""))
@@ -88,23 +83,21 @@ object AdbTool {
         if (list.size == 1) {
             val time = System.currentTimeMillis()
             val outPath = File(outDir, "${pkgName}_${time}.apk").absolutePath
-            val pullCmd = if (device.isNotEmpty()) {
-                "adb -s $device pull ${list[0]} $outPath"
-            } else {
-                "adb pull ${list[0]} $outPath"
-            }
+            val pullCmd = mutableListOf<String>()
+                    .put("adb")
+                    .put(device.isNotEmpty(), "-s", device)
+                    .put("pull", list[0], outPath)
             return Terminal.run(pullCmd)
         } else {
             val time = System.currentTimeMillis()
-            val apksDir = outDir + File.separator + pkgName + "_" + time
+            val apksDir = outDir.join("${pkgName}_$time")
             FileUtils.createOrExistsDir(apksDir)
             for (item in list) {
                 val outPath = File(apksDir, item.substring(item.lastIndexOf("/"))).absolutePath
-                val pullCmd = if (device.isNotEmpty()) {
-                    "adb -s $device pull $item $outPath"
-                } else {
-                    "adb pull $item $outPath"
-                }
+                val pullCmd = mutableListOf<String>()
+                        .put("adb")
+                        .put(device.isNotEmpty(), "-s", device)
+                        .put("pull", item, outPath)
                 Terminal.run(pullCmd)
             }
             return true

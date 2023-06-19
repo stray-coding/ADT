@@ -1,10 +1,11 @@
 package com.coding.dec
 
-import com.coding.dec.utils.Suffix
 import com.coding.dec.utils.Paths
+import com.coding.dec.utils.Suffix
 import com.coding.utils.Terminal
 import com.coding.utils.isDirPathValid
 import com.coding.utils.isFilePathValid
+import com.coding.utils.put
 
 object ApkTool {
     /**
@@ -12,11 +13,13 @@ object ApkTool {
      * */
     fun decompile(apkPath: String, ignoreDex: Boolean, ignoreRes: Boolean, outPath: String = ""): Boolean {
         if (!apkPath.isFilePathValid(Suffix.APK)) return false
-        val dexStr = if (ignoreDex) "-s" else ""
-        val resStr = if (ignoreRes) "-r" else ""
-        val omc = if (ignoreDex) "" else "-only-main-classes"
         val finalOutPath = outPath.ifEmpty { apkPath.removeSuffix(Suffix.APK) }
-        val cmd = "${Paths.getJava()} -jar ${Paths.getApkTool()} d $apkPath $dexStr $omc $resStr -f -o $finalOutPath"
+        val cmd = mutableListOf<String>()
+                .put(Paths.getJava(), "-jar", Paths.getApkTool(), "d", apkPath)
+                .put(ignoreDex, "-s")
+                .put(ignoreRes, "-r")
+                .put(!ignoreDex, "-only-main-classes")
+                .put("-f", "-o", finalOutPath)
         return Terminal.run(cmd)
     }
 

@@ -1,11 +1,8 @@
 package com.coding.dec
 
-import com.coding.dec.utils.Suffix
 import com.coding.dec.utils.Paths
-import com.coding.utils.FileUtils
-import com.coding.utils.Terminal
-import com.coding.utils.ZipUtils
-import com.coding.utils.isFilePathValid
+import com.coding.dec.utils.Suffix
+import com.coding.utils.*
 import java.io.File
 
 object DexTool {
@@ -55,7 +52,7 @@ object DexTool {
         if (!oldDex.isFilePathValid(Suffix.DEX)) return false
         if (!newDex.isFilePathValid(Suffix.DEX)) return false
         if (outDir.isEmpty()) return false
-        val tempDir = "${outDir}${File.separator}patch_temp"
+        val tempDir = outDir.join("patch_temp")
         val oldDexTemp = File(tempDir, "old.dex")
         val newDexTemp = File(tempDir, "new.dex")
         println("copy resource dex file.")

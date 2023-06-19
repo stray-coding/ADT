@@ -17,19 +17,19 @@ object SignTool {
      * @return
      */
     fun signAAB(
-        aabPath: String,
-        signBean: SignUtils.SignBean
+            aabPath: String,
+            signBean: SignUtils.SignBean
     ): Boolean {
         if (!aabPath.isFilePathValid(Suffix.AAB)) return false
         return Terminal.run(
-            "jarsigner " +
-                    "-digestalg SHA1 " +
-                    "-sigalg SHA1withRSA " +
-                    "-keystore ${signBean.path} " +
-                    "-storepass ${signBean.pwd} " +
-                    "-keypass ${signBean.aliasPwd} " +
-                    "$aabPath " +
-                    signBean.alias
+                "jarsigner " +
+                        "-digestalg SHA1 " +
+                        "-sigalg SHA1withRSA " +
+                        "-keystore ${signBean.path} " +
+                        "-storepass ${signBean.pwd} " +
+                        "-keypass ${signBean.aliasPwd} " +
+                        "$aabPath " +
+                        signBean.alias
         )
     }
 
@@ -39,9 +39,9 @@ object SignTool {
      * 3. jarsigner apk only v1
      */
     fun signAndAlign(
-        apkPath: String,
-        signBean: SignUtils.SignBean,
-        outPath: String = "",
+            apkPath: String,
+            signBean: SignUtils.SignBean,
+            outPath: String = "",
     ): Boolean {
         if (!apkPath.isFilePathValid(Suffix.APK)) return false
         val signPath = apkPath.removeSuffix(Suffix.APK) + "_signed.apk"
@@ -63,13 +63,13 @@ object SignTool {
      * 2. sign apk
      */
     fun alignAndSign(
-        apkPath: String,
-        signBean: SignUtils.SignBean,
-        outPath: String = "",
-        v1Enable: Boolean,
-        v2Enable: Boolean,
-        v3Enable: Boolean = false,
-        v4Enable: Boolean = false
+            apkPath: String,
+            signBean: SignUtils.SignBean,
+            outPath: String = "",
+            v1Enable: Boolean,
+            v2Enable: Boolean,
+            v3Enable: Boolean = false,
+            v4Enable: Boolean = false
     ): Boolean {
         if (!apkPath.isFilePathValid(Suffix.APK)) return false
         val alignPath = apkPath.removeSuffix(Suffix.APK) + "_aligned.apk"
@@ -95,9 +95,9 @@ object SignTool {
      * sign the apk  only v1
      * */
     private fun signApkByJarSigner(
-        apkPath: String,
-        signBean: SignUtils.SignBean,
-        outPath: String = "",
+            apkPath: String,
+            signBean: SignUtils.SignBean,
+            outPath: String = "",
     ): Boolean {
         if (!apkPath.isFilePathValid(Suffix.APK)) return false
         val newOutPath = outPath.ifEmpty {
@@ -119,21 +119,18 @@ object SignTool {
      * sign the apk
      * */
     private fun signApkByApkSigner(
-        apkPath: String,
-        signBean: SignUtils.SignBean,
-        outPath: String = "",
-        v1Enable: Boolean,
-        v2Enable: Boolean,
-        v3Enable: Boolean = false,
-        v4Enable: Boolean = false
+            apkPath: String,
+            signBean: SignUtils.SignBean,
+            outPath: String = "",
+            v1Enable: Boolean,
+            v2Enable: Boolean,
+            v3Enable: Boolean = false,
+            v4Enable: Boolean = false
     ): Boolean {
         if (!apkPath.isFilePathValid(Suffix.APK)) return false
         val newOutPath = outPath.ifEmpty {
             apkPath.removeSuffix(Suffix.APK) + "_signed.apk"
         }
-        val v3EnableStr = if (v3Enable) "--v3-signing-enabled true " else ""
-        val v4EnableStr = if (v4Enable) "--v4-signing-enabled true " else ""
-
         val cmd = "${Paths.getJava()} -jar ${Paths.getApkSigner()} " +
                 "sign " + "--ks ${signBean.path} " +
                 "--ks-key-alias ${signBean.alias} " +
@@ -141,8 +138,8 @@ object SignTool {
                 "--key-pass pass:${signBean.aliasPwd} " +
                 "--v1-signing-enabled $v1Enable " +
                 "--v2-signing-enabled $v2Enable " +
-                "$v3EnableStr " +
-                "$v4EnableStr " +
+                "--v3-signing-enabled $v3Enable " +
+                "--v4-signing-enabled $v4Enable " +
                 "-v --out $newOutPath $apkPath"
         return Terminal.run(cmd)
     }
