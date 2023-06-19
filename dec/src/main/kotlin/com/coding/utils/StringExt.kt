@@ -18,3 +18,36 @@ fun String?.isDirPathValid(): Boolean {
     val file = File(this)
     return file.exists() && file.isDirectory
 }
+
+fun String.join(vararg subPaths: String): String {
+    val path = StringBuilder()
+    path.append(this)
+    if (!this.endsWith(File.separator)) path.append(File.separator)
+    for (sub in subPaths) {
+        if (sub.isEmpty() || sub == File.separator) continue
+        path.append(sub)
+        path.append(File.separator)
+    }
+    path.deleteCharAt(path.length - 1)
+    return path.toString()
+}
+
+fun String.toCMDList(): MutableList<String> {
+    val list = mutableListOf<String>()
+    this.split(" ").forEach {
+        val trim = it.trim()
+        if (trim.isNotEmpty()) {
+            list.add(trim)
+        }
+    }
+    return list
+}
+
+fun main() {
+    println("".join("", ""))
+    println("C:\\Users\\root\\Desktop\\ADT".join())
+    println("C:\\Users\\root\\Desktop\\ADT".join("sign"))
+    println("C:\\Users\\root\\Desktop\\ADT".join("sign", "1.jks"))
+    println("C:\\Users\\root\\Desktop\\ADT".join("sign", "", "aaa", "", File.separator, "bbb", "1.jks"))
+    println("----------------------------")
+}

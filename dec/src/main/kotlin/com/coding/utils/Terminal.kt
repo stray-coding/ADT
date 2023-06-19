@@ -47,20 +47,13 @@ object Terminal {
      */
     //自动把cmd分割  去除""串
     fun run(cmd: String, timeout: Long = 0, listener: OnStdoutListener? = null): Boolean {
-        println("cmd:$cmd")
-        val list = mutableListOf<String>()
-        cmd.split(" ").forEach {
-            val trim = it.trim()
-            if (trim.isNotEmpty()) {
-                list.add(trim)
-            }
-        }
-        return run(list, timeout, listener)
+        return run(cmd.toCMDList(), timeout, listener)
     }
 
-    fun run(cmd: List<String>, timeout: Long = 0, listener: OnStdoutListener? = null): Boolean {
+    fun run(params: List<String>, timeout: Long = 0, listener: OnStdoutListener? = null): Boolean {
+        val cmd = params.toString().replace(",","").replace("[","").replace("]","")
         println("cmd:$cmd")
-        val pb = ProcessBuilder(cmd)
+        val pb = ProcessBuilder(params)
             //合并标准输出和标准错误
             .redirectErrorStream(true)
         val p: Process = pb.start()
