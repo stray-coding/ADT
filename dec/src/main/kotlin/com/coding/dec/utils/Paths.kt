@@ -1,6 +1,7 @@
 package com.coding.dec.utils
 
 import com.coding.utils.Terminal
+import com.coding.utils.join
 import java.io.File
 
 /**
@@ -15,6 +16,7 @@ object Paths {
     private const val CONFIG = "config"
 
     private const val SIGN = "sign"
+
     fun getJava(): String {
         return "java"
     }
@@ -65,24 +67,24 @@ object Paths {
 
     fun getJar2dex(): String {
         val file = if (Terminal.isWindows()) {
-            File(TOOLS, "dex2jar${File.separator}d2j-jar2dex.bat")
+            File(TOOLS.join("dex2jar", "d2j-jar2dex.bat"))
         } else {
-            File(TOOLS, "dex2jar${File.separator}d2j-jar2dex.sh")
+            File(TOOLS.join("dex2jar", "d2j-jar2dex.sh"))
         }
         return file.absolutePath
     }
 
     fun getDex2jar(): String {
         val file = if (Terminal.isWindows()) {
-            File(TOOLS, "dex2jar${File.separator}d2j-dex2jar.bat")
+            File(TOOLS.join("dex2jar", "d2j-dex2jar.bat"))
         } else {
-            File(TOOLS, "dex2jar${File.separator}d2j-dex2jar.sh")
+            File(TOOLS.join("dex2jar", "d2j-dex2jar.sh"))
         }
         return file.absolutePath
     }
 
     fun getBundleTool(): String {
-        val file = File(TOOLS, "bundletool.jar")
+        val file = File(TOOLS.join("aab", "bundletool.jar"))
         return file.absolutePath
     }
 
@@ -92,17 +94,17 @@ object Paths {
     }
 
     fun getAndroidJar(): String {
-        val file = File(TOOLS, "android.jar")
+        val file = File(TOOLS.join("aab", "android.jar"))
         return file.absolutePath
     }
 
     fun getSmaliJar(): String {
-        val file = File(TOOLS, "smali.jar")
+        val file = File(TOOLS.join("aab", "smali.jar"))
         return file.absolutePath
     }
 
     fun getBundleConfigJson(): String {
-        val file = File(TOOLS, "BundleConfig.json")
+        val file = File(TOOLS.join("aab", "BundleConfig.json"))
         return file.absolutePath
     }
 
