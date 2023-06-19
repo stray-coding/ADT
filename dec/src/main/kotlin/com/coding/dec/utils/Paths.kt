@@ -114,14 +114,18 @@ object Paths {
     }
 
     fun getDefaultSignFile(): String {
-        val file = File(TOOLS, "adt.jks")
+        val file = File(TOOLS.join("base", "adt.jks"))
         return file.absolutePath
     }
 
     fun getUnsignedApk(): String {
-        val file = File(TOOLS, "adt-unsigned.apk")
+        val file = File(TOOLS.join("base", "adt-unsigned.apk"))
         return file.absolutePath
     }
 
+    fun getIcon():String {
+        val file = File(TOOLS.join("base", "icon.jpg"))
+        return file.absolutePath
+    }
 
 }

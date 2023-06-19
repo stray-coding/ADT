@@ -24,6 +24,7 @@ import com.coding.compose.ui.dex.DexDialog
 import com.coding.compose.ui.sign.SignDialog
 import com.coding.compose.ui.signmanager.SignManagerDialog
 import com.coding.dec.ApkTool
+import com.coding.dec.utils.Paths
 import org.jetbrains.skiko.toBitmap
 import java.io.File
 import javax.imageio.ImageIO
@@ -44,7 +45,7 @@ fun main() = application {
     SignDialog(sign_show)
     AABDialog(aab_show)
     ADBDialog(adb_show)
-    val buffer = ImageIO.read(File("tools\\icon.jpg"))
+    val buffer = ImageIO.read(File(Paths.getIcon()))
     val painter = BitmapPainter(buffer.toBitmap().asComposeImageBitmap())
     Window(
         onCloseRequest = ::exitApplication,
