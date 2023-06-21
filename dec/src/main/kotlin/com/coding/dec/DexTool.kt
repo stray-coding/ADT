@@ -6,6 +6,29 @@ import com.coding.utils.*
 import java.io.File
 
 object DexTool {
+
+    /**
+     * dex2smali
+     * convert dex file to smali files
+     * */
+    fun dex2smali(dexPath: String, outPath: String = ""): Boolean {
+        if (!dexPath.isFilePathValid(Suffix.DEX)) return false
+        val finalOutPath = outPath.ifEmpty { dexPath.removeSuffix(Suffix.DEX) }
+        val cmd = "${Paths.getJava()} -jar ${Paths.getBackSmaliJar()} disassemble $dexPath -o $finalOutPath"
+        return Terminal.run(cmd)
+    }
+
+    /**
+     * smali2dex
+     * convert smali files to dex file
+     * */
+    fun smali2dex(smaliDir: String, outPath: String = ""): Boolean {
+        if (!smaliDir.isDirPathValid()) return false
+        val finalOutPath = outPath.ifEmpty { "${smaliDir}_back.dex" }
+        val cmd = "${Paths.getJava()} -jar ${Paths.getSmaliJar()} assemble $smaliDir -o $finalOutPath"
+        return Terminal.run(cmd)
+    }
+
     /**
      * dex2jar
      * convert dex file to jar file

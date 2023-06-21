@@ -41,6 +41,7 @@ def THIRDS = [
         bundletool: "1.13.2",
         zipalign  : "31.0.0",
         smail     : "2.5.2",
+        backsmail : "2.5.2"
 ]
 
 application {

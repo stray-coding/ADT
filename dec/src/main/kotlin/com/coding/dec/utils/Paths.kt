@@ -103,6 +103,11 @@ object Paths {
         return file.absolutePath
     }
 
+    fun getBackSmaliJar(): String {
+        val file = File(TOOLS.join("aab", "backsmali.jar"))
+        return file.absolutePath
+    }
+
     fun getBundleConfigJson(): String {
         val file = File(TOOLS.join("aab", "BundleConfig.json"))
         return file.absolutePath
@@ -123,7 +128,7 @@ object Paths {
         return file.absolutePath
     }
 
-    fun getIcon():String {
+    fun getIcon(): String {
         val file = File(TOOLS.join("base", "icon.jpg"))
         return file.absolutePath
     }
