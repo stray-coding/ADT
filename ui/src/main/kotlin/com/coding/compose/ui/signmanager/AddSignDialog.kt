@@ -1,8 +1,8 @@
 package com.coding.compose.ui.signmanager
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -24,9 +24,9 @@ import javax.swing.JFileChooser
 fun AddSignDialog(show: MutableState<Boolean>, closeListener: OnDialogCloseListener? = null) {
     Dialog(title = "add sign", state = show, onCloseRequest = closeListener) {
         Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             val pwd = remember { mutableStateOf("") }
             val alias = remember { mutableStateOf("") }
@@ -34,41 +34,41 @@ fun AddSignDialog(show: MutableState<Boolean>, closeListener: OnDialogCloseListe
             OutlinedTextField("password", pwd)
             OutlinedTextField("alias", alias)
             OutlinedTextField("alias password", alias_pwd)
-            Button("sign file path") {
+            Button("sign file path", modifier = Modifier.padding(bottom = 10.dp).size(150.dp, 50.dp)) {
                 if (pwd.value.isEmpty() || alias.value.isEmpty() || alias_pwd.value.isEmpty()) {
                     Toast.showMsg(window, "please complete the signature configuration information")
                     return@Button
                 }
                 FileChooser.newInstance(
-                    window,
-                    JFileChooser.FILES_ONLY,
-                    "choose sign",
-                    arrayOf(Suffix.JKS, Suffix.KEY_STORE),
-                    object : FileChooser.OnFileSelectListener {
-                        override fun onSelected(path: String) {
-                            val name = path.substring(path.lastIndexOf(File.separator) + 1)
-                            //保存签名文件的路径
-                            val savePath = Paths.getSignDir() + File.separator + name
-                            FileUtils.copyFile(path, savePath)
-                            val relativePath = savePath.replace(Paths.getCurDir() + File.separator, "")
-                            val sign = SignUtils.SignBean(name, relativePath, pwd.value, alias.value, alias_pwd.value)
-                            if (!SignTool.alignAndSign(
-                                    Paths.getUnsignedApk(),
-                                    sign,
-                                    v1Enable = true,
-                                    v2Enable = true
-                                )
-                            ) {
-                                FileUtils.deleteFile(savePath)
-                                Toast.showMsg(window, "Configuration information does not match signature file.")
-                                return
+                        window,
+                        JFileChooser.FILES_ONLY,
+                        "choose sign",
+                        arrayOf(Suffix.JKS, Suffix.KEY_STORE),
+                        object : FileChooser.OnFileSelectListener {
+                            override fun onSelected(path: String) {
+                                val name = path.substring(path.lastIndexOf(File.separator) + 1)
+                                //保存签名文件的路径
+                                val savePath = Paths.getSignDir() + File.separator + name
+                                FileUtils.copyFile(path, savePath)
+                                val relativePath = savePath.replace(Paths.getCurDir() + File.separator, "")
+                                val sign = SignUtils.SignBean(name, relativePath, pwd.value, alias.value, alias_pwd.value)
+                                if (!SignTool.alignAndSign(
+                                                Paths.getUnsignedApk(),
+                                                sign,
+                                                v1Enable = true,
+                                                v2Enable = true
+                                        )
+                                ) {
+                                    FileUtils.deleteFile(savePath)
+                                    Toast.showMsg(window, "Configuration information does not match signature file.")
+                                    return
+                                }
+                                FileUtils.deleteFile(Paths.getUnsignedApk().replace(".apk", "_aligned_signed.apk"))
+                                SignUtils.addSign(sign)
+                                show.value = false
+                                closeListener?.onClose()
                             }
-                            FileUtils.deleteFile(Paths.getUnsignedApk().replace(".apk", "_aligned_signed.apk"))
-                            SignUtils.addSign(sign)
-                            show.value = false
-                            closeListener?.onClose()
-                        }
-                    })
+                        })
             }
         }
     }

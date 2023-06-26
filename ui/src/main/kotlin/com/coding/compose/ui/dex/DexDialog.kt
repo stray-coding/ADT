@@ -97,7 +97,7 @@ fun DexDialog(show: MutableState<Boolean>) {
                         modifier = Modifier.width(300.dp).height(50.dp).clickable {
                             FileChooser.newInstance(window,
                                     JFileChooser.FILES_ONLY,
-                                    "new dex",
+                                    "old dex",
                                     Suffix.DEX,
                                     object : FileChooser.OnFileSelectListener {
                                         override fun onSelected(path: String) {
@@ -108,6 +108,7 @@ fun DexDialog(show: MutableState<Boolean>) {
                         placeholder = { Text("choose old dex") },
                         textStyle = TextStyle(textAlign = TextAlign.Center),
                         maxLines = 1,
+                        singleLine = true
                 )
             }
             val newDexPath = remember { mutableStateOf("") }
@@ -133,10 +134,11 @@ fun DexDialog(show: MutableState<Boolean>) {
                         placeholder = { Text("choose new dex") },
                         textStyle = TextStyle(textAlign = TextAlign.Center),
                         maxLines = 1,
+                        singleLine = true
                 )
             }
 
-            Button("generate patch") {
+            Button("generate patch", modifier = Modifier.padding(bottom = 10.dp).size(150.dp, 50.dp)) {
                 if (oldDexPath.value.isEmpty() || newDexPath.value.isEmpty()) {
                     Toast.showMsg(window, "please complete the dex file path information")
                     return@Button

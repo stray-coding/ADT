@@ -32,7 +32,7 @@ fun RadioGroup(
                     })
                     Text(modifier = Modifier.width(200.dp), text = it, textAlign = TextAlign.Start, maxLines = 1)
                 }
-                Spacer(modifier = Modifier.height(0.5.dp))
+                Spacer(modifier = Modifier.height(1.dp))
             }
         } else {
             Text(

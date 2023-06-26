@@ -1,9 +1,6 @@
 package com.coding.compose.ui.adb
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
@@ -34,9 +31,9 @@ fun ADBDialog(show: MutableState<Boolean>) {
         Row {
             val scrollState = rememberScrollState()
             Column(
-                modifier = Modifier.verticalScroll(scrollState).fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.verticalScroll(scrollState).fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 val btnLabel = remember { mutableStateOf("choose device") }
                 val selectedDevice = remember { mutableStateOf("") }
@@ -49,7 +46,7 @@ fun ADBDialog(show: MutableState<Boolean>) {
                     }
                 })
                 ClickableText(text = AnnotatedString(btnLabel.value), style = TextStyle(
-                    color = Color.Blue, fontSize = TextUnit(16.0f, TextUnitType.Sp)
+                        color = Color.Blue, fontSize = TextUnit(16.0f, TextUnitType.Sp)
                 ), onClick = {
                     showDevicesList.value = true
                 })
@@ -61,21 +58,21 @@ fun ADBDialog(show: MutableState<Boolean>) {
                         return@Button
                     }
                     FileChooser.newInstance(window,
-                        JFileChooser.FILES_ONLY,
-                        "choose apk",
-                        Suffix.APK,
-                        object : FileChooser.OnFileSelectListener {
-                            override fun onSelected(path: String) {
-                                println("install apk:" + AdbTool.installApk(selectedDevice.value, debug.value, path))
-                            }
-                        })
+                            JFileChooser.FILES_ONLY,
+                            "choose apk",
+                            Suffix.APK,
+                            object : FileChooser.OnFileSelectListener {
+                                override fun onSelected(path: String) {
+                                    println("install apk:" + AdbTool.installApk(selectedDevice.value, debug.value, path))
+                                }
+                            })
                 }
 
 
                 val pkgNameLabel = remember { mutableStateOf("choose package name") }
                 val selectedPkg = remember { mutableStateOf("") }
                 val showPkgNamesList = remember { mutableStateOf(false) }
-                val mode = remember { mutableStateOf("") }
+                val mode = remember { mutableStateOf(AdbTool.ONLY_THIRD_APP) }
                 AppPkgListDialog(selectedDevice, mode, showPkgNamesList, object : OnSelectListener {
                     override fun onSelected(name: String) {
                         selectedPkg.value = name
@@ -85,41 +82,43 @@ fun ADBDialog(show: MutableState<Boolean>) {
                 })
 
                 val only_system = remember { mutableStateOf(false) }
-                val only_third = remember { mutableStateOf(false) }
-                CheckBox("only system app", only_system, listener = object : OnCheckListener {
-                    override fun onCheckedChange(checked: Boolean) {
-                        if (checked) {
-                            only_third.value = false
-                            mode.value = AdbTool.ONLY_SYSTEM_APP
-                            return
+                val only_third = remember { mutableStateOf(true) }
+                Row {
+                    CheckBox("only system app", only_system, listener = object : OnCheckListener {
+                        override fun onCheckedChange(checked: Boolean) {
+                            if (checked) {
+                                only_third.value = false
+                                mode.value = AdbTool.ONLY_SYSTEM_APP
+                                return
+                            }
+                            mode.value = AdbTool.ALL_APP
                         }
-                        mode.value = AdbTool.ALL_APP
-                    }
-                })
+                    })
 
-                CheckBox("only third app", only_third, listener = object : OnCheckListener {
-                    override fun onCheckedChange(checked: Boolean) {
-                        if (checked) {
-                            only_system.value = false
-                            mode.value = AdbTool.ONLY_THIRD_APP
-                            return
+                    CheckBox("only third app", only_third, listener = object : OnCheckListener {
+                        override fun onCheckedChange(checked: Boolean) {
+                            if (checked) {
+                                only_system.value = false
+                                mode.value = AdbTool.ONLY_THIRD_APP
+                                return
+                            }
+                            mode.value = AdbTool.ALL_APP
                         }
-                        mode.value = AdbTool.ALL_APP
-                    }
-                })
+                    })
+                }
 
                 ClickableText(text = AnnotatedString(pkgNameLabel.value), style = TextStyle(
-                    color = Color.Blue, fontSize = TextUnit(16.0f, TextUnitType.Sp)
+                        color = Color.Blue, fontSize = TextUnit(16.0f, TextUnitType.Sp)
                 ), onClick = {
                     showPkgNamesList.value = true
                 })
-                Row(horizontalArrangement = Arrangement.spacedBy(25.dp)) {
-                    Button("extract apk") {
-                        if (selectedDevice.value.isEmpty() || selectedPkg.value.isEmpty()) {
-                            Toast.showMsg(window, "Please select a device and package name.")
-                            return@Button
-                        }
-                        FileChooser.newInstance(window,
+
+                Button("extract apk", modifier = Modifier.padding(bottom = 10.dp).size(150.dp, 50.dp)) {
+                    if (selectedDevice.value.isEmpty() || selectedPkg.value.isEmpty()) {
+                        Toast.showMsg(window, "Please select a device and package name.")
+                        return@Button
+                    }
+                    FileChooser.newInstance(window,
                             JFileChooser.DIRECTORIES_ONLY,
                             "choose dir",
                             object : FileChooser.OnFileSelectListener {
@@ -127,7 +126,6 @@ fun ADBDialog(show: MutableState<Boolean>) {
                                     AdbTool.extractApk(selectedDevice.value, selectedPkg.value, path)
                                 }
                             })
-                    }
                 }
             }
         }

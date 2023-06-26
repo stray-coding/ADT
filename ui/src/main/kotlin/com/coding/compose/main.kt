@@ -1,11 +1,17 @@
 package com.coding.compose
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asComposeImageBitmap
@@ -48,33 +54,35 @@ fun main() = application {
     val buffer = ImageIO.read(File(Paths.getIcon()))
     val painter = BitmapPainter(buffer.toBitmap().asComposeImageBitmap())
     Window(
-        onCloseRequest = ::exitApplication,
-        title = "ADT",
-        icon = painter,
-        state = rememberWindowState(width = 280.dp, height = (110 + 7 * 50).dp),
-        resizable = false
+            onCloseRequest = ::exitApplication,
+            title = "ADT",
+            icon = painter,
+            state = rememberWindowState(width = 250.dp, height = (40 + 7 * 60).dp),
+            resizable = false
     ) {
         MaterialTheme {
             Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button("decompile") {
                     dec_show.value = true
                 }
+                // 展示第二个界面的内容
                 Button("dex") {
                     dex_show.value = true
                 }
+
                 Button("backToApk") {
                     FileChooser.newInstance(window,
-                        JFileChooser.DIRECTORIES_ONLY,
-                        "backToApk",
-                        object : FileChooser.OnFileSelectListener {
-                            override fun onSelected(path: String) {
-                                ApkTool.backToApk(path)
-                            }
-                        })
+                            JFileChooser.DIRECTORIES_ONLY,
+                            "backToApk",
+                            object : FileChooser.OnFileSelectListener {
+                                override fun onSelected(path: String) {
+                                    ApkTool.backToApk(path)
+                                }
+                            })
                 }
                 Button("sign manager") {
                     sign_manager_show.value = true
@@ -92,3 +100,5 @@ fun main() = application {
         }
     }
 }
+
+
