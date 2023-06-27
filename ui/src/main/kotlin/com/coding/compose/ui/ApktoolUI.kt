@@ -1,4 +1,4 @@
-package com.coding.compose.ui.apktool
+package com.coding.compose.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -1,4 +1,4 @@
-package com.coding.compose.ui.aab
+package com.coding.compose.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -17,13 +18,9 @@ import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import com.coding.compose.base.Button
-import com.coding.compose.base.CheckBox
-import com.coding.compose.base.FileChooser
-import com.coding.compose.base.Toast
+import com.coding.compose.base.*
 import com.coding.compose.listener.OnSelectListener
 import com.coding.compose.mWindow
-import com.coding.compose.ui.sign.SignListDialog
 import com.coding.dec.BundleTool
 import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
@@ -40,14 +37,25 @@ fun AABUI() {
             val btnLabel = remember { mutableStateOf("choose sign") }
             val selectedName = remember { mutableStateOf("") }
             val showSignList = remember { mutableStateOf(false) }
-            SignListDialog(showSignList, object : OnSelectListener {
-                override fun onSelected(name: String) {
-                    selectedName.value = name
-                    btnLabel.value = name
-                    showSignList.value = false
-                    println("selectedName:$name")
-                }
-            })
+
+            val list = remember { mutableStateListOf<String>() }
+            list.clear()
+            for (item in SignUtils.getSignList()) {
+                list.add(item.name)
+            }
+            ListDialog("sign list",
+                    btnLabel,
+                    list,
+                    showSignList,
+                    object : OnSelectListener {
+                        override fun onSelected(name: String) {
+                            selectedName.value = name
+                            btnLabel.value = name
+                            showSignList.value = false
+                            println("selected sign:$name")
+                        }
+                    }
+            )
 
             ClickableText(text = AnnotatedString(btnLabel.value), style = TextStyle(
                     color = Color.Blue, fontSize = TextUnit(16.0f, TextUnitType.Sp)

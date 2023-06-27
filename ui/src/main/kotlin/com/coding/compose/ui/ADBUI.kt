@@ -1,8 +1,9 @@
-package com.coding.compose.ui.adb
+package com.coding.compose.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -12,10 +13,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.coding.compose.base.Button
-import com.coding.compose.base.CheckBox
-import com.coding.compose.base.FileChooser
-import com.coding.compose.base.Toast
+import com.coding.compose.base.*
 import com.coding.compose.listener.OnCheckListener
 import com.coding.compose.listener.OnSelectListener
 import com.coding.compose.mWindow
@@ -34,13 +32,23 @@ fun ADBUI() {
                 val btnLabel = remember { mutableStateOf("choose device") }
                 val selectedDevice = remember { mutableStateOf("") }
                 val showDevicesList = remember { mutableStateOf(false) }
-                DevicesListDialog(showDevicesList, object : OnSelectListener {
-                    override fun onSelected(name: String) {
-                        selectedDevice.value = name
-                        btnLabel.value = name
-                        showDevicesList.value = false
-                    }
-                })
+
+                val deviceList = remember { mutableStateListOf<String>() }
+                deviceList.clear()
+                for (item in AdbTool.getAllDevices()) {
+                    deviceList.add(item)
+                }
+                ListDialog("device list",
+                        btnLabel,
+                        deviceList,
+                        showDevicesList,
+                        object : OnSelectListener {
+                            override fun onSelected(name: String) {
+                                selectedDevice.value = name
+                                btnLabel.value = name
+                                showDevicesList.value = false
+                            }
+                        })
                 ClickableText(text = AnnotatedString(btnLabel.value), style = TextStyle(
                         color = Color.Blue, fontSize = 16.sp
                 ), onClick = {
@@ -69,7 +77,16 @@ fun ADBUI() {
                 val selectedPkg = remember { mutableStateOf("") }
                 val showPkgNamesList = remember { mutableStateOf(false) }
                 val mode = remember { mutableStateOf(AdbTool.ONLY_THIRD_APP) }
-                AppPkgListDialog(selectedDevice, mode, showPkgNamesList, object : OnSelectListener {
+
+                val packageList = remember { mutableStateListOf<String>() }
+                packageList.clear()
+                for (item in AdbTool.getAllApkPackageNames(selectedDevice.value, mode.value)) {
+                    packageList.add(item)
+                }
+                ListDialog("app package name list",
+                        pkgNameLabel,
+                        packageList,
+                        showPkgNamesList, object : OnSelectListener {
                     override fun onSelected(name: String) {
                         selectedPkg.value = name
                         pkgNameLabel.value = name

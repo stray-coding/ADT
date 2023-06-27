@@ -13,21 +13,20 @@ import com.coding.compose.listener.OnSelectListener
 
 @Composable
 fun RadioGroup(
-    select: MutableState<String>,
-    array: SnapshotStateList<String>,
-    listener: OnSelectListener? = null,
-    tips: String = "数据不见了 -_-!"
+        selected: MutableState<String>,
+        list: SnapshotStateList<String>,
+        listener: OnSelectListener? = null,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        if (array.isNotEmpty()) {
-            array.forEach {
+        if (list.isNotEmpty()) {
+            list.forEach {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(modifier = Modifier.height(25.dp), selected = it == select.value, onClick = {
-                        select.value = it
+                    RadioButton(modifier = Modifier.height(25.dp), selected = it == selected.value, onClick = {
+                        selected.value = it
                         listener?.onSelected(it)
                     })
                     Text(modifier = Modifier.width(200.dp), text = it, textAlign = TextAlign.Start, maxLines = 1)
@@ -36,9 +35,9 @@ fun RadioGroup(
             }
         } else {
             Text(
-                modifier = Modifier.fillMaxSize(),
-                text = tips,
-                style = TextStyle(textAlign = TextAlign.Center)
+                    modifier = Modifier.fillMaxSize(),
+                    text = "数据不见了 -_-!",
+                    style = TextStyle(textAlign = TextAlign.Center)
             )
         }
     }

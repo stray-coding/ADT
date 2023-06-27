@@ -1,8 +1,9 @@
-package com.coding.compose.ui.sign
+package com.coding.compose.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -12,10 +13,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.coding.compose.base.Button
-import com.coding.compose.base.CheckBox
-import com.coding.compose.base.FileChooser
-import com.coding.compose.base.Toast
+import com.coding.compose.base.*
 import com.coding.compose.listener.OnSelectListener
 import com.coding.compose.mWindow
 import com.coding.dec.SignTool
@@ -33,14 +31,26 @@ fun SignUI() {
             val btnLabel = remember { mutableStateOf("choose sign") }
             val selectedName = remember { mutableStateOf("") }
             val showSignList = remember { mutableStateOf(false) }
-            SignListDialog(showSignList, object : OnSelectListener {
-                override fun onSelected(name: String) {
-                    selectedName.value = name
-                    btnLabel.value = name
-                    showSignList.value = false
-                    println("selected sign:$name")
-                }
-            })
+
+
+            val list = remember { mutableStateListOf<String>() }
+            list.clear()
+            for (item in SignUtils.getSignList()) {
+                list.add(item.name)
+            }
+            ListDialog("sign list",
+                    btnLabel,
+                    list,
+                    showSignList,
+                    object : OnSelectListener {
+                        override fun onSelected(name: String) {
+                            selectedName.value = name
+                            btnLabel.value = name
+                            showSignList.value = false
+                            println("selected sign:$name")
+                        }
+                    }
+            )
 
             ClickableText(text = AnnotatedString(btnLabel.value), style = TextStyle(
                     color = Color.Blue, fontSize = 16.sp

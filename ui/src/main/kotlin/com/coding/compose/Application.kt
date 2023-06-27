@@ -18,12 +18,12 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import com.coding.compose.base.MyIcons
-import com.coding.compose.ui.aab.AABUI
-import com.coding.compose.ui.adb.ADBUI
-import com.coding.compose.ui.apktool.ApktoolUI
-import com.coding.compose.ui.dex.DexUI
-import com.coding.compose.ui.sign.SignUI
-import com.coding.compose.ui.signmanager.SignManagerUI
+import com.coding.compose.ui.AABUI
+import com.coding.compose.ui.ADBUI
+import com.coding.compose.ui.ApktoolUI
+import com.coding.compose.ui.DexUI
+import com.coding.compose.ui.SignUI
+import com.coding.compose.ui.SignManagerUI
 
 enum class UI(val description: String) {
     TYPE_APKTOOL("apktool"),
