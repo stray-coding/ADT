@@ -1,4 +1,4 @@
-package com.coding.utils
+package com.coding.dec.utils
 
 import com.coding.dec.bean.ApkInfo
 import java.io.File

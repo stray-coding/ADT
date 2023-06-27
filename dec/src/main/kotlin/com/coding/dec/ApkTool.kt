@@ -2,10 +2,10 @@ package com.coding.dec
 
 import com.coding.dec.utils.Paths
 import com.coding.dec.utils.Suffix
-import com.coding.utils.Terminal
-import com.coding.utils.isDirPathValid
-import com.coding.utils.isFilePathValid
-import com.coding.utils.put
+import com.coding.dec.utils.Terminal
+import com.coding.dec.utils.isDirPathValid
+import com.coding.dec.utils.isFilePathValid
+import com.coding.dec.utils.put
 
 object ApkTool {
     /**

@@ -1,4 +1,4 @@
-package com.coding.utils
+package com.coding.dec.utils
 
 fun <T> MutableList<T>.put(param: T): MutableList<T> {
     this.add(param)

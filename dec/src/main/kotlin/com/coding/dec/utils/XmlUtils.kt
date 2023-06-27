@@ -1,4 +1,4 @@
-package com.coding.utils
+package com.coding.dec.utils
 
 import org.w3c.dom.Document
 import java.io.File

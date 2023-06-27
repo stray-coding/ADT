@@ -1,4 +1,4 @@
-package com.coding.utils
+package com.coding.dec.utils
 
 import java.util.concurrent.TimeUnit
 

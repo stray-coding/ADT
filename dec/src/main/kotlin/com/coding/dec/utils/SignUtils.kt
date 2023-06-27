@@ -1,8 +1,7 @@
 package com.coding.dec.utils
 
 import com.coding.utils.FileUtils
-import com.coding.utils.XmlUtils
-import com.coding.utils.XmlUtils.newDoc
+import com.coding.dec.utils.XmlUtils.newDoc
 import org.w3c.dom.Element
 import java.io.File
 

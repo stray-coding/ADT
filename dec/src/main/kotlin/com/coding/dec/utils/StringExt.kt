@@ -1,4 +1,4 @@
-package com.coding.utils
+package com.coding.dec.utils
 
 import java.io.File
 
@@ -41,13 +41,4 @@ fun String.toCMDList(): MutableList<String> {
         }
     }
     return list
-}
-
-fun main() {
-    println("".join("", ""))
-    println("C:\\Users\\root\\Desktop\\ADT".join())
-    println("C:\\Users\\root\\Desktop\\ADT".join("sign"))
-    println("C:\\Users\\root\\Desktop\\ADT".join("sign", "1.jks"))
-    println("C:\\Users\\root\\Desktop\\ADT".join("sign", "", "aaa", "", File.separator, "bbb", "1.jks"))
-    println("----------------------------")
 }

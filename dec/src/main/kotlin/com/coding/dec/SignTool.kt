@@ -4,8 +4,8 @@ import com.coding.dec.utils.Paths
 import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
 import com.coding.utils.FileUtils
-import com.coding.utils.Terminal
-import com.coding.utils.isFilePathValid
+import com.coding.dec.utils.Terminal
+import com.coding.dec.utils.isFilePathValid
 
 object SignTool {
 
