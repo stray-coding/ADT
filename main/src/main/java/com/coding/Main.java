@@ -1,10 +1,10 @@
 package com.coding;
 
 
-import com.coding.compose.MainKt;
+import com.coding.compose.ApplicationKt;
 
 public class Main {
     public static void main(String[] args) {
-        MainKt.main();
+        ApplicationKt.main();
     }
 }

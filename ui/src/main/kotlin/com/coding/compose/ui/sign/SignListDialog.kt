@@ -18,9 +18,9 @@ fun SignListDialog(show: MutableState<Boolean>, listener: OnSelectListener) {
     Dialog(title = "sign list", state = show) {
         val scrollState = rememberScrollState()
         Column(
-            modifier = Modifier.verticalScroll(scrollState).fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.verticalScroll(scrollState).fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             if (show.value) {
                 val list = remember { mutableStateListOf<String>() }

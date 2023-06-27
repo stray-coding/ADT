@@ -133,4 +133,14 @@ object Paths {
         return file.absolutePath
     }
 
+    fun getOnTopNormal(): String {
+        val file = File(TOOLS.join("base", "ic_on_top_normal.png"))
+        return file.absolutePath
+    }
+
+    fun getOnTopSelected(): String {
+        val file = File(TOOLS.join("base", "ic_on_top_selected.png"))
+        return file.absolutePath
+    }
+
 }

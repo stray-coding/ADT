@@ -1,11 +1,8 @@
 package com.coding.compose.ui.adb
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -13,25 +10,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.ExperimentalUnitApi
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import com.coding.compose.base.*
+import androidx.compose.ui.unit.sp
+import com.coding.compose.base.Button
+import com.coding.compose.base.CheckBox
+import com.coding.compose.base.FileChooser
+import com.coding.compose.base.Toast
 import com.coding.compose.listener.OnCheckListener
 import com.coding.compose.listener.OnSelectListener
+import com.coding.compose.mWindow
 import com.coding.dec.AdbTool
 import com.coding.dec.utils.Suffix
 import javax.swing.JFileChooser
 
-@OptIn(ExperimentalUnitApi::class)
 @Composable
-fun ADBDialog(show: MutableState<Boolean>) {
-    Dialog(title = "adb", state = show) {
+fun ADBUI() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Row {
-            val scrollState = rememberScrollState()
             Column(
-                    modifier = Modifier.verticalScroll(scrollState).fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -46,29 +42,29 @@ fun ADBDialog(show: MutableState<Boolean>) {
                     }
                 })
                 ClickableText(text = AnnotatedString(btnLabel.value), style = TextStyle(
-                        color = Color.Blue, fontSize = TextUnit(16.0f, TextUnitType.Sp)
+                        color = Color.Blue, fontSize = 16.sp
                 ), onClick = {
                     showDevicesList.value = true
                 })
                 val debug = remember { mutableStateOf(false) }
-                CheckBox("debug", debug)
-                Button("install apk") {
-                    if (selectedDevice.value.isEmpty()) {
-                        Toast.showMsg(window, "Please select the device first.")
-                        return@Button
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    CheckBox("debug", debug)
+                    Button("install apk") {
+                        if (selectedDevice.value.isEmpty()) {
+                            Toast.showMsg(mWindow, "Please select the device first.")
+                            return@Button
+                        }
+                        FileChooser.newInstance(mWindow,
+                                JFileChooser.FILES_ONLY,
+                                "install apk",
+                                Suffix.APK,
+                                object : FileChooser.OnFileSelectListener {
+                                    override fun onSelected(path: String) {
+                                        println("install apk:" + AdbTool.installApk(selectedDevice.value, debug.value, path))
+                                    }
+                                })
                     }
-                    FileChooser.newInstance(window,
-                            JFileChooser.FILES_ONLY,
-                            "choose apk",
-                            Suffix.APK,
-                            object : FileChooser.OnFileSelectListener {
-                                override fun onSelected(path: String) {
-                                    println("install apk:" + AdbTool.installApk(selectedDevice.value, debug.value, path))
-                                }
-                            })
                 }
-
-
                 val pkgNameLabel = remember { mutableStateOf("choose package name") }
                 val selectedPkg = remember { mutableStateOf("") }
                 val showPkgNamesList = remember { mutableStateOf(false) }
@@ -108,19 +104,19 @@ fun ADBDialog(show: MutableState<Boolean>) {
                 }
 
                 ClickableText(text = AnnotatedString(pkgNameLabel.value), style = TextStyle(
-                        color = Color.Blue, fontSize = TextUnit(16.0f, TextUnitType.Sp)
+                        color = Color.Blue, fontSize = 16.sp
                 ), onClick = {
                     showPkgNamesList.value = true
                 })
 
-                Button("extract apk", modifier = Modifier.padding(bottom = 10.dp).size(150.dp, 50.dp)) {
+                Button("extract apk") {
                     if (selectedDevice.value.isEmpty() || selectedPkg.value.isEmpty()) {
-                        Toast.showMsg(window, "Please select a device and package name.")
+                        Toast.showMsg(mWindow, "Please select a device and package name.")
                         return@Button
                     }
-                    FileChooser.newInstance(window,
+                    FileChooser.newInstance(mWindow,
                             JFileChooser.DIRECTORIES_ONLY,
-                            "choose dir",
+                            "extract apk",
                             object : FileChooser.OnFileSelectListener {
                                 override fun onSelected(path: String) {
                                     AdbTool.extractApk(selectedDevice.value, selectedPkg.value, path)
