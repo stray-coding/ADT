@@ -29,8 +29,8 @@ dependencies {
 }
 
 
-def VERSION_NAME = "0.2.4"
-def VERSION_CODE = 24
+def VERSION_NAME = "0.2.5"
+def VERSION_CODE = 25
 
 def THIRDS = [
         dex2jar   : "2.1",
@@ -41,7 +41,8 @@ def THIRDS = [
         bundletool: "1.13.2",
         zipalign  : "31.0.0",
         smail     : "2.5.2",
-        backsmail : "2.5.2"
+        backsmail : "2.5.2",
+        adb       : "1.0.41"
 ]
 
 application {

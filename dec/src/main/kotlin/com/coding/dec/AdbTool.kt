@@ -17,7 +17,7 @@ object AdbTool {
      */
     fun getAllDevices(): List<String> {
         val list = mutableListOf<String>()
-        Terminal.run("adb devices", listener = object : Terminal.OnStdoutListener {
+        Terminal.run("${Paths.getAdb()} devices", listener = object : Terminal.OnStdoutListener {
             override fun callback(line: String) {
                 if (line.endsWith("device")) {
                     list.add(line.removeSuffix("device").trim())
@@ -33,7 +33,7 @@ object AdbTool {
      */
     fun getAllApkPackageNames(device: String = "", filter: String = ALL_APP): List<String> {
         val cmd = mutableListOf<String>()
-                .put("adb")
+                .put(Paths.getAdb())
                 .put(device.isNotEmpty(), "-s", device)
                 .put("shell", "pm", "list", "packages", filter)
         val list = mutableListOf<String>()
@@ -56,7 +56,7 @@ object AdbTool {
     fun installApk(device: String = "", debug: Boolean = false, apkPath: String): Boolean {
         if (!apkPath.isFilePathValid()) return false
         val cmd = mutableListOf<String>()
-                .put("adb")
+                .put(Paths.getAdb())
                 .put(device.isNotEmpty(), "-s", device)
                 .put(debug, "-t")
                 .put("install", "-r", apkPath)
@@ -70,7 +70,7 @@ object AdbTool {
         if (pkgName.isEmpty()) return false
         if (!outDir.isDirPathValid()) return false
         val cmd = mutableListOf<String>()
-                .put("adb")
+                .put(Paths.getAdb())
                 .put(device.isNotEmpty(), "-s", device)
                 .put("shell", "pm", "path", pkgName)
         val list = arrayListOf<String>()
@@ -84,7 +84,7 @@ object AdbTool {
             val time = System.currentTimeMillis()
             val outPath = File(outDir, "${pkgName}_${time}.apk").absolutePath
             val pullCmd = mutableListOf<String>()
-                    .put("adb")
+                    .put(Paths.getAdb())
                     .put(device.isNotEmpty(), "-s", device)
                     .put("pull", list[0], outPath)
             return Terminal.run(pullCmd)
@@ -95,7 +95,7 @@ object AdbTool {
             for (item in list) {
                 val outPath = File(apksDir, item.substring(item.lastIndexOf("/"))).absolutePath
                 val pullCmd = mutableListOf<String>()
-                        .put("adb")
+                        .put(Paths.getAdb())
                         .put(device.isNotEmpty(), "-s", device)
                         .put("pull", item, outPath)
                 Terminal.run(pullCmd)

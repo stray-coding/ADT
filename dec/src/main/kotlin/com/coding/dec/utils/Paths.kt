@@ -57,6 +57,11 @@ object Paths {
         return file.absolutePath
     }
 
+    fun getAdb(): String {
+        val file = File(TOOLS.join("adb", "adb.exe"))
+        return file.absolutePath
+    }
+
     fun getZipalign(): String {
         val file = if (Terminal.isWindows()) File(TOOLS, "zipalign.exe")
         else File(TOOLS, "zipalign")
@@ -87,7 +92,7 @@ object Paths {
     }
 
     fun getAAPT2(): String {
-        val file = File(TOOLS, "aapt2.exe")
+        val file = File(TOOLS.join("aab", "aapt2.exe"))
         return file.absolutePath
     }
 
