@@ -14,10 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.ExperimentalUnitApi
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.coding.compose.base.*
 import com.coding.compose.listener.OnSelectListener
 import com.coding.compose.mWindow
@@ -26,7 +24,6 @@ import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
 import javax.swing.JFileChooser
 
-@OptIn(ExperimentalUnitApi::class)
 @Composable
 fun AABUI() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -58,7 +55,7 @@ fun AABUI() {
             )
 
             ClickableText(text = AnnotatedString(btnLabel.value), style = TextStyle(
-                    color = Color.Blue, fontSize = TextUnit(16.0f, TextUnitType.Sp)
+                    color = Color.Blue, fontSize = 16.0.sp
             ), onClick = {
                 showSignList.value = true
             })
