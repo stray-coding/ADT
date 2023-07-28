@@ -57,6 +57,16 @@ object Paths {
         return file.absolutePath
     }
 
+    fun getFrameworkDir(): String {
+        val file = File(CONFIG.join("framework"))
+        return file.absolutePath
+    }
+
+    fun getFrameworkApk(): String {
+        val file = File(CONFIG.join("framework", "1.apk"))
+        return file.absolutePath
+    }
+
     fun getAdb(): String {
         val file = File(TOOLS.join("adb", "adb.exe"))
         return file.absolutePath
