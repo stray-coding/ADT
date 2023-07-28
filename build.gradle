@@ -34,12 +34,12 @@ def VERSION_CODE = 25
 
 def THIRDS = [
         dex2jar   : "2.1",
-        aapt2     : "31.0.0",
-        android   : "30",
-        apksigner : "31.0.0",
-        apktool   : "2.7.0",
+        aapt2     : "34.0.0",
+        android   : "34",
+        apksigner : "34.0.0",
+        apktool   : "2.8.1",
         bundletool: "1.13.2",
-        zipalign  : "31.0.0",
+        zipalign  : "34.0.0",
         smail     : "2.5.2",
         backsmail : "2.5.2",
         adb       : "1.0.41"
