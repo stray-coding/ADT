@@ -19,4 +19,8 @@
 如果觉得本工具对你有帮助，不妨请作者喝杯奶茶😊😊😊
 ```
 
-<img src="tools/base/wx_payment_code.jpg" width = "300" height = "300" />
+<div>
+    <img src="tools/base/ali_payment_code.jpg" width = "300" height = "300">
+    <img src="tools/base/wx_payment_code.jpg" width = "300" height = "300">
+</div>
+
