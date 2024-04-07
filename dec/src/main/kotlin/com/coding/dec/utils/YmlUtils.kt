@@ -12,15 +12,9 @@ object YmlUtils {
 
 
     fun getValueFromApkToolYml(ymlPath: String): ApkInfo {
-        val tags = arrayListOf(
-            TAG_APK_FILE_NAME,
-            TAG_MIN_SDK_VERSION,
-            TAG_TARGET_SDK_VERSION,
-            TAG_VERSION_CODE,
-            TAG_VERSION_NAME
-        )
         val apkInfo = ApkInfo()
         if (!ymlPath.isFilePathValid()) return apkInfo
+        val tags = arrayListOf(TAG_APK_FILE_NAME, TAG_MIN_SDK_VERSION, TAG_TARGET_SDK_VERSION, TAG_VERSION_CODE, TAG_VERSION_NAME)
         try {
             for (line in File(ymlPath).readLines()) {
                 for (tag in tags) {
