@@ -33,12 +33,12 @@ def VERSION_NAME = "0.2.5"
 def VERSION_CODE = 25
 
 def THIRDS = [
-        dex2jar   : "2.1",
+        dex2jar   : "2.4",
         aapt2     : "34.0.0",
         android   : "34",
         apksigner : "34.0.0",
-        apktool   : "2.8.1",
-        bundletool: "1.13.2",
+        apktool   : "2.9.3",
+        bundletool: "1.15.6",
         zipalign  : "34.0.0",
         smail     : "2.5.2",
         backsmail : "2.5.2",
