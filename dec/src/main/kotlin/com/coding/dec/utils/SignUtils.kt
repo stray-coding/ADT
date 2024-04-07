@@ -1,7 +1,8 @@
 package com.coding.dec.utils
 
-import com.coding.utils.FileUtils
+import com.coding.dec.bean.SignBean
 import com.coding.dec.utils.XmlUtils.newDoc
+import com.coding.utils.FileUtils
 import org.w3c.dom.Element
 import java.io.File
 
@@ -61,7 +62,7 @@ object SignUtils {
             val signList = doc.getElementsByTagName(ELEMENT_SIGN)
             for (i in signList.length - 1 downTo 0) {
                 val item = signList.item(i) as Element
-                SignBean.transform(item)?.let {
+                transform(item)?.let {
                     val file = File(it.path)
                     //不存在就删除
                     if (!file.exists()) {
@@ -146,36 +147,23 @@ object SignUtils {
     }
 
 
-    class SignBean(
-        var name: String = "",
-        var path: String = "",
-        var pwd: String = "",
-        var alias: String = "",
-        var aliasPwd: String = ""
-    ) {
-        private constructor() : this("", "", "", "", "")
-
-        companion object {
-            fun transform(element: Element): SignBean? {
-                try {
-                    val signBean = SignBean()
-                    signBean.name = element.getAttribute(SIGN_NAME)
-                    signBean.path = File(element.getAttribute(SIGN_PATH)).absolutePath
-                    signBean.pwd = element.getAttribute(SIGN_PWD)
-                    signBean.alias = element.getAttribute(SIGN_ALIAS)
-                    signBean.aliasPwd = element.getAttribute(SIGN_ALIAS_PWD)
-                    return signBean
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    println("sign configuration error")
-                }
-                return null
-            }
+    private fun transform(element: Element): SignBean? {
+        try {
+            val signBean = SignBean()
+            signBean.name = element.getAttribute(SIGN_NAME)
+            signBean.path = File(element.getAttribute(SIGN_PATH)).absolutePath
+            signBean.pwd = element.getAttribute(SIGN_PWD)
+            signBean.alias = element.getAttribute(SIGN_ALIAS)
+            signBean.aliasPwd = element.getAttribute(SIGN_ALIAS_PWD)
+            return signBean
+        } catch (e: Exception) {
+            e.printStackTrace()
+            println("sign configuration error")
         }
+        return null
     }
-
-
 }
+
 
 fun main() {
     val doc = XmlUtils.parse("config/sign_config.xml")

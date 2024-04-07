@@ -1,5 +1,6 @@
 package com.coding.dec
 
+import com.coding.dec.bean.SignBean
 import com.coding.dec.utils.*
 import com.coding.utils.FileUtils
 import com.coding.utils.ZipUtils
@@ -14,7 +15,7 @@ object BundleTool {
      */
     fun aab2Apks(
         aabPath: String,
-        signBean: SignUtils.SignBean,
+        signBean: SignBean,
         outPath: String = "",
         universal: Boolean = false
     ): Boolean {
@@ -27,6 +28,8 @@ object BundleTool {
             Paths.getJava(), "-jar", Paths.getBundleTool(),
             "build-apks", "--bundle=$aabPath",
             "--output=$newOutPath",
+        ).put(
+            signBean.path.isNotEmpty(),
             "--ks=${signBean.path}",
             "--ks-pass", "pass:${signBean.pwd}",
             "--ks-key-alias=${signBean.alias}",
@@ -39,7 +42,7 @@ object BundleTool {
     /**
      *
      */
-    fun apk2AAB(apkPath: String, signBean: SignUtils.SignBean): Boolean {
+    fun apk2AAB(apkPath: String, signBean: SignBean): Boolean {
         if (!apkPath.isFilePathValid(Suffix.APK)) {
             println("apk is not exist,failed")
             return false

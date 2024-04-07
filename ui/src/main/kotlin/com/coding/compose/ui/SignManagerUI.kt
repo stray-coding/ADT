@@ -16,6 +16,7 @@ import com.coding.compose.base.*
 import com.coding.compose.listener.OnCloseListener
 import com.coding.compose.mWindow
 import com.coding.dec.SignTool
+import com.coding.dec.bean.SignBean
 import com.coding.dec.utils.Paths
 import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
@@ -128,7 +129,7 @@ fun AddSignUI(onCloseListener: OnCloseListener) {
                                 val savePath = Paths.getSignDir() + File.separator + name
                                 FileUtils.copy(path, savePath)
                                 val relativePath = savePath.replace(Paths.getCurDir() + File.separator, "")
-                                val sign = SignUtils.SignBean(name, relativePath, pwd.value, alias.value, alias_pwd.value)
+                                val sign = SignBean(name, relativePath, pwd.value, alias.value, alias_pwd.value)
                                 if (!SignTool.alignAndSign(
                                                 Paths.getUnsignedApk(),
                                                 sign,

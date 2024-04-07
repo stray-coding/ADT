@@ -1,11 +1,11 @@
 package com.coding.dec
 
+import com.coding.dec.bean.SignBean
 import com.coding.dec.utils.Paths
-import com.coding.dec.utils.SignUtils
 import com.coding.dec.utils.Suffix
-import com.coding.utils.FileUtils
 import com.coding.dec.utils.Terminal
 import com.coding.dec.utils.isFilePathValid
+import com.coding.utils.FileUtils
 
 object SignTool {
 
@@ -17,19 +17,19 @@ object SignTool {
      * @return
      */
     fun signAAB(
-            aabPath: String,
-            signBean: SignUtils.SignBean
+        aabPath: String,
+        signBean: SignBean
     ): Boolean {
         if (!aabPath.isFilePathValid(Suffix.AAB)) return false
         return Terminal.run(
-                "jarsigner " +
-                        "-digestalg SHA1 " +
-                        "-sigalg SHA1withRSA " +
-                        "-keystore ${signBean.path} " +
-                        "-storepass ${signBean.pwd} " +
-                        "-keypass ${signBean.aliasPwd} " +
-                        "$aabPath " +
-                        signBean.alias
+            "jarsigner " +
+                    "-digestalg SHA1 " +
+                    "-sigalg SHA1withRSA " +
+                    "-keystore ${signBean.path} " +
+                    "-storepass ${signBean.pwd} " +
+                    "-keypass ${signBean.aliasPwd} " +
+                    "$aabPath " +
+                    signBean.alias
         )
     }
 
@@ -39,9 +39,9 @@ object SignTool {
      * 3. jarsigner apk only v1
      */
     fun signAndAlign(
-            apkPath: String,
-            signBean: SignUtils.SignBean,
-            outPath: String = "",
+        apkPath: String,
+        signBean: SignBean,
+        outPath: String = "",
     ): Boolean {
         if (!apkPath.isFilePathValid(Suffix.APK)) return false
         val signPath = apkPath.removeSuffix(Suffix.APK) + "_signed.apk"
@@ -63,13 +63,13 @@ object SignTool {
      * 2. sign apk
      */
     fun alignAndSign(
-            apkPath: String,
-            signBean: SignUtils.SignBean,
-            outPath: String = "",
-            v1Enable: Boolean,
-            v2Enable: Boolean,
-            v3Enable: Boolean = false,
-            v4Enable: Boolean = false
+        apkPath: String,
+        signBean: SignBean,
+        outPath: String = "",
+        v1Enable: Boolean,
+        v2Enable: Boolean,
+        v3Enable: Boolean = false,
+        v4Enable: Boolean = false
     ): Boolean {
         if (!apkPath.isFilePathValid(Suffix.APK)) return false
         val alignPath = apkPath.removeSuffix(Suffix.APK) + "_aligned.apk"
@@ -95,9 +95,9 @@ object SignTool {
      * sign the apk  only v1
      * */
     private fun signApkByJarSigner(
-            apkPath: String,
-            signBean: SignUtils.SignBean,
-            outPath: String = "",
+        apkPath: String,
+        signBean: SignBean,
+        outPath: String = "",
     ): Boolean {
         if (!apkPath.isFilePathValid(Suffix.APK)) return false
         val newOutPath = outPath.ifEmpty {
@@ -119,13 +119,13 @@ object SignTool {
      * sign the apk
      * */
     private fun signApkByApkSigner(
-            apkPath: String,
-            signBean: SignUtils.SignBean,
-            outPath: String = "",
-            v1Enable: Boolean,
-            v2Enable: Boolean,
-            v3Enable: Boolean = false,
-            v4Enable: Boolean = false
+        apkPath: String,
+        signBean: SignBean,
+        outPath: String = "",
+        v1Enable: Boolean,
+        v2Enable: Boolean,
+        v3Enable: Boolean = false,
+        v4Enable: Boolean = false
     ): Boolean {
         if (!apkPath.isFilePathValid(Suffix.APK)) return false
         val newOutPath = outPath.ifEmpty {
