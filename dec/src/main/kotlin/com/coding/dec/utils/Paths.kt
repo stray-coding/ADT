@@ -16,7 +16,7 @@ object Paths {
     private const val SIGN = "sign"
 
     fun getJava(): String {
-        return "java -Dfile.encoding=UTF-8"
+        return "java"
     }
 
     fun getCurDir(): String {
