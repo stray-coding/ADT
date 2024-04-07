@@ -15,7 +15,7 @@ object ApkTool {
      * */
     fun decompile(apkPath: String, ignoreDex: Boolean, ignoreRes: Boolean, outPath: String = ""): Boolean {
         if (!apkPath.isFilePathValid(Suffix.APK)) return false
-        FileUtils.deleteFile(Paths.getFrameworkApk())
+        FileUtils.delete(Paths.getFrameworkApk())
         val finalOutPath = outPath.ifEmpty { apkPath.removeSuffix(Suffix.APK) }
         val cmd = mutableListOf<String>()
                 .put(Paths.getJava(), "-jar", Paths.getApkTool(), "d", apkPath)
@@ -33,7 +33,7 @@ object ApkTool {
      * */
     fun backToApk(srcDir: String, outPath: String = ""): Boolean {
         if (!srcDir.isDirPathValid()) return false
-        FileUtils.deleteFile(Paths.getFrameworkApk())
+        FileUtils.delete(Paths.getFrameworkApk())
         val newOutPath = outPath.ifEmpty { "${srcDir}_btc.apk" }
         val cmd = mutableListOf<String>()
                 .put(Paths.getJava(), "-jar", Paths.getApkTool())

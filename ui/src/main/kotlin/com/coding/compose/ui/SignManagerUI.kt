@@ -126,7 +126,7 @@ fun AddSignUI(onCloseListener: OnCloseListener) {
                                 val name = path.substring(path.lastIndexOf(File.separator) + 1)
                                 //保存签名文件的路径
                                 val savePath = Paths.getSignDir() + File.separator + name
-                                FileUtils.copyFile(path, savePath)
+                                FileUtils.copy(path, savePath)
                                 val relativePath = savePath.replace(Paths.getCurDir() + File.separator, "")
                                 val sign = SignUtils.SignBean(name, relativePath, pwd.value, alias.value, alias_pwd.value)
                                 if (!SignTool.alignAndSign(
@@ -136,11 +136,11 @@ fun AddSignUI(onCloseListener: OnCloseListener) {
                                                 v2Enable = true
                                         )
                                 ) {
-                                    FileUtils.deleteFile(savePath)
+                                    FileUtils.delete(savePath)
                                     Toast.showMsg(mWindow, "Configuration information does not match signature file.")
                                     return
                                 }
-                                FileUtils.deleteFile(Paths.getUnsignedApk().replace(".apk", "_aligned_signed.apk"))
+                                FileUtils.delete(Paths.getUnsignedApk().replace(".apk", "_aligned_signed.apk"))
                                 SignUtils.addSign(sign)
                                 onCloseListener.onClose()
                             }

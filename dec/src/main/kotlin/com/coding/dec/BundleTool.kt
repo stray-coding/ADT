@@ -1,19 +1,22 @@
 package com.coding.dec
 
 import com.coding.dec.utils.*
-import com.coding.utils.*
+import com.coding.utils.FileUtils
+import com.coding.utils.ZipUtils
 import net.lingala.zip4j.ZipFile
 import java.io.File
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 object BundleTool {
     /**
      * aab file 2 apks
      */
     fun aab2Apks(
-            aabPath: String,
-            signBean: SignUtils.SignBean,
-            outPath: String = "",
-            universal: Boolean = false
+        aabPath: String,
+        signBean: SignUtils.SignBean,
+        outPath: String = "",
+        universal: Boolean = false
     ): Boolean {
         if (!aabPath.isFilePathValid(Suffix.AAB)) return false
         val newOutPath = outPath.ifEmpty {
@@ -21,14 +24,15 @@ object BundleTool {
         }
         FileUtils.delete(newOutPath)
         val cmd = mutableListOf<String>().put(
-                Paths.getJava(), "-jar", Paths.getBundleTool(),
-                "build-apks", "--bundle=$aabPath",
-                "--output=$newOutPath",
-                "--ks=${signBean.path}",
-                "--ks-pass", "pass:${signBean.pwd}",
-                "--ks-key-alias=${signBean.alias}",
-                "--key-pass", "pass:${signBean.aliasPwd}")
-                .put(universal, "--mode=universal")
+            Paths.getJava(), "-jar", Paths.getBundleTool(),
+            "build-apks", "--bundle=$aabPath",
+            "--output=$newOutPath",
+            "--ks=${signBean.path}",
+            "--ks-pass", "pass:${signBean.pwd}",
+            "--ks-key-alias=${signBean.alias}",
+            "--key-pass", "pass:${signBean.aliasPwd}"
+        )
+            .put(universal, "--mode=universal")
         return Terminal.run(cmd)
     }
 
@@ -43,7 +47,7 @@ object BundleTool {
 
         println("-----1. create temp dir-----")
         val tempPath = File(apkPath.substringBeforeLast(File.separator), "work_temp").absolutePath
-        FileUtils.deleteDir(tempPath)
+        FileUtils.delete(tempPath)
         FileUtils.createOrExistsDir(tempPath)
 
         println("-----2. decompile apk-----")
@@ -58,17 +62,17 @@ object BundleTool {
         println("-----4. link resource-----")
         val linkApk = File(tempPath, "link.apk").absolutePath
         Terminal.run(
-                "${Paths.getAAPT2()} link " +
-                        "--proto-format " +
-                        "-o $linkApk " +
-                        "-I ${Paths.getAndroidJar()} " +
-                        "--min-sdk-version ${apkInfo.minsdk} " +
-                        "--target-sdk-version ${apkInfo.targetsdk} " +
-                        "--version-code ${apkInfo.versionCode} " +
-                        "--version-name ${apkInfo.versionName} " +
-                        "--manifest ${decompilePath.join("AndroidManifest.xml")} " +
-                        "-R $compiledResourcesZipPath " +
-                        "--auto-add-overlay"
+            "${Paths.getAAPT2()} link " +
+                    "--proto-format " +
+                    "-o $linkApk " +
+                    "-I ${Paths.getAndroidJar()} " +
+                    "--min-sdk-version ${apkInfo.minsdk} " +
+                    "--target-sdk-version ${apkInfo.targetsdk} " +
+                    "--version-code ${apkInfo.versionCode} " +
+                    "--version-name ${apkInfo.versionName} " +
+                    "--manifest ${decompilePath.join("AndroidManifest.xml")} " +
+                    "-R $compiledResourcesZipPath " +
+                    "--auto-add-overlay"
         )
         if (!FileUtils.isFileExists(linkApk)) {
             println("link apk is not exist,failed")
@@ -80,83 +84,65 @@ object BundleTool {
         ZipUtils.unzipFile(linkApk, baseDirPath)
 
         println("-----6. copy all resource-----")
+        val tasks = ArrayList<CompletableFuture<Void>>(7)
+        val customThreadPool = Executors.newFixedThreadPool(7)
+        tasks.add(CompletableFuture.runAsync({
+            println("-----copy AndroidManifest.xml-----")
+            FileUtils.move(baseDirPath.join("AndroidManifest.xml"), baseDirPath.join("manifest", "AndroidManifest.xml"))
+        }, customThreadPool))
 
-        println("-----copy AndroidManifest.xml-----")
-        FileUtils.moveFile(
-                baseDirPath.join("AndroidManifest.xml"),
-                baseDirPath.join("manifest", "AndroidManifest.xml")
-        )
+        tasks.add(CompletableFuture.runAsync({
+            println("-----copy assets dir-----")
+            FileUtils.copy(decompilePath.join("assets"), baseDirPath.join("assets"))
+        }, customThreadPool))
 
-        println("-----copy assets dir-----")
-        FileUtils.copyDir(
-                decompilePath.join("assets"),
-                baseDirPath.join("assets")
-        )
+        tasks.add(CompletableFuture.runAsync({
+            println("-----copy lib dir-----")
+            FileUtils.copy(decompilePath.join("lib"), baseDirPath.join("lib"))
+        }, customThreadPool))
 
-        println("-----copy lib dir-----")
-        FileUtils.copyDir(
-                decompilePath.join("lib"),
-                baseDirPath.join("lib")
-        )
+        tasks.add(CompletableFuture.runAsync({
+            println("-----copy unknown dir-----")
+            FileUtils.copy(decompilePath.join("unknown"), baseDirPath.join("root"))
+        }, customThreadPool))
 
-        println("-----copy unknown dir-----")
-        FileUtils.copyDir(
-                decompilePath.join("unknown"),
-                baseDirPath.join("root")
-        )
+        tasks.add(CompletableFuture.runAsync({
+            println("-----copy kotlin dir-----")
+            FileUtils.copy(decompilePath.join("kotlin"), baseDirPath.join("root", "kotlin"))
+        }, customThreadPool))
 
-        println("-----copy kotlin dir-----")
-        FileUtils.copyDir(
-                decompilePath.join("kotlin"),
-                baseDirPath.join("root", "kotlin")
-        )
+        tasks.add(CompletableFuture.runAsync({
+            println("-----copy META-INF dir-----")
+            FileUtils.copy(decompilePath.join("original", "META-INF"), baseDirPath.join("root", "META-INF"))
+        }, customThreadPool))
 
-        println("-----copy META-INF dir-----")
-        FileUtils.copyDir(
-                decompilePath.join("original", "META-INF"),
-                baseDirPath.join("root", "META-INF")
-        )
-
-        println("-----copy dex files-----")
-        FileUtils.createOrExistsDir(baseDirPath.join("dex"))
-        for (file in FileUtils.listFilesInDir(decompilePath)) {
-            if (file.isDirectory && file.name.contains("smali")) {
-                val array = file.name.split("_")
-                val outDexName = if (array.size > 1) {
-                    "${array[1]}.dex"
-                } else {
-                    "classes.dex"
-                }
-                Terminal.run(
+        tasks.add(CompletableFuture.runAsync({
+            println("-----copy dex files-----")
+            FileUtils.createOrExistsDir(baseDirPath.join("dex"))
+            for (file in FileUtils.listFilesInDir(decompilePath)) {
+                if (file.isDirectory && file.name.contains("smali")) {
+                    val array = file.name.split("_")
+                    val outDexName = if (array.size > 1) {
+                        "${array[1]}.dex"
+                    } else {
+                        "classes.dex"
+                    }
+                    Terminal.run(
                         "${Paths.getJava()} -jar ${Paths.getSmaliJar()} " +
                                 "assemble ${decompilePath.join(file.name)} " +
                                 "-o ${baseDirPath.join("dex", outDexName)}"
-                )
-            }
-        }
-
-        println("-----7. zip all resource to .zip file-----")
-        val items = arrayListOf(
-                baseDirPath.join("assets"),
-                baseDirPath.join("dex"),
-                baseDirPath.join("lib"),
-                baseDirPath.join("manifest"),
-                baseDirPath.join("res"),
-                baseDirPath.join("root"),
-                baseDirPath.join("resources.pb")
-        )
-        val baseZipPath = tempPath.join("base.zip")
-        val zipFile = ZipFile(baseZipPath)
-        for (item in items) {
-            val file = File(item)
-            if (file.exists()) {
-                if (file.isDirectory) {
-                    zipFile.addFolder(File(item))
-                } else {
-                    zipFile.addFile(file)
+                    )
                 }
             }
-        }
+        }, customThreadPool))
+        CompletableFuture.allOf(*tasks.toTypedArray()).join()
+        customThreadPool.shutdown()
+
+
+        println("-----7. zip all resource to .zip file-----")
+        val baseZipPath = tempPath.join("base.zip")
+        zipAllInDir(baseDirPath, baseZipPath)
+
         if (!FileUtils.isFileExists(baseZipPath)) {
             println("base zip is not exist,failed")
             return false
@@ -164,29 +150,50 @@ object BundleTool {
 
         println("-----8. create .aab file-----")
         val finalAABPath = "${apkPath.substringBeforeLast(".")}.aab"
-        FileUtils.deleteFile(finalAABPath)
+        FileUtils.delete(finalAABPath)
         Terminal.run(
-                "${Paths.getJava()} -jar ${Paths.getBundleTool()} build-bundle " +
-                        "--modules=$baseZipPath " +
-                        "--output=$finalAABPath " +
-                        "--config=${Paths.getBundleConfigJson()}"
+            "${Paths.getJava()} -jar ${Paths.getBundleTool()} build-bundle " +
+                    "--modules=$baseZipPath " +
+                    "--output=$finalAABPath " +
+                    "--config=${Paths.getBundleConfigJson()}"
         )
         if (!FileUtils.isFileExists(finalAABPath)) {
             println("aab is not exist,failed")
             return false
         }
-        FileUtils.deleteDir(tempPath)
+        FileUtils.delete(tempPath)
 
         println("-----9. sign the aab file-----")
         return Terminal.run(
-                "jarsigner " +
-                        "-digestalg SHA1 " +
-                        "-sigalg SHA1withRSA " +
-                        "-keystore ${signBean.path} " +
-                        "-storepass ${signBean.pwd} " +
-                        "-keypass ${signBean.aliasPwd} " +
-                        "$finalAABPath " +
-                        signBean.alias
+            "jarsigner " +
+                    "-digestalg SHA1 " +
+                    "-sigalg SHA1withRSA " +
+                    "-keystore ${signBean.path} " +
+                    "-storepass ${signBean.pwd} " +
+                    "-keypass ${signBean.aliasPwd} " +
+                    "$finalAABPath " +
+                    signBean.alias
         )
+    }
+
+    /**
+     * 压缩某个目录下的所有文件，但不包括自身
+     *
+     * @param dir
+     * @param outZip
+     */
+    private fun zipAllInDir(dir: String, outZip: String) {
+        val zipFile = ZipFile(outZip)
+        File(dir).listFiles()?.let {
+            for (item in it) {
+                if (item.exists()) {
+                    if (item.isDirectory) {
+                        zipFile.addFolder(item)
+                    } else {
+                        zipFile.addFile(item)
+                    }
+                }
+            }
+        }
     }
 }

@@ -78,8 +78,8 @@ object DexTool {
         val oldDexTemp = File(tempDir, "old.dex")
         val newDexTemp = File(tempDir, "new.dex")
         println("copy resource dex file.")
-        FileUtils.copyFile(oldDex, oldDexTemp.absolutePath)
-        FileUtils.copyFile(newDex, newDexTemp.absolutePath)
+        FileUtils.copy(oldDex, oldDexTemp.absolutePath)
+        FileUtils.copy(newDex, newDexTemp.absolutePath)
         if (oldDexTemp.readBytes().contentEquals(newDexTemp.readBytes())) {
             println("The content of the new and old dex is the same, so the incremental package cannot be generated.")
             return true
@@ -113,7 +113,7 @@ object DexTool {
          * */
         println("generating patch...")
         val patchDir = File(tempDir, "patch")
-        FileUtils.copyDir(newDir, patchDir)
+        FileUtils.copy(newDir, patchDir)
         //traverse the patch folder
         for (item in FileUtils.listFilesInDir(patchDir, true)) {
             if (item.isFile) {
@@ -140,7 +140,7 @@ object DexTool {
             println("convert patch jar2dex cause error.")
             return false
         }
-        FileUtils.deleteDir(tempDir)
+        FileUtils.delete(tempDir)
         println("patch generate success,patch path:$patchOutPath")
         return true
     }
