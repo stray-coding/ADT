@@ -78,27 +78,29 @@ tasks.register('release') {
     dependsOn(assemble)
     assemble.mustRunAfter(createProperties)
     doLast {
-        systemOut("create release start")
+        systemOut("=>create release start...")
         String dir = projectDir.absolutePath + File.separator + "release"
         delete(dir)
-        String src = dir + File.separator + "src"
-        mkdir(src)
+        String workspace = dir + File.separator + "workspace"
+        mkdir(workspace)
         copy {
             from "./build/libs/ADT-all.jar"
-            into src
+            into workspace
             systemOut("ADT.jar copy success")
         }
         copy {
             from "./tools"
-            into src + File.separator + "tools"
+            into workspace + File.separator + "tools"
             systemOut("tools dir copy success")
         }
-        createBootBat(src)
+        createBootBat(workspace)
         project.ant.zip(
-                basedir: src,
+                basedir: workspace,
                 destfile: dir + File.separator + "ADT.zip"
         )
-        systemOut("create release end")
+        delete(workspace)
+        systemOut("<=create release end...")
+
     }
 }
 
@@ -113,7 +115,10 @@ private static def getCurDate() {
 private static def createBootBat(String dir) {
     File bat = new File(dir, "ADT.bat")
     FileOutputStream fos = new FileOutputStream(bat)
-    fos.write("java -jar ADT-all.jar".getBytes(StandardCharsets.UTF_8))
+    fos.write("""@echo off
+cd %0/..
+@echo on
+java -jar ADT-all.jar""".getBytes(StandardCharsets.UTF_8))
     fos.flush()
     fos.close()
 }
