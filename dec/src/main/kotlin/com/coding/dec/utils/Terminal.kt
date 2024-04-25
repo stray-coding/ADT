@@ -82,4 +82,15 @@ object Terminal {
     interface OnStdoutListener {
         fun callback(line: String)
     }
+
+    private fun String.toCMDList(): MutableList<String> {
+        val list = mutableListOf<String>()
+        this.split(" ").forEach {
+            val trim = it.trim()
+            if (trim.isNotEmpty()) {
+                list.add(trim)
+            }
+        }
+        return list
+    }
 }

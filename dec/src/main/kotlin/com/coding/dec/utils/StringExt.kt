@@ -31,14 +31,3 @@ fun String.join(vararg subPaths: String): String {
     path.deleteCharAt(path.length - 1)
     return path.toString()
 }
-
-fun String.toCMDList(): MutableList<String> {
-    val list = mutableListOf<String>()
-    this.split(" ").forEach {
-        val trim = it.trim()
-        if (trim.isNotEmpty()) {
-            list.add(trim)
-        }
-    }
-    return list
-}
